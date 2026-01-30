@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { CompareSearch } from "@/components/compare/CompareSearch";
 import { ComparisonView } from "@/components/compare/ComparisonView";
 import { RatingComparisonGraph } from "@/components/compare/RatingComparisonGraph";
+import { CommonContests } from "@/components/compare/CommonContests";
 import { useUserData } from "@/lib/hooks/useUserData";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { ErrorState } from "@/components/shared/ErrorState";
@@ -70,12 +71,19 @@ export default function ComparePage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Left Column: Vitals */}
-                <div className="lg:col-span-1">
+                <div className="lg:col-span-1 space-y-8">
                     <ComparisonView
                         user1={user1.userInfo.data}
                         user2={user2.userInfo.data}
                         user1Submissions={user1.userStatus.data}
                         user2Submissions={user2.userStatus.data}
+                    />
+
+                    <CommonContests
+                        user1Handle={handles.h1}
+                        user2Handle={handles.h2}
+                        user1History={user1.ratingHistory.data || []}
+                        user2History={user2.ratingHistory.data || []}
                     />
                 </div>
 
@@ -88,6 +96,12 @@ export default function ComparePage() {
                         user2History={user2.ratingHistory.data || []}
                         isLoading={isLoading}
                     />
+
+                    {/* 
+                     Space for another chart:
+                     - Problems Solved Heatmap Comparison? 
+                     - Tag Strength Radar Chart? 
+                 */}
                 </div>
             </div>
         </div>
