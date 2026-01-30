@@ -54,9 +54,19 @@ async function fetchFromCF<T>(path: string, params: Record<string, string | numb
       }
 
       return data.result;
-    } catch (error) {
+    } catch (error: any) {
       lastError = error;
-      console.warn(`Attempt ${i + 1} failed for ${path}:`, error);
+      
+      // Don't retry if user not found or bad request
+      if (error.message && (
+        error.message.includes("not found") || 
+        error.message.includes("handle: User") || 
+        error.message.includes("handles: User")
+      )) {
+        throw error;
+      }
+
+      console.warn(`Attempt ${i + 1} failed for ${path}:`, error.message);
       if (i < retries - 1) {
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
       }

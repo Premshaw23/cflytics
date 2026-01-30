@@ -24,6 +24,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(ratingData);
   } catch (error: any) {
+    if (error.message && (error.message.includes("not found") || error.message.includes("User"))) {
+       return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
     console.error("API Route Error (rating):", error);
     return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
   }
