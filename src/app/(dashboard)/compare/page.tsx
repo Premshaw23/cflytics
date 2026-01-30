@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { CompareSearch } from "@/components/compare/CompareSearch";
 import { ComparisonView } from "@/components/compare/ComparisonView";
+import { RatingComparisonGraph } from "@/components/compare/RatingComparisonGraph";
 import { useUserData } from "@/lib/hooks/useUserData";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { ErrorState } from "@/components/shared/ErrorState";
@@ -78,11 +79,15 @@ export default function ComparePage() {
                     />
                 </div>
 
-                {/* Right Column: Graphs/Charts (Placeholder for now) */}
+                {/* Right Column: Graphs */}
                 <div className="lg:col-span-1 flex flex-col gap-6">
-                    <div className="p-8 border-2 border-dashed rounded-lg flex items-center justify-center bg-muted/30 h-full">
-                        <p className="text-muted-foreground font-medium">Common Contests & Rating Graph Comparison (Coming Soon)</p>
-                    </div>
+                    <RatingComparisonGraph
+                        user1Handle={handles.h1}
+                        user2Handle={handles.h2}
+                        user1History={user1.ratingHistory.data || []}
+                        user2History={user2.ratingHistory.data || []}
+                        isLoading={isLoading}
+                    />
                 </div>
             </div>
         </div>
