@@ -107,9 +107,9 @@ export function RatingGraph({ data, isLoading }: RatingGraphProps) {
                     <Line
                         type="monotone"
                         dataKey="newRating"
-                        stroke="hsl(var(--primary))"
+                        stroke="var(--primary)"
                         strokeWidth={2}
-                        dot={{ r: 3, fill: "hsl(var(--primary))", strokeWidth: 0 }}
+                        dot={{ r: 3, fill: "var(--primary)", strokeWidth: 0 }}
                         activeDot={{ r: 6, strokeWidth: 0 }}
                         animationDuration={1500}
                     />

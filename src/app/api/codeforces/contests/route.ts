@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { codeforcesApi } from "@/lib/api/codeforces";
-import { cache } from "@/lib/db/redis";
+import { getFromCache, setCache } from "@/lib/db/redis";
 
 // Cache contests for 1 hour as they don't change that often
 const CACHE_TTL = 3600; 
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   
   try {
     // Try to get from cache
-    const cachedData = await cache.get(cacheKey);
+    const cachedData = await getFromCache(cacheKey);
     if (cachedData) {
       return NextResponse.json(cachedData);
     }
@@ -22,7 +22,7 @@ export async function GET(request: Request) {
     const contests = await codeforcesApi.getContestList(gym);
     
     // Store in cache
-    await cache.set(cacheKey, contests, CACHE_TTL);
+    await setCache(cacheKey, contests, CACHE_TTL);
     
     return NextResponse.json(contests);
   } catch (error: any) {

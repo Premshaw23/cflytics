@@ -126,5 +126,26 @@ export const codeforcesApi = {
    */
   async getContestList(gym: boolean = false): Promise<CFContest[]> {
     return fetchFromCF<CFContest[]>("/contest.list", { gym: gym.toString() });
+  },
+
+  /**
+   * Returns information about a contest and its problems (and optionally standings).
+   * @param contestId Id of the contest.
+   * @param from 1-based index of the standings row to start from.
+   * @param count Number of standing rows to return.
+   * @param showUnofficial Whether to show unofficial participants.
+   */
+  async getContestStandings(
+    contestId: number, 
+    from: number = 1, 
+    count: number = 5, 
+    showUnofficial: boolean = false
+  ): Promise<{ contest: CFContest, problems: CFProblem[], rows: any[] }> {
+    return fetchFromCF<{ contest: CFContest, problems: CFProblem[], rows: any[] }>("/contest.standings", {
+      contestId,
+      from,
+      count,
+      showUnofficial: showUnofficial.toString()
+    });
   }
 };

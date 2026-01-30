@@ -104,7 +104,7 @@ export function TopicAnalysis({ submissions, isLoading }: TopicAnalysisProps) {
                     <Tooltip cursor={{ fill: 'var(--accent)', opacity: 0.2 }} content={<CustomTooltip />} />
                     <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={20}>
                         {data.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill="hsl(var(--primary))" opacity={0.8 + (index * 0.02)} />
+                            <Cell key={`cell-${index}`} fill="var(--primary)" opacity={0.8 + (index * 0.02)} />
                         ))}
                     </Bar>
                 </BarChart>

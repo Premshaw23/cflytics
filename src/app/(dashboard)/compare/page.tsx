@@ -5,6 +5,7 @@ import { CompareSearch } from "@/components/compare/CompareSearch";
 import { ComparisonView } from "@/components/compare/ComparisonView";
 import { RatingComparisonGraph } from "@/components/compare/RatingComparisonGraph";
 import { CommonContests } from "@/components/compare/CommonContests";
+import { TagComparison } from "@/components/compare/TagComparison";
 import { useUserData } from "@/lib/hooks/useUserData";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { ErrorState } from "@/components/shared/ErrorState";
@@ -97,11 +98,13 @@ export default function ComparePage() {
                         isLoading={isLoading}
                     />
 
-                    {/* 
-                     Space for another chart:
-                     - Problems Solved Heatmap Comparison? 
-                     - Tag Strength Radar Chart? 
-                 */}
+                    {/* Tag Strength Comparison */}
+                    <TagComparison
+                        user1Handle={handles.h1}
+                        user2Handle={handles.h2}
+                        user1Submissions={user1.userStatus.data || []}
+                        user2Submissions={user2.userStatus.data || []}
+                    />
                 </div>
             </div>
         </div>
