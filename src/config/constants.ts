@@ -20,3 +20,14 @@ export const CACHE_TTL = {
   PROBLEMS: 86400, // 24 hours
   CONTESTS: 3600,
 };
+
+export const CF_TAGS = [
+  "implementation", "math", "greedy", "dp", "data structures", 
+  "brute force", "constructive algorithms", "graphs", "sortings", 
+  "binary search", "dfs and similar", "strings", "number theory", 
+  "trees", "combinatorics", "two pointers", "geometry", "bitmasks", 
+  "dsu", "probabilities", "shortest paths", "hashing", "divide and conquer", 
+  "games", "flows", "matrices", "expression parsing", "string suffix structures", 
+  "meet-in-the-middle", "fft", "ternary search"
+];
+
