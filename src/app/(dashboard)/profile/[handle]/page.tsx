@@ -7,6 +7,7 @@ import { useUserData } from "@/lib/hooks/useUserData";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileStats } from "@/components/profile/ProfileStats";
 import { RatingGraph } from "@/components/profile/RatingGraph";
+import { ActivityHeatmap } from "@/components/profile/ActivityHeatmap";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { BarChart, Info } from "lucide-react";
@@ -34,6 +35,12 @@ export default function ProfilePage() {
             <ProfileStats
                 user={userInfo.data}
                 submissions={userStatus.data}
+                isLoading={isLoading}
+            />
+
+            {/* Activity Heatmap */}
+            <ActivityHeatmap
+                submissions={userStatus.data || []}
                 isLoading={isLoading}
             />
 
