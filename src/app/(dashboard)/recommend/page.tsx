@@ -5,15 +5,27 @@ import { useRecommendations } from '@/lib/hooks/useRecommendations';
 import { ProblemCard } from '@/components/recommend/ProblemCard';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, Sparkles, Target, Zap } from 'lucide-react';
+import { Search, Sparkles, Target, Zap, Filter, ChevronDown, Check } from 'lucide-react';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { Card } from '@/components/ui/card';
+import { CF_TAGS } from '@/config/constants';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Badge } from '@/components/ui/badge';
 
 export default function RecommendPage() {
     const [handle, setHandle] = useState('');
     const [submittedHandle, setSubmittedHandle] = useState('');
+    const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-    const { recommendations, isLoading, userRating } = useRecommendations({ handle: submittedHandle });
+    const { recommendations, isLoading, userRating } = useRecommendations({
+        handle: submittedHandle,
+        tag: selectedTag
+    });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -68,8 +80,46 @@ export default function RecommendPage() {
                         Target Rating Zone: <span className="text-primary font-bold">{userRating || 1200} - {(userRating || 1200) + 300}</span>
                     </p>
                 </div>
-                <Button variant="outline" onClick={() => setSubmittedHandle('')}>Change User</Button>
+
+                <div className="flex gap-2">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="gap-2">
+                                <Filter className="w-4 h-4" />
+                                {selectedTag || "All Tags"}
+                                <ChevronDown className="w-4 h-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="h-[300px] overflow-y-auto w-[200px]">
+                            <DropdownMenuItem onClick={() => setSelectedTag(null)}>
+                                <div className="flex items-center justify-between w-full">
+                                    All Tags
+                                    {!selectedTag && <Check className="w-4 h-4" />}
+                                </div>
+                            </DropdownMenuItem>
+                            {CF_TAGS.map(tag => (
+                                <DropdownMenuItem key={tag} onClick={() => setSelectedTag(tag)}>
+                                    <div className="flex items-center justify-between w-full">
+                                        {tag}
+                                        {selectedTag === tag && <Check className="w-4 h-4" />}
+                                    </div>
+                                </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    <Button variant="outline" onClick={() => { setSubmittedHandle(''); setHandle(''); }}>Change User</Button>
+                </div>
             </div>
+
+            {selectedTag && (
+                <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-muted-foreground">Filtering by:</span>
+                    <Badge variant="secondary" className="gap-1 cursor-pointer hover:bg-destructive/10 hover:text-destructive" onClick={() => setSelectedTag(null)}>
+                        {selectedTag} <span className="text-[10px]">✕</span>
+                    </Badge>
+                </div>
+            )}
 
             {isLoading ? (
                 <div className="min-h-[400px] flex items-center justify-center">
@@ -78,7 +128,7 @@ export default function RecommendPage() {
             ) : recommendations.length === 0 ? (
                 <div className="text-center py-20 border-2 border-dashed rounded-xl">
                     <p className="text-xl font-bold text-muted-foreground">No recommendations found.</p>
-                    <p className="text-muted-foreground">Try solving some problems first to establish a rating, or check your handle.</p>
+                    <p className="text-muted-foreground">Try adjusting your filters or solving more problems to establish a rating.</p>
                 </div>
             ) : (
                 <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
