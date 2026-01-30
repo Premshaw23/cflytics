@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { codeforcesApi } from "@/lib/api/codeforces";
 import { getFromCache, setCache } from "@/lib/db/redis";
 import { CACHE_TTL } from "@/config/constants";
-import { rateLimit } from "@/lib/api/rate-limiter";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -13,24 +12,6 @@ export async function GET(request: NextRequest) {
   }
 
   const handles = handlesParam.split(";").filter(Boolean);
-  
-  // Basic rate limiting by IP (identifier can be improved)
-  const ip = request.headers.get("x-forwarded-for") || "anonymous";
-  const limitResult = await rateLimit(ip, 10, 60); // 10 requests per minute
-
-  if (!limitResult.success) {
-    return NextResponse.json(
-      { error: "Too many requests" }, 
-      { 
-        status: 429,
-        headers: {
-          "X-RateLimit-Limit": limitResult.limit.toString(),
-          "X-RateLimit-Remaining": limitResult.remaining.toString(),
-          "X-RateLimit-Reset": limitResult.reset.toString(),
-        }
-      }
-    );
-  }
 
   try {
     const cacheKey = `cf:user:${handles.sort().join(";")}`;

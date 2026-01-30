@@ -18,6 +18,16 @@ export async function rateLimit(
   limit: number = 5,
   windowSeconds: number = 10
 ): Promise<RateLimitResult> {
+  // If Redis is not available, allow all requests
+  if (!redis) {
+    return {
+      success: true,
+      limit,
+      remaining: limit,
+      reset: Date.now() + windowSeconds * 1000,
+    };
+  }
+
   const key = `ratelimit:${identifier}`;
   const now = Date.now();
   const windowStart = now - windowSeconds * 1000;
