@@ -8,6 +8,7 @@ import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileStats } from "@/components/profile/ProfileStats";
 import { RatingGraph } from "@/components/profile/RatingGraph";
 import { ActivityHeatmap } from "@/components/profile/ActivityHeatmap";
+import { TopicAnalysis } from "@/components/profile/TopicAnalysis";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { BarChart, Info } from "lucide-react";
@@ -60,18 +61,11 @@ export default function ProfilePage() {
                 <Card className="lg:col-span-3 border-border/50">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                            <Info className="w-5 h-5" /> Weak Topics
+                            <Info className="w-5 h-5" /> Strongest Topics
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="min-h-[350px] flex items-center justify-center border-2 border-dashed rounded-lg m-4 opacity-50 bg-zinc-50/50 dark:bg-zinc-900/50">
-                        {isLoading ? (
-                            <LoadingSpinner />
-                        ) : (
-                            <div className="text-center">
-                                <p className="font-bold text-muted-foreground">Topic Analysis</p>
-                                <p className="text-xs uppercase tracking-widest text-muted-foreground/70 mt-1">Coming Next</p>
-                            </div>
-                        )}
+                    <CardContent className="h-[400px] p-6">
+                        <TopicAnalysis submissions={userStatus.data || []} isLoading={isLoading} />
                     </CardContent>
                 </Card>
             </div>
