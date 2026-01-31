@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ExternalLink, Swords } from 'lucide-react';
 import { CFRatingChange } from '@/types';
 import { Button } from '@/components/ui/button';
-import { format } from 'date-fns';
+import { formatIST } from '@/lib/utils/date-utils';
 
 interface CommonContestsProps {
     user1Handle: string;
@@ -103,7 +103,7 @@ export function CommonContests({
                                     <TableRow key={c.contestId}>
                                         <TableCell className="font-medium">
                                             <span className="line-clamp-1" title={c.contestName}>{c.contestName}</span>
-                                            <span className="text-xs text-muted-foreground">{format(new Date(c.time * 1000), 'MMM d, yyyy')}</span>
+                                            <span className="text-xs text-muted-foreground">{formatIST(c.time * 1000, 'dd/MM/yyyy')} IST</span>
                                         </TableCell>
                                         <TableCell className={`text-center ${u1Win ? "text-green-500 font-bold" : "text-muted-foreground"}`}>
                                             {c.u1.rank}

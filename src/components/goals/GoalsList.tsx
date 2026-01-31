@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { format } from "date-fns";
+import { formatIST } from "@/lib/utils/date-utils";
 import { Check, Trash2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Goal } from "@prisma/client";
+import { Goal } from "@/types";
 
 interface GoalsListProps {
     handle: string;
@@ -85,7 +85,7 @@ export function GoalsList({ handle, refreshKey }: GoalsListProps) {
                                         {goal.deadline && (
                                             <span className="text-xs text-muted-foreground flex items-center gap-1">
                                                 <Calendar className="w-3 h-3" />
-                                                Before {format(new Date(goal.deadline), "MMM d, yyyy")}
+                                                Before {formatIST(new Date(goal.deadline), "dd/MM/yyyy")} IST
                                             </span>
                                         )}
                                     </div>

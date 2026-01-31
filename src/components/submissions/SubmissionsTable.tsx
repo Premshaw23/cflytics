@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { format } from "date-fns";
+import { formatIST } from "@/lib/utils/date-utils";
 import {
     Table,
     TableBody,
@@ -117,7 +117,7 @@ export function SubmissionsTable({ submissions, isLoading }: SubmissionsTablePro
                                     {(sub.memoryConsumptionBytes / 1024).toFixed(0)} KB
                                 </TableCell>
                                 <TableCell className="text-right text-sm text-muted-foreground">
-                                    {format(new Date(sub.creationTimeSeconds * 1000), "MMM d, HH:mm")}
+                                    {formatIST(sub.creationTimeSeconds * 1000, "dd/MM/yyyy HH:mm")} IST
                                 </TableCell>
                             </TableRow>
                         ))}

@@ -15,7 +15,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CFRatingChange } from '@/types';
 import { getRatingColor } from '@/lib/utils/rating-colors';
-import { format } from 'date-fns';
+import { formatIST } from '@/lib/utils/date-utils';
 
 interface RatingGraphProps {
     data: CFRatingChange[];
@@ -36,7 +36,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                             {data.newRating - data.oldRating >= 0 ? "+" : ""}{data.newRating - data.oldRating}
                         </span>
                     </p>
-                    <p className="text-muted-foreground">{format(new Date(data.ratingUpdateTimeSeconds * 1000), 'MMM d, yyyy')}</p>
+                    <p className="text-muted-foreground">{formatIST(data.ratingUpdateTimeSeconds * 1000, 'dd/MM/yyyy')} IST</p>
                 </div>
             </div>
         );
@@ -87,7 +87,7 @@ export function RatingGraph({ data, isLoading }: RatingGraphProps) {
 
                     <XAxis
                         dataKey="ratingUpdateTimeSeconds"
-                        tickFormatter={(unix) => format(new Date(unix * 1000), 'yyyy')}
+                        tickFormatter={(unix) => formatIST(unix * 1000, 'yyyy')}
                         stroke="var(--muted-foreground)"
                         fontSize={12}
                         tickLine={false}

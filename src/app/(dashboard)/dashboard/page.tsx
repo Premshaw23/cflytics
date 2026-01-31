@@ -21,6 +21,7 @@ import { ErrorState } from "@/components/shared/ErrorState";
 import { GoalProgressSummary } from "@/components/dashboard/GoalProgressSummary";
 import { TopicFocus } from "@/components/dashboard/TopicFocus";
 import { StreakStats } from "@/components/dashboard/StreakStats";
+import { formatIST } from "@/lib/utils/date-utils";
 
 const RatingProgressionChart = dynamic(() => import("@/components/dashboard/RatingProgressionChart").then(mod => mod.RatingProgressionChart), {
     ssr: false,
@@ -162,23 +163,23 @@ export default function DashboardOverview() {
                                 Array.from({ length: 5 }).map((_, i) => <SkeletonLoader key={i} className="h-14 w-full" />)
                             ) : (
                                 userStatus.data?.filter(s => s.verdict === "OK").slice(0, 5).map((s, i) => (
-                                    <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-zinc-100/30 dark:bg-zinc-800/30 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all border border-transparent hover:border-primary/10 group">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
-                                                <CheckCircle2 className="w-5 h-5 text-green-500" />
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-bold group-hover:text-primary transition-colors truncate max-w-[150px] md:max-w-none">
+                                    <div key={i} className="flex flex-col gap-2 p-4 rounded-xl bg-zinc-100/30 dark:bg-zinc-800/30 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all border border-border/50 hover:border-primary/30 group">
+                                        <div className="flex items-center justify-between">
+                                            <div className="space-y-1">
+                                                <p className="text-sm font-bold group-hover:text-primary transition-colors">
                                                     {s.problem.name}
                                                 </p>
-                                                <p className="text-[10px] uppercase font-bold text-muted-foreground">
+                                                <p className="text-[10px] uppercase font-black text-muted-foreground/70">
                                                     {s.problem.contestId}{s.problem.index} • Rating: {s.problem.rating || "N/A"}
                                                 </p>
                                             </div>
+                                            <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
+                                                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                            </div>
                                         </div>
-                                        <Badge variant="outline" className="text-[10px] font-bold py-0 h-6 shrink-0">
-                                            {new Date(s.creationTimeSeconds * 1000).toLocaleDateString()}
-                                        </Badge>
+                                        <div className="text-[10px] font-bold text-muted-foreground/60 flex items-center gap-1">
+                                            <span>{formatIST(s.creationTimeSeconds * 1000, "dd/MM/yyyy")} IST</span>
+                                        </div>
                                     </div>
                                 ))
                             )}

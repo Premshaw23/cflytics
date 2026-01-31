@@ -10,7 +10,7 @@ import { FileText, ExternalLink, Calendar, Search, Edit3 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { NoteDialog } from "@/components/problems/NoteDialog";
-import { format } from "date-fns";
+import { formatIST } from "@/lib/utils/date-utils";
 
 interface Note {
     id: string;
@@ -129,7 +129,7 @@ export default function NotesClient() {
                                         <Badge variant="outline" className="font-mono">{note.problemId}</Badge>
                                         <span className="text-xs text-muted-foreground flex items-center gap-1 font-medium">
                                             <Calendar className="w-3 h-3" />
-                                            Updated {format(new Date(note.updatedAt), "MMM d, yyyy")}
+                                            Updated {formatIST(new Date(note.updatedAt), "dd/MM/yyyy")} IST
                                         </span>
                                     </div>
                                     <CardTitle className="text-xl font-bold">Reflections on {note.problemId}</CardTitle>

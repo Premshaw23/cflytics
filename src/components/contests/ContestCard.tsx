@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
+import { formatIST } from "@/lib/utils/date-utils";
 import { Calendar, Clock, ExternalLink, Trophy, Timer } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { ContestCountdown } from "./ContestCountdown";
 import { CFContest } from "@/types";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { formatContestName } from "@/lib/utils/contest-utils";
 
 interface ContestCardProps {
     contest: CFContest;
@@ -47,9 +50,11 @@ export function ContestCard({ contest, showCountdown = true }: ContestCardProps)
                         #{contest.id}
                     </span>
                 </div>
-                <CardTitle className="text-lg leading-tight mt-3 line-clamp-2" title={contest.name}>
-                    {contest.name}
-                </CardTitle>
+                <Link href={`/contests/${contest.id}`} className="hover:text-primary transition-colors">
+                    <CardTitle className="text-lg leading-tight mt-3 line-clamp-2" title={contest.name}>
+                        {formatContestName(contest.name, contest.id)}
+                    </CardTitle>
+                </Link>
             </CardHeader>
 
             <CardContent className="space-y-4 flex-grow">
@@ -62,8 +67,8 @@ export function ContestCard({ contest, showCountdown = true }: ContestCardProps)
                 <div className="space-y-2.5 text-sm">
                     <div className="flex items-center gap-2 text-muted-foreground">
                         <Calendar className="w-4 h-4 text-primary/70" />
-                        <span className="font-medium text-foreground/80">{format(startTime, "PPP")}</span>
-                        <span className="text-xs">at {format(startTime, "p")}</span>
+                        <span className="font-medium text-foreground/80">{formatIST(startTime, "dd/MM/yyyy")}</span>
+                        <span className="text-xs">at {formatIST(startTime, "HH:mm")} IST</span>
                     </div>
 
                     <div className="flex items-center gap-2 text-muted-foreground">
@@ -91,14 +96,9 @@ export function ContestCard({ contest, showCountdown = true }: ContestCardProps)
                     variant={isFinished ? "outline" : "default"}
                     asChild
                 >
-                    <a
-                        href={`https://codeforces.com/contest/${contest.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        {isCoding ? "Enter Contest" : isBefore ? "Register / details" : "View Standings"}
-                        <ExternalLink className="w-4 h-4" />
-                    </a>
+                    <Link href={`/contests/${contest.id}`}>
+                        {isCoding ? "Enter Contest" : isBefore ? "Register / details" : "View Details"}
+                    </Link>
                 </Button>
             </CardFooter>
         </Card>

@@ -15,7 +15,7 @@ import {
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CFRatingChange } from '@/types';
-import { format } from 'date-fns';
+import { formatIST } from '@/lib/utils/date-utils';
 import { TrendingUp } from 'lucide-react';
 
 interface RatingComparisonGraphProps {
@@ -31,7 +31,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
         return (
             <div className="bg-popover border border-border p-3 rounded-lg shadow-lg">
                 <p className="text-muted-foreground text-[10px] mb-2 font-bold uppercase tracking-wider">
-                    {format(new Date(label * 1000), 'MMM d, yyyy')}
+                    {formatIST(label * 1000, 'dd/MM/yyyy')} IST
                 </p>
 
                 {payload.map((entry: any, index: number) => (
@@ -130,7 +130,7 @@ export function RatingComparisonGraph({
 
                         <XAxis
                             dataKey="time"
-                            tickFormatter={(unix) => format(new Date(unix * 1000), 'yyyy')}
+                            tickFormatter={(unix) => formatIST(unix * 1000, 'yyyy')}
                             stroke="var(--muted-foreground)"
                             fontSize={12}
                             tickLine={false}

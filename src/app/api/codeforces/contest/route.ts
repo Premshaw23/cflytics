@@ -19,12 +19,36 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(cachedData);
     }
 
-    const contestData = await codeforcesApi.getContestStandings(parseInt(id), 1, count, false);
-    
-    // Cache for shorter time if contest is running, longer if finished
-    await setCache(cacheKey, contestData, 300); // 5 minutes
+    try {
+      const contestData = await codeforcesApi.getContestStandings(parseInt(id), 1, count, false);
+      // Cache for shorter time if contest is running, longer if finished
+      await setCache(cacheKey, contestData, 300); // 5 minutes
+      return NextResponse.json(contestData);
+    } catch (error: any) {
+      if (error.message?.includes("not started")) {
+        // Fallback: Get basic info from contest list
+        // Try to check cache first
+        let allContests = await getFromCache<any[]>(`contests:false`);
+        
+        if (!allContests) {
+          allContests = await codeforcesApi.getContestList();
+          await setCache(`contests:false`, allContests, 3600);
+        }
 
-    return NextResponse.json(contestData);
+        const contest = allContests?.find((c: any) => c.id === parseInt(id));
+        
+        if (contest) {
+          const fallbackData = {
+            contest,
+            problems: [],
+            rows: []
+          };
+          await setCache(cacheKey, fallbackData, 3600); // Cache for 1 hour since it hasn't started
+          return NextResponse.json(fallbackData);
+        }
+      }
+      throw error;
+    }
   } catch (error: unknown) {
     console.error("API Route Error (contest):", error);
     const message = error instanceof Error ? error.message : "Internal Server Error";

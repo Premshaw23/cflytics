@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Bookmark as BookmarkIcon, ExternalLink, Trash2, Search, Target } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import { formatIST } from "@/lib/utils/date-utils";
 
 export default function BookmarksClient() {
     const [handle, setHandle] = useState<string | null>(null);
@@ -100,7 +101,7 @@ export default function BookmarksClient() {
                                         <span className="font-bold text-primary">{bookmark.rating || "N/A"}</span>
                                     </div>
                                     <span className="text-[10px] text-muted-foreground font-medium uppercase">
-                                        Added {new Date(bookmark.createdAt).toLocaleDateString()}
+                                        Added {formatIST(new Date(bookmark.createdAt), "dd/MM/yyyy")} IST
                                     </span>
                                 </div>
 

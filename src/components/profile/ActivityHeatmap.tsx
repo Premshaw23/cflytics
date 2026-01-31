@@ -2,7 +2,9 @@
 
 import React, { useMemo, useState } from "react";
 import { format, subDays, eachDayOfInterval, startOfWeek, endOfWeek, isSameDay, getDay } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { CFSubmission } from "@/types";
+import { formatIST } from "@/lib/utils/date-utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Calendar } from "lucide-react";
@@ -22,7 +24,8 @@ export function ActivityHeatmap({ submissions, isLoading }: ActivityHeatmapProps
 
         const counts: Record<string, number> = {};
         submissions.forEach(sub => {
-            const date = format(new Date(sub.creationTimeSeconds * 1000), 'yyyy-MM-dd');
+            const zonedDate = toZonedTime(new Date(sub.creationTimeSeconds * 1000), "Asia/Kolkata");
+            const date = format(zonedDate, 'yyyy-MM-dd');
             counts[date] = (counts[date] || 0) + 1;
         });
 
@@ -112,7 +115,7 @@ export function ActivityHeatmap({ submissions, isLoading }: ActivityHeatmapProps
                                                     />
                                                 </TooltipTrigger>
                                                 <TooltipContent className="text-xs">
-                                                    <span className="font-bold">{count} submissions</span> on {format(day, 'MMM d, yyyy')}
+                                                    <span className="font-bold">{count} submissions</span> on {formatIST(day, 'dd/MM/yyyy')} IST
                                                 </TooltipContent>
                                             </Tooltip>
                                         </TooltipProvider>

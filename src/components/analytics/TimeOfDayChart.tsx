@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CFSubmission } from "@/types";
+import { toZonedTime } from "date-fns-tz";
 
 interface TimeOfDayChartProps {
     submissions: CFSubmission[];
@@ -25,7 +26,8 @@ export function TimeOfDayChart({ submissions }: TimeOfDayChartProps) {
         submissions.forEach(sub => {
             // creationTimeSeconds is unix timestamp
             const date = new Date(sub.creationTimeSeconds * 1000);
-            const hour = date.getHours();
+            const zonedDate = toZonedTime(date, "Asia/Kolkata");
+            const hour = zonedDate.getHours();
             hours[hour]++;
         });
 
@@ -41,7 +43,7 @@ export function TimeOfDayChart({ submissions }: TimeOfDayChartProps) {
     return (
         <Card className="col-span-1 border-border/50">
             <CardHeader>
-                <CardTitle className="text-lg">Activity by Time of Day</CardTitle>
+                <CardTitle className="text-lg">Activity by Time of Day (IST)</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="h-[300px] w-full">

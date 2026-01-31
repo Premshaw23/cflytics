@@ -11,6 +11,7 @@ import {
 import { StatsCard } from "@/components/dashboard/StatsCard";
 import { CFUser, CFSubmission } from "@/types";
 import { SkeletonLoader } from "@/components/shared/LoadingSpinner";
+import { formatIST } from "@/lib/utils/date-utils";
 
 interface ProfileStatsProps {
     user?: CFUser;
@@ -53,7 +54,7 @@ export function ProfileStats({ user, submissions, isLoading }: ProfileStatsProps
             />
             <StatsCard
                 title="Last Visit"
-                value={user?.lastOnlineTimeSeconds ? new Date(user.lastOnlineTimeSeconds * 1000).toLocaleDateString() : "N/A"}
+                value={user?.lastOnlineTimeSeconds ? formatIST(user.lastOnlineTimeSeconds * 1000, "dd/MM/yyyy") : "N/A"}
                 icon={Clock}
                 description="Last online"
                 trendColor="text-orange-500"

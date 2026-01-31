@@ -12,7 +12,7 @@ import {
     ReferenceLine
 } from 'recharts';
 import { CFRatingChange } from '@/types';
-import { format } from 'date-fns';
+import { formatIST } from '@/lib/utils/date-utils';
 
 interface RatingProgressionChartProps {
     history: CFRatingChange[];
@@ -24,7 +24,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
         return (
             <div className="bg-popover border border-border p-3 rounded-lg shadow-lg">
                 <p className="text-muted-foreground text-[10px] mb-2 font-bold uppercase tracking-wider">
-                    {format(new Date(label * 1000), 'MMM d, yyyy')}
+                    {formatIST(label * 1000, 'dd/MM/yyyy')} IST
                 </p>
                 <div className="flex items-center gap-2 text-sm">
                     <span className="font-bold text-primary">{payload[0].value}</span>
@@ -71,7 +71,7 @@ export function RatingProgressionChart({ history, isLoading }: RatingProgression
 
                 <XAxis
                     dataKey="ratingUpdateTimeSeconds"
-                    tickFormatter={(unix) => format(new Date(unix * 1000), 'yyyy')}
+                    tickFormatter={(unix) => formatIST(unix * 1000, 'yyyy')}
                     stroke="var(--muted-foreground)"
                     fontSize={10}
                     tickLine={false}

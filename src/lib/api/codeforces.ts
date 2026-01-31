@@ -62,7 +62,8 @@ async function fetchFromCF<T>(path: string, params: Record<string, string | numb
       if (message && (
         message.includes("not found") || 
         message.includes("handle: User") || 
-        message.includes("handles: User")
+        message.includes("handles: User") ||
+        message.includes("not started")
       )) {
         throw error;
       }

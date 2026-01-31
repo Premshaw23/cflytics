@@ -6,8 +6,10 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { format } from 'date-fns';
-import { ExternalLink, Search, Trophy, Timer, Calendar } from 'lucide-react';
+import { formatIST } from '@/lib/utils/date-utils';
+import { ExternalLink, Search, Trophy, Timer, Calendar, Eye } from 'lucide-react';
+import Link from 'next/link';
+import { formatContestName } from '@/lib/utils/contest-utils';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import {
     Table,
@@ -104,6 +106,7 @@ export default function ContestsClient() {
                                         <TableHead className="w-[100px] font-bold">ID</TableHead>
                                         <TableHead className="font-bold">Name</TableHead>
                                         <TableHead className="hidden md:table-cell font-bold">Date</TableHead>
+                                        <TableHead className="hidden lg:table-cell font-bold">Duration</TableHead>
                                         <TableHead className="text-right font-bold">Action</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -128,23 +131,24 @@ export default function ContestsClient() {
                                             <TableRow key={contest.id} className="hover:bg-muted/50 transition-colors">
                                                 <TableCell className="font-mono text-muted-foreground">{contest.id}</TableCell>
                                                 <TableCell className="font-medium">
-                                                    <a
-                                                        href={`https://codeforces.com/contest/${contest.id}`}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
+                                                    <Link
+                                                        href={`/contests/${contest.id}`}
                                                         className="hover:text-primary hover:underline underline-offset-4"
                                                     >
-                                                        {contest.name}
-                                                    </a>
+                                                        {formatContestName(contest.name, contest.id)}
+                                                    </Link>
                                                 </TableCell>
-                                                <TableCell className="hidden md:table-cell text-muted-foreground">
-                                                    {format(new Date(contest.startTimeSeconds! * 1000), "MMM d, yyyy")}
+                                                <TableCell className="hidden md:table-cell text-muted-foreground whitespace-nowrap">
+                                                    {formatIST(contest.startTimeSeconds! * 1000, "dd/MM/yyyy")}
+                                                </TableCell>
+                                                <TableCell className="hidden lg:table-cell text-muted-foreground">
+                                                    {Math.floor(contest.durationSeconds / 3600)}h {(contest.durationSeconds % 3600) / 60 > 0 ? `${(contest.durationSeconds % 3600) / 60}m` : ""}
                                                 </TableCell>
                                                 <TableCell className="text-right">
-                                                    <Button variant="ghost" size="sm" asChild className="h-8 px-2">
-                                                        <a href={`https://codeforces.com/contest/${contest.id}`} target="_blank" rel="noopener noreferrer">
-                                                            View <ExternalLink className="w-3 h-3 ml-2" />
-                                                        </a>
+                                                    <Button variant="ghost" size="sm" asChild className="h-8 px-2 font-bold gap-1.5">
+                                                        <Link href={`/contests/${contest.id}`}>
+                                                            <Eye className="w-3.5 h-3.5" /> View
+                                                        </Link>
                                                     </Button>
                                                 </TableCell>
                                             </TableRow>

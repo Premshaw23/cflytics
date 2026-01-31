@@ -12,7 +12,7 @@ import {
     ReferenceLine
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { format } from "date-fns";
+import { formatIST } from "@/lib/utils/date-utils";
 import { CFSubmission } from "@/types";
 
 interface DifficultyChartProps {
@@ -50,7 +50,7 @@ export function DifficultyChart({ submissions }: DifficultyChartProps) {
                                 dataKey="x"
                                 domain={['auto', 'auto']}
                                 name="Time"
-                                tickFormatter={(unixTime) => format(new Date(unixTime), 'MMM yyyy')}
+                                tickFormatter={(unixTime) => formatIST(unixTime, 'MM/yyyy')}
                                 tick={{ fill: 'var(--muted-foreground)', fontSize: 10 }}
                                 type="number"
                             />
@@ -70,7 +70,7 @@ export function DifficultyChart({ submissions }: DifficultyChartProps) {
                                             <div className="bg-popover border border-border rounded-md p-2 shadow-md">
                                                 <p className="font-bold text-popover-foreground">{d.name}</p>
                                                 <p className="text-sm text-popover-foreground">Rating: {d.y}</p>
-                                                <p className="text-xs text-muted-foreground">{format(new Date(d.x), 'PPP')}</p>
+                                                <p className="text-xs text-muted-foreground">{formatIST(d.x, 'dd/MM/yyyy')} IST</p>
                                             </div>
                                         );
                                     }

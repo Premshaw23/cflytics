@@ -9,8 +9,10 @@ import { ErrorState } from "@/components/shared/ErrorState";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Calendar, Clock, Trophy, AlertCircle } from "lucide-react";
-import { format } from "date-fns";
+import { ExternalLink, Calendar, Clock, Trophy, AlertCircle, Info } from "lucide-react";
+import { formatIST } from "@/lib/utils/date-utils";
+import { formatContestName } from "@/lib/utils/contest-utils";
+import { PracticeProblems } from "@/components/contests/PracticeProblems";
 import {
     Table,
     TableBody,
@@ -55,9 +57,13 @@ export default function ContestDetailPage() {
                             >
                                 {isCoding ? "LIVE" : isBefore ? "UPCOMING" : "FINISHED"}
                             </Badge>
-                            <span className="text-sm font-mono text-muted-foreground">ID: {contest.id}</span>
+                            <Badge variant="outline" className="font-mono text-xs py-0.5 px-2 bg-muted/50">
+                                #{contest.id}
+                            </Badge>
                         </div>
-                        <h1 className="text-3xl font-bold tracking-tight">{contest.name}</h1>
+                        <h1 className="text-3xl font-bold tracking-tight">
+                            {formatContestName(contest.name, contest.id)}
+                        </h1>
                     </div>
                     <Button asChild className={cn(isCoding ? "bg-green-600 hover:bg-green-700" : "")}>
                         <a href={`https://codeforces.com/contest/${contest.id}`} target="_blank" rel="noopener noreferrer">
@@ -69,13 +75,16 @@ export default function ContestDetailPage() {
                 <div className="flex flex-wrap gap-6 text-sm text-muted-foreground border-y border-border/50 py-4">
                     <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-primary" />
-                        <span className="font-medium text-foreground">{format(startTime, "PPP p")}</span>
+                        <span className="font-medium text-foreground">{formatIST(startTime, "dd/MM/yyyy HH:mm")} IST</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Clock className="w-4 h-4 text-primary" />
-                        <span className="font-medium text-foreground">
-                            {Math.floor(contest.durationSeconds / 3600)} hours
-                        </span>
+                        <div className="flex flex-col">
+                            <span className="font-medium text-foreground">
+                                {Math.floor(contest.durationSeconds / 3600)}h {(contest.durationSeconds % 3600) / 60 > 0 && `${(contest.durationSeconds % 3600) / 60}m`}
+                            </span>
+                            <span className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">Duration</span>
+                        </div>
                     </div>
                     <div className="flex items-center gap-2">
                         <Trophy className="w-4 h-4 text-primary" />
@@ -88,19 +97,37 @@ export default function ContestDetailPage() {
 
             {/* Countdown or Status */}
             {isBefore && (
-                <Card className="bg-primary/5 border-primary/20">
-                    <CardContent className="flex flex-col items-center justify-center py-10 gap-4">
-                        <h3 className="text-xl font-semibold">Contest starts in</h3>
-                        <div className="text-4xl md:text-6xl">
-                            <ContestCountdown targetTimeSeconds={contest.startTimeSeconds!} />
+                <div className="space-y-8">
+                    <Card className="bg-primary/5 border-primary/20">
+                        <CardContent className="flex flex-col items-center justify-center py-10 gap-4">
+                            <h3 className="text-xl font-semibold">Contest starts in</h3>
+                            <div className="text-4xl md:text-6xl text-primary font-bold">
+                                <ContestCountdown targetTimeSeconds={contest.startTimeSeconds!} />
+                            </div>
+                            <Button className="mt-4 font-bold" variant="outline" asChild size="lg">
+                                <a href={`https://codeforces.com/contest/${contest.id}/standings`} target="_blank" rel="noopener noreferrer">
+                                    Register Now via Codeforces
+                                </a>
+                            </Button>
+                        </CardContent>
+                    </Card>
+
+                    <div className="flex flex-col gap-3 p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400">
+                        <div className="flex items-center gap-3">
+                            <Info className="w-5 h-5 shrink-0" />
+                            <p className="text-sm font-medium">
+                                Problem details are locked for security until the contest begins. However, you can practice with similar problems below!
+                            </p>
                         </div>
-                        <Button className="mt-4" variant="outline" asChild>
-                            <a href={`https://codeforces.com/contest/${contest.id}/standings`} target="_blank" rel="noopener noreferrer">
-                                Register Now via Codeforces
-                            </a>
-                        </Button>
-                    </CardContent>
-                </Card>
+                        {!/#\d+/.test(contest.name) && (
+                            <div className="text-[11px] opacity-80 pl-8 border-t border-blue-500/10 pt-2 italic">
+                                Note: This round hasn't been officially numbered by Codeforces yet. We are using the Contest ID (#{contest.id}) as a temporary identifier.
+                            </div>
+                        )}
+                    </div>
+
+                    <PracticeProblems currentContestName={contest.name} />
+                </div>
             )}
 
             {/* Problems List */}
