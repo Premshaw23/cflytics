@@ -27,13 +27,13 @@ export function Sidebar() {
             {/* Header / Logo Area */}
             <div className="h-auto py-4 flex items-center px-6 shrink-0">
                 <Link href="/" className="flex items-center gap-4 group">
-                    <div className="w-10 h-10 bg-zinc-900 dark:bg-white rounded-2xl flex items-center justify-center shrink-0 shadow-2xl shadow-zinc-900/10 dark:shadow-white/10 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ease-out">
+                    <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center shrink-0 shadow-2xl shadow-zinc-900/10 dark:shadow-white/10 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ease-out">
                         <Image
                             src="/logo.png"
                             alt="Codey Logo"
-                            width={32}
-                            height={32}
-                            className="w-7 h-7 rounded-2xl object-fill z-100"
+                            width={42}
+                            height={42}
+                            className="w-10 h-10 rounded-2xl object-fill"
                             priority
                         />
                     </div>
