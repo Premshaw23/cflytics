@@ -16,6 +16,12 @@ export function useUserData({ handle, enabled = true }: UseUserDataProps) {
       return response.json();
     },
     enabled: !!handle && enabled,
+    refetchInterval: (() => {
+      if (typeof window === 'undefined') return undefined;
+      const saved = localStorage.getItem("codey_refresh_interval");
+      if (!saved || saved === "0") return undefined;
+      return parseInt(saved) * 60 * 1000;
+    })(),
   });
 
   // Fetch rating history
@@ -28,6 +34,12 @@ export function useUserData({ handle, enabled = true }: UseUserDataProps) {
       return response.json();
     },
     enabled: !!handle && enabled,
+    refetchInterval: (() => {
+      if (typeof window === 'undefined') return undefined;
+      const saved = localStorage.getItem("codey_refresh_interval");
+      if (!saved || saved === "0") return undefined;
+      return parseInt(saved) * 60 * 1000;
+    })(),
   });
 
   // Fetch submissions (user status)
@@ -39,6 +51,12 @@ export function useUserData({ handle, enabled = true }: UseUserDataProps) {
       return response.json();
     },
     enabled: !!handle && enabled,
+    refetchInterval: (() => {
+      if (typeof window === 'undefined') return undefined;
+      const saved = localStorage.getItem("codey_refresh_interval");
+      if (!saved || saved === "0") return undefined;
+      return parseInt(saved) * 60 * 1000;
+    })(),
   });
 
   return {

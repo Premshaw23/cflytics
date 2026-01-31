@@ -175,9 +175,25 @@ export function AdvancedInsights({ submissions, ratingHistory, currentRating = 0
                             <div className="mt-1 bg-primary/10 p-1 rounded">
                                 <Target className="w-4 h-4 text-primary" />
                             </div>
-                            <p className="text-sm">
-                                Based on your performance, you should aim for problems with rating around <span className="font-bold text-primary">{insights.recommendedDifficulty}</span>.
-                            </p>
+                            <div className="space-y-2">
+                                <p className="text-sm">
+                                    Based on your performance, you should aim for problems with rating around <span className="font-bold text-primary">{insights.recommendedDifficulty}</span>.
+                                </p>
+                                {insights.ratingTrend > 0 && (
+                                    <div className="p-3 rounded-lg bg-primary/5 border border-primary/10 space-y-2">
+                                        <div className="flex justify-between text-xs font-bold">
+                                            <span>Next Rank Elevation</span>
+                                            <span className="text-primary">~{Math.ceil(100 / insights.ratingTrend)} contests</span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <div className="h-1.5 flex-grow bg-muted rounded-full overflow-hidden">
+                                                <div className="h-full bg-primary" style={{ width: '40%' }}></div>
+                                            </div>
+                                            <span className="text-[10px] font-bold text-muted-foreground uppercase">Estimated</span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </CardContent>

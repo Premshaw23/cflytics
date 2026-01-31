@@ -26,20 +26,31 @@ export function SettingsManager() {
     const [handle, setHandle] = useState("");
     const [isSaving, setIsSaving] = useState(false);
     const [notifications, setNotifications] = useState(true);
+    const [displayMode, setDisplayMode] = useState<"card" | "table">("table");
+    const [refreshInterval, setRefreshInterval] = useState("30");
 
     useEffect(() => {
         const savedHandle = localStorage.getItem("codey_active_handle");
         if (savedHandle) setHandle(savedHandle);
+
+        const savedMode = localStorage.getItem("codey_problem_display_mode") as "card" | "table";
+        if (savedMode) setDisplayMode(savedMode);
+
+        const savedInterval = localStorage.getItem("codey_refresh_interval");
+        if (savedInterval) setRefreshInterval(savedInterval);
     }, []);
 
     const handleSave = () => {
         setIsSaving(true);
-        // Simulate save
+        // Persist all settings
         localStorage.setItem("codey_active_handle", handle);
+        localStorage.setItem("codey_problem_display_mode", displayMode);
+        localStorage.setItem("codey_refresh_interval", refreshInterval);
+
         setTimeout(() => {
             setIsSaving(false);
             toast.success("Settings saved successfully!");
-        }, 1000);
+        }, 800);
     };
 
     const handleExport = () => {
@@ -94,21 +105,22 @@ export function SettingsManager() {
                     </CardFooter>
                 </Card>
 
-                {/* Appearance */}
+                {/* Appearance & Layout */}
                 <Card className="border-border/50">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                            <Sun className="w-5 h-5 text-primary" /> Appearance
+                            <Sun className="w-5 h-5 text-primary" /> Appearance & Layout
                         </CardTitle>
-                        <CardDescription>Customize how Codey looks on your device.</CardDescription>
+                        <CardDescription>Customize how Codey looks and behaves.</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="flex items-center justify-between p-2 rounded-lg bg-muted/30 border border-border/50">
+                    <CardContent className="space-y-6">
+                        {/* Theme Toggle */}
+                        <div className="flex items-center justify-between">
                             <div className="flex flex-col">
-                                <span className="text-sm font-bold">Display Mode</span>
-                                <span className="text-[11px] text-muted-foreground">Toggle between light and dark themes.</span>
+                                <span className="text-sm font-bold">Theme Mode</span>
+                                <span className="text-[11px] text-muted-foreground">Light, dark, or system.</span>
                             </div>
-                            <div className="flex gap-1 p-1 bg-background rounded-md border border-border/50">
+                            <div className="flex gap-1 p-1 bg-muted/30 rounded-md border border-border/50">
                                 <Button
                                     variant={theme === "light" ? "secondary" : "ghost"}
                                     size="sm"
@@ -135,28 +147,70 @@ export function SettingsManager() {
                                 </Button>
                             </div>
                         </div>
+
+                        {/* Problem Display Mode */}
+                        <div className="flex items-center justify-between">
+                            <div className="flex flex-col">
+                                <span className="text-sm font-bold">Problem List View</span>
+                                <span className="text-[11px] text-muted-foreground">Default display style for problems.</span>
+                            </div>
+                            <div className="flex gap-1 p-1 bg-muted/30 rounded-md border border-border/50">
+                                <Button
+                                    variant={displayMode === "table" ? "secondary" : "ghost"}
+                                    size="sm"
+                                    onClick={() => setDisplayMode("table")}
+                                    className="h-8 px-4 text-xs font-bold"
+                                >
+                                    Table
+                                </Button>
+                                <Button
+                                    variant={displayMode === "card" ? "secondary" : "ghost"}
+                                    size="sm"
+                                    onClick={() => setDisplayMode("card")}
+                                    className="h-8 px-4 text-xs font-bold"
+                                >
+                                    Cards
+                                </Button>
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
 
-                {/* Notifications */}
+                {/* Synchronization */}
                 <Card className="border-border/50">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                            <Bell className="w-5 h-5 text-primary" /> Notifications
+                            <Bell className="w-5 h-5 text-primary" /> Sync & Alerts
                         </CardTitle>
-                        <CardDescription>Stay updated on contests and goals.</CardDescription>
+                        <CardDescription>Manage how Codey updates your data.</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="flex items-center justify-between space-x-2">
+                    <CardContent className="space-y-6">
+                        <div className="flex items-center justify-between">
                             <Label htmlFor="contests" className="flex flex-col space-y-1">
                                 <span className="font-bold">Contest Reminders</span>
-                                <span className="font-normal text-[11px] text-muted-foreground whitespace-normal">Notify me before contests start.</span>
+                                <span className="font-normal text-[11px] text-muted-foreground">Notify me before contests start.</span>
                             </Label>
                             <Switch
                                 id="contests"
                                 checked={notifications}
                                 onCheckedChange={setNotifications}
                             />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label className="text-sm font-bold">Data Auto-Refresh</Label>
+                            <select
+                                value={refreshInterval}
+                                onChange={(e) => setRefreshInterval(e.target.value)}
+                                className="w-full h-10 px-3 rounded-md bg-muted/30 border border-border/50 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                            >
+                                <option value="5">Every 5 minutes</option>
+                                <option value="15">Every 15 minutes</option>
+                                <option value="30">Every 30 minutes</option>
+                                <option value="60">Every hour</option>
+                                <option value="0">Manual refresh only</option>
+                            </select>
+                            <p className="text-[11px] text-muted-foreground">Higher frequency may increase API usage.</p>
                         </div>
                     </CardContent>
                 </Card>

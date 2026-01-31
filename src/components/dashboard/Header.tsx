@@ -32,9 +32,11 @@ export function Header() {
         <header className="h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 px-6 flex items-center justify-between">
             {/* Search Bar */}
             <div className="flex-1 max-w-xl">
-                <form onSubmit={handleSearch} className="relative group">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
+                <form onSubmit={handleSearch} className="relative group" role="search">
+                    <label htmlFor="header-search" className="sr-only">Search Codeforces handle</label>
+                    <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
                     <Input
+                        id="header-search"
                         type="text"
                         placeholder="Search handle..."
                         className="pl-10 h-10 w-full md:w-[300px] lg:w-[400px] bg-zinc-100/50 dark:bg-zinc-800/50 border-none transition-all focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:w-full"

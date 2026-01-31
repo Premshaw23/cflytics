@@ -6,7 +6,9 @@ import { ErrorState } from "@/components/shared/ErrorState";
 import { ProblemTable } from "@/components/problems/ProblemTable";
 import { ProblemFilter, FilterState } from "@/components/problems/ProblemFilter";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, LayoutGrid, List } from "lucide-react";
+import { ProblemCards } from "@/components/problems/ProblemCards";
+import { cn } from "@/lib/utils";
 import { CFProblem } from "@/types";
 
 const ITEMS_PER_PAGE = 20;
@@ -28,10 +30,14 @@ export default function ProblemsClient() {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [handle, setHandle] = useState<string>("");
+    const [displayMode, setDisplayMode] = useState<"card" | "table">("table");
 
     useEffect(() => {
         const saved = localStorage.getItem("codey_active_handle");
         if (saved) setHandle(saved);
+
+        const savedMode = localStorage.getItem("codey_problem_display_mode") as "card" | "table";
+        if (savedMode) setDisplayMode(savedMode);
     }, []);
 
     const { data, isLoading, isError, refetch } = useProblems({ tags: filters.tags });
@@ -114,6 +120,30 @@ export default function ProblemsClient() {
                     <h1 className="text-3xl font-bold tracking-tight mb-2">Problem Explorer</h1>
                     <p className="text-muted-foreground font-medium">Browse and search through thousands of Codeforces problems.</p>
                 </div>
+                <div className="flex bg-muted/50 p-1 rounded-lg border border-border/50">
+                    <Button
+                        variant={displayMode === "table" ? "secondary" : "ghost"}
+                        size="sm"
+                        onClick={() => {
+                            setDisplayMode("table");
+                            localStorage.setItem("codey_problem_display_mode", "table");
+                        }}
+                        className="h-8 px-3 gap-2"
+                    >
+                        <List className="w-4 h-4" /> Table
+                    </Button>
+                    <Button
+                        variant={displayMode === "card" ? "secondary" : "ghost"}
+                        size="sm"
+                        onClick={() => {
+                            setDisplayMode("card");
+                            localStorage.setItem("codey_problem_display_mode", "card");
+                        }}
+                        className="h-8 px-3 gap-2"
+                    >
+                        <LayoutGrid className="w-4 h-4" /> Cards
+                    </Button>
+                </div>
             </div>
 
             <ProblemFilter
@@ -124,13 +154,21 @@ export default function ProblemsClient() {
                 }}
             />
 
-            <ProblemTable
-                problems={paginatedProblems}
-                isLoading={isLoading}
-                sortConfig={sortConfig}
-                onSort={handleSort}
-                handle={handle}
-            />
+            {displayMode === "table" ? (
+                <ProblemTable
+                    problems={paginatedProblems}
+                    isLoading={isLoading}
+                    sortConfig={sortConfig}
+                    onSort={handleSort}
+                    handle={handle}
+                />
+            ) : (
+                <ProblemCards
+                    problems={paginatedProblems}
+                    isLoading={isLoading}
+                    handle={handle}
+                />
+            )}
 
             {/* Pagination Controls */}
             {!isLoading && filteredProblems.length > 0 && (
