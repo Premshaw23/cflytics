@@ -5,22 +5,24 @@ An advanced analytics and tracking platform for Codeforces competitive programme
 ## 🚀 Features
 
 - **Real-time Analytics**: Track your Codeforces performance with live data
+- **Advanced Insights**: Topic weakness identification and rating projections
 - **Problem Explorer**: Browse and filter 8000+ problems by tags, difficulty, and more
+- **User Comparison**: Compare progress with friends side-by-side
 - **Dashboard Overview**: Comprehensive stats on problems solved, rating, contests, and streaks
-- **Smart Caching**: Optional Redis integration for improved performance
 - **Dark Mode**: Beautiful UI with light/dark theme support
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 15+ with App Router
+- **Framework**: Next.js 16+ with App Router
 - **Styling**: Tailwind CSS 4
-- **Database**: Prisma 7 with PostgreSQL
-- **Caching**: Redis (optional)
+- **Database**: Prisma 6 with PostgreSQL (Neon)
+- **Caching**: Redis (Upstash/ioredis)
 - **State Management**: React Query + Zustand
 - **UI Components**: shadcn/ui
 - **Animations**: Framer Motion
 - **Charts**: Recharts
+- **Testing**: Vitest + React Testing Library
 
 ## 📦 Installation
 
@@ -37,12 +39,13 @@ npm install
 
 3. Set up environment variables:
 ```bash
+# Copy example env
 cp .env.example .env
 ```
 
 Edit `.env` and add your configuration:
-- `DATABASE_URL`: Your PostgreSQL connection string
-- `REDIS_URL`: (Optional) Your Redis connection string
+- `DATABASE_URL`: Your PostgreSQL connection string (Neon recommended)
+- `REDIS_URL`: (Optional) Your Redis connection string (Upstash recommended)
 - `CF_API_KEY` & `CF_API_SECRET`: Get from https://codeforces.com/settings/api
 
 4. Run database migrations:
@@ -58,59 +61,51 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## 🔧 Configuration
+## 🧪 Running Tests
 
-### Redis (Optional)
+The project uses Vitest for unit and component testing.
 
-Redis is used for caching API responses and rate limiting. The application works perfectly without Redis, but enabling it improves performance:
+```bash
+# Run all tests
+npm test
 
-- **With Redis**: Uncomment `REDIS_URL` in `.env`
-- **Without Redis**: Leave `REDIS_URL` commented out (default)
-
-### Codeforces API
-
-To get higher rate limits, register for API credentials:
-1. Visit https://codeforces.com/settings/api
-2. Generate API Key and Secret
-3. Add them to your `.env` file
+# Run tests in watch mode
+npm run test:watch
+```
 
 ## 📁 Project Structure
 
 ```
 src/
 ├── app/                    # Next.js app directory
-│   ├── (dashboard)/       # Dashboard pages
+│   ├── (dashboard)/       # Dashboard pages (Problems, Analytics, etc.)
 │   ├── api/               # API routes
 │   └── page.tsx           # Landing page
 ├── components/            # React components
-│   ├── dashboard/         # Dashboard-specific components
-│   ├── shared/            # Shared/reusable components
-│   └── ui/                # shadcn/ui components
+│   ├── analytics/         # Insight-focused charts and components
+│   ├── dashboard/         # Dashboard layout and summary components
+│   ├── shared/            # Reusable UI elements
+│   └── ui/                # shadcn/ui base components
 ├── lib/                   # Utilities and helpers
-│   ├── api/               # API wrappers
-│   ├── db/                # Database clients
-│   ├── hooks/             # Custom React hooks
-│   └── utils/             # Utility functions
-├── config/                # Configuration files
-└── types/                 # TypeScript type definitions
+│   ├── api/               # API wrappers (Codeforces)
+│   ├── hooks/             # Custom React hooks (Data fetching)
+│   └── utils/             # Business logic and formatting
+├── config/                # Site metadata and constants
+└── types/                 # TypeScript interfaces
 ```
 
 ## 🎯 Project Evolution (Roadmap)
 
-- [x] **Weeks 1-3**: Infrastructure & Foundation (Next.js, Tailwind, Prisma, API)
-- [x] **Weeks 4-6**: Core Features (Dashboard, User Search, Analytics Charts)
-- [x] **Weeks 7-9**: Advanced Features (Problem Explorer, Contest Schedule, Comparison Tool)
-- [x] **Weeks 10-12**: UX & Identity (Goals, Heatmap, Brand Identity, Dark Mode Polish)
-- [x] **Weeks 13-14**: Testing & SEO (Unit Tests, Performance Optimization, SEO Implementation)
-- [x] **Week 15**: Launch Preparation (Deployment, Analytics, Documentation)
+- [x] **Weeks 1-3**: Infrastructure & Foundation
+- [x] **Weeks 4-6**: Core Dashboard & Charts
+- [x] **Weeks 7-9**: Advanced Problem Filters & Comparison
+- [x] **Weeks 10-12**: User Goals, Heatmaps & Polish
+- [x] **Weeks 13-14**: Advanced Insights, Testing & SEO
+- [x] **Week 15**: Deployment & Final Launch Documentation
 
 ## 📝 License
 
 MIT License - see LICENSE file for details
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📧 Contact
 

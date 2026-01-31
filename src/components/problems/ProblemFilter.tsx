@@ -73,6 +73,7 @@ export function ProblemFilter({ filters, onChange }: ProblemFilterProps) {
                         <Input
                             placeholder="Search by name or index (e.g. 4A)..."
                             className="pl-10"
+                            aria-label="Search problems"
                             value={filters.search}
                             onChange={(e) => updateFilter("search", e.target.value)}
                         />
@@ -162,7 +163,7 @@ export function ProblemFilter({ filters, onChange }: ProblemFilterProps) {
                                     value={filters.status}
                                     onValueChange={(val) => updateFilter("status", val)}
                                 >
-                                    <DropdownMenuRadioItem value="all">All Goals</DropdownMenuRadioItem>
+                                    <DropdownMenuRadioItem value="all">All Statuses</DropdownMenuRadioItem>
                                     <DropdownMenuRadioItem value="unsolved">Unsolved</DropdownMenuRadioItem>
                                     <DropdownMenuRadioItem value="solved">Solved</DropdownMenuRadioItem>
                                     <DropdownMenuRadioItem value="attempted">Attempted</DropdownMenuRadioItem>
