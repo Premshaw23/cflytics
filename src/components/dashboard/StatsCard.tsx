@@ -7,7 +7,7 @@ interface StatsCardProps {
     title: string;
     value: string | number;
     icon: LucideIcon;
-    description?: string;
+    description?: React.ReactNode;
     trend?: string;
     trendColor?: "text-green-500" | "text-red-500" | "text-blue-500" | "text-orange-500" | "text-purple-500";
     className?: string;

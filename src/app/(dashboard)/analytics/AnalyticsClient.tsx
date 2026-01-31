@@ -8,9 +8,10 @@ import { ErrorState } from "@/components/shared/ErrorState";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
-import { Search, TrendingUp, BarChart2 } from "lucide-react";
+import { Search, TrendingUp, BarChart2, CheckCircle2, Trophy, Brain, Zap } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { AdvancedInsights } from "@/components/analytics/AdvancedInsights";
+import { StatsCard } from "@/components/dashboard/StatsCard";
 
 const TimeOfDayChart = dynamic(() => import("@/components/analytics/TimeOfDayChart").then(mod => mod.TimeOfDayChart), {
     loading: () => <SkeletonLoader className="h-[300px] w-full" />,
@@ -58,34 +59,45 @@ export default function AnalyticsClient() {
 
     if (!handle) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 animate-in fade-in zoom-in-95 duration-500">
-                <div className="text-center space-y-2">
-                    <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2 justify-center">
-                        <TrendingUp className="w-8 h-8 text-primary" /> Advanced Analytics
-                    </h1>
-                    <p className="text-muted-foreground max-w-md mx-auto">
-                        Deep dive into your Codeforces performance with detailed charts and insights.
-                    </p>
-                </div>
+            <div className="flex flex-col items-center justify-center min-h-[70vh] relative overflow-hidden">
+                {/* Background Decor */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 blur-[120px] rounded-full opacity-20 pointer-events-none" />
 
-                <form onSubmit={handleSearch} className="flex gap-2 w-full max-w-sm">
-                    <Input
-                        placeholder="Enter Codeforces Handle"
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                        className="h-10"
-                    />
-                    <Button type="submit" size="lg">
-                        <Search className="w-4 h-4 mr-2" />
-                        Analyze
-                    </Button>
-                </form>
+                <div className="relative z-10 w-full max-w-lg space-y-8 animate-in fade-in zoom-in-95 duration-700">
+                    <div className="text-center space-y-4">
+                        <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-zinc-900 border border-white/5 shadow-2xl mb-4 group">
+                            <TrendingUp className="w-10 h-10 text-primary group-hover:scale-110 transition-transform duration-500" />
+                        </div>
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
+                            ANALYTICS HUB
+                        </h1>
+                        <p className="text-lg text-muted-foreground/80 font-medium">
+                            Unlock deep insights into your competitive programming journey.
+                        </p>
+                    </div>
+
+                    <form onSubmit={handleSearch} className="relative group">
+                        <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-primary/50 to-purple-600/50 opacity-20 group-hover:opacity-40 blur transition duration-500" />
+                        <div className="relative flex items-center bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-1.5 shadow-2xl">
+                            <Search className="w-5 h-5 text-muted-foreground ml-3" />
+                            <Input
+                                placeholder="Enter Codeforces Handle..."
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                                className="h-12 border-none bg-transparent focus-visible:ring-0 text-lg placeholder:text-muted-foreground/50"
+                            />
+                            <Button type="submit" size="lg" className="h-10 px-6 font-bold uppercase tracking-wide rounded-lg">
+                                Analyze
+                            </Button>
+                        </div>
+                    </form>
+                </div>
             </div>
         );
     }
 
     if (isLoading) {
-        return <LoadingSpinner label={`Analyzing data for ${handle}...`} />;
+        return <LoadingSpinner label={`Crunching data for ${handle}...`} />;
     }
 
     if (userStatus.isError || userInfo.isError) {
@@ -100,70 +112,94 @@ export default function AnalyticsClient() {
 
     const submissions = userStatus.data || [];
     const solved = submissions.filter(s => s.verdict === "OK");
+    const avgDifficulty = solved.length > 0
+        ? (solved.reduce((acc, curr) => acc + (curr.problem.rating || 0), 0) / solved.length).toFixed(0)
+        : 0;
+    const maxDifficulty = solved.length > 0
+        ? Math.max(...solved.map(s => s.problem.rating || 0))
+        : 0;
 
     return (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Analytics Explorer</h1>
-                    <p className="text-muted-foreground font-medium">Detailed performance breakdown for <span className="text-primary font-bold">{handle}</span></p>
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div className="space-y-2">
+                    <h1 className="text-3xl font-black tracking-tight uppercase">
+                        Analytics <span className="text-primary">//</span> Explorer
+                    </h1>
+                    <p className="text-muted-foreground font-medium flex items-center gap-2">
+                        Insights for <span className="text-white font-bold bg-zinc-900 px-2 py-0.5 rounded border border-white/10">{handle}</span>
+                    </p>
                 </div>
-                <Button variant="outline" onClick={() => router.push("/analytics")} className="w-full md:w-auto">
+                <Button variant="outline" onClick={() => router.push("/analytics")} className="w-full md:w-auto border-dashed hover:border-solid">
                     Change User
                 </Button>
             </div>
 
-            <div className="grid grid-cols-1 gap-6">
-                {/* Key Metrics Snapshot */}
-                <Card className="border-border/50 bg-card overflow-hidden">
-                    <CardHeader className="bg-muted/50 py-4">
-                        <CardTitle className="text-lg flex items-center gap-2">
-                            <BarChart2 className="w-5 h-5 text-primary" /> Performance Snapshot
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 text-center bg-card">
-                        <div className="space-y-1">
-                            <div className="text-3xl font-bold tracking-tight">{submissions.length}</div>
-                            <div className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Submissions</div>
-                        </div>
-                        <div className="space-y-1">
-                            <div className="text-3xl font-bold tracking-tight text-green-500">{solved.length}</div>
-                            <div className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Problems Solved</div>
-                        </div>
-                        <div className="space-y-1">
-                            <div className="text-3xl font-bold tracking-tight text-yellow-500">
-                                {solved.length > 0
-                                    ? (solved.reduce((acc, curr) => acc + (curr.problem.rating || 0), 0) / solved.length).toFixed(0)
-                                    : 0}
-                            </div>
-                            <div className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Avg. Difficulty</div>
-                        </div>
-                        <div className="space-y-1">
-                            <div className="text-3xl font-bold tracking-tight text-blue-500">
-                                {solved.length > 0
-                                    ? Math.max(...solved.map(s => s.problem.rating || 0))
-                                    : 0}
-                            </div>
-                            <div className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Peak Difficulty</div>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Advanced Insights Section */}
-                <AdvancedInsights
-                    submissions={submissions}
-                    ratingHistory={ratingHistory.data || []}
-                    currentRating={userInfo.data?.rating}
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <StatsCard
+                    title="Total Submissions"
+                    value={submissions.length}
+                    icon={BarChart2}
+                    description="Lifetime attempts"
+                    trendColor="text-blue-500"
                 />
+                <StatsCard
+                    title="Problems Solved"
+                    value={solved.length}
+                    icon={CheckCircle2}
+                    description={`Success Rate: ${submissions.length > 0 ? ((solved.length / submissions.length) * 100).toFixed(1) : 0}%`}
+                    trendColor="text-green-500"
+                />
+                <StatsCard
+                    title="Avg. Difficulty"
+                    value={avgDifficulty}
+                    icon={Brain}
+                    description="Based on solved problems"
+                    trendColor="text-orange-500"
+                />
+                <StatsCard
+                    title="Peak Difficulty"
+                    value={maxDifficulty}
+                    icon={Trophy}
+                    description="Hardest problem cracked"
+                    trendColor="text-purple-500"
+                />
+            </div>
 
-                {/* Charts Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-2">
-                        <DifficultyChart submissions={solved} />
-                    </div>
-                    <div className="lg:col-span-1">
-                        <TimeOfDayChart submissions={submissions} />
-                    </div>
+            {/* Advanced Insights Section */}
+            <AdvancedInsights
+                submissions={submissions}
+                ratingHistory={ratingHistory.data || []}
+                currentRating={userInfo.data?.rating}
+            />
+
+            {/* Charts Grid */}
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                <div className="xl:col-span-2 space-y-6">
+                    <Card className="bg-zinc-900/40 border-white/5 backdrop-blur-xl shadow-xl overflow-hidden h-full">
+                        <CardHeader className="border-b border-white/5 pb-4">
+                            <CardTitle className="text-sm font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+                                <TrendingUp className="w-4 h-4 text-primary" /> Difficulty Progression
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-6">
+                            <DifficultyChart submissions={solved} />
+                        </CardContent>
+                    </Card>
+                </div>
+                <div className="xl:col-span-1 space-y-6">
+                    <Card className="bg-zinc-900/40 border-white/5 backdrop-blur-xl shadow-xl overflow-hidden h-full">
+                        <CardHeader className="border-b border-white/5 pb-4">
+                            <CardTitle className="text-sm font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+                                <Zap className="w-4 h-4 text-yellow-500" /> Hourly Activity
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-6">
+                            <TimeOfDayChart submissions={submissions} />
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
         </div>

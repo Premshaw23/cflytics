@@ -43,33 +43,36 @@ export function ContestCountdown({ targetTimeSeconds, className, onTimerEnd }: C
     }, [targetTimeSeconds, onTimerEnd]);
 
     if (!timeLeft) {
-        return <span className="text-muted-foreground font-medium">Started</span>;
+        return (
+            <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary">In Progress</span>
+            </div>
+        );
     }
 
+    const { days, hours, minutes, seconds } = timeLeft;
+
     return (
-        <div className={cn("flex items-center gap-2 font-mono text-primary font-bold", className)}>
-            <Timer className="w-4 h-4" />
-            <div className="flex items-center gap-1">
-                {timeLeft.days > 0 && (
-                    <>
-                        <div className="bg-primary/10 rounded px-1.5 py-0.5 min-w-[3ch] text-center">
-                            {timeLeft.days}d
-                        </div>
-                        <span>:</span>
-                    </>
-                )}
-                <div className="bg-primary/10 rounded px-1.5 py-0.5 min-w-[3ch] text-center">
-                    {timeLeft.hours.toString().padStart(2, '0')}h
-                </div>
-                <span>:</span>
-                <div className="bg-primary/10 rounded px-1.5 py-0.5 min-w-[3ch] text-center">
-                    {timeLeft.minutes.toString().padStart(2, '0')}m
-                </div>
-                <span>:</span>
-                <div className="bg-primary/10 rounded px-1.5 py-0.5 min-w-[3ch] text-center">
-                    {timeLeft.seconds.toString().padStart(2, '0')}s
-                </div>
-            </div>
+        <div className={cn("flex items-center gap-2 md:gap-3", className)}>
+            {[
+                { label: "D", value: days, show: days > 0 },
+                { label: "H", value: hours, show: true },
+                { label: "M", value: minutes, show: true },
+                { label: "S", value: seconds, show: true }
+            ].filter(t => t.show).map((t, i, arr) => (
+                <React.Fragment key={t.label}>
+                    <div className="flex items-end gap-0.5">
+                        <span className="text-lg md:text-xl font-black tracking-tighter text-white tabular-nums leading-none">
+                            {t.value.toString().padStart(2, '0')}
+                        </span>
+                        <span className="text-[8px] font-black text-zinc-600 uppercase tracking-widest mb-0.5">{t.label}</span>
+                    </div>
+                    {i < arr.length - 1 && (
+                        <div className="text-zinc-800 font-black text-sm select-none mb-0.5">:</div>
+                    )}
+                </React.Fragment>
+            ))}
         </div>
     );
 }

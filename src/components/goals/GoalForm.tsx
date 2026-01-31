@@ -58,19 +58,27 @@ export function GoalForm({ handle, onGoalCreated }: GoalFormProps) {
     };
 
     return (
-        <Card className="w-full">
-            <CardHeader>
-                <CardTitle>Set New Goal</CardTitle>
+        <Card className="w-full bg-zinc-900/40 border-white/5 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
+            {/* Decor */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[60px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
+
+            <CardHeader className="relative">
+                <CardTitle className="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60 font-black uppercase tracking-wider flex items-center gap-2">
+                    <div className="p-2 rounded-lg bg-zinc-800/50 border border-white/5">
+                        <Loader2 className="w-4 h-4 text-primary animate-spin-slow" />
+                    </div>
+                    Set New Goal
+                </CardTitle>
             </CardHeader>
-            <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
+            <CardContent className="relative">
+                <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="space-y-2">
-                        <Label>Goal Type</Label>
+                        <Label className="uppercase text-xs font-bold text-zinc-500 tracking-wider">Goal Type</Label>
                         <Select value={type} onValueChange={setType}>
-                            <SelectTrigger>
+                            <SelectTrigger className="bg-zinc-950/50 border-white/10 h-10">
                                 <SelectValue placeholder="Select type" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="bg-zinc-900 border-white/10">
                                 <SelectItem value="RATING">Rating Target</SelectItem>
                                 <SelectItem value="PROBLEMS_SOLVED">Problems Solved</SelectItem>
                                 <SelectItem value="CONTEST_RANK">Contest Rank</SelectItem>
@@ -79,30 +87,31 @@ export function GoalForm({ handle, onGoalCreated }: GoalFormProps) {
                     </div>
 
                     <div className="space-y-2">
-                        <Label>Target Value</Label>
+                        <Label className="uppercase text-xs font-bold text-zinc-500 tracking-wider">Target Value</Label>
                         <Input
                             type="number"
                             placeholder="e.g. 1500"
                             value={target}
                             onChange={(e) => setTarget(e.target.value)}
                             required
+                            className="bg-zinc-950/50 border-white/10 h-10 focus-visible:ring-primary/50"
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <Label>Deadline (Optional)</Label>
+                        <Label className="uppercase text-xs font-bold text-zinc-500 tracking-wider">Deadline (Optional)</Label>
                         <Input
                             type="date"
                             value={deadline}
                             onChange={(e) => setDeadline(e.target.value)}
+                            className="bg-zinc-950/50 border-white/10 h-10 w-full block focus-visible:ring-primary/50"
                         />
                     </div>
 
-                    {error && <p className="text-sm text-red-500">{error}</p>}
+                    {error && <p className="text-sm font-bold text-red-400 bg-red-500/10 p-3 rounded-lg border border-red-500/20">{error}</p>}
 
-                    <Button type="submit" disabled={loading} className="w-full">
-                        {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                        Create Goal
+                    <Button type="submit" disabled={loading} className="w-full h-11 font-bold uppercase tracking-widest bg-primary hover:bg-primary/90 text-primary-foreground">
+                        {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : "Create Goal"}
                     </Button>
                 </form>
             </CardContent>

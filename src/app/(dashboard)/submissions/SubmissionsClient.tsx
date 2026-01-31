@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
-import { Search } from "lucide-react";
+import { Search, Activity, CheckCircle2, Target, Code2, History, PieChart as PieChartIcon } from "lucide-react";
 
 export default function SubmissionsClient() {
     const searchParams = useSearchParams();
@@ -48,17 +48,26 @@ export default function SubmissionsClient() {
 
     if (!handle) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-                <h1 className="text-2xl font-bold">Search User Submissions</h1>
-                <form onSubmit={handleSearch} className="flex gap-2 w-full max-w-sm">
-                    <Input
-                        placeholder="Enter Codeforces Handle"
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                    />
-                    <Button type="submit">
-                        <Search className="w-4 h-4 mr-2" />
-                        Search
+            <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 animate-in fade-in zoom-in duration-500">
+                <div className="relative">
+                    <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full" />
+                    <Search className="w-24 h-24 text-white relative z-10" />
+                </div>
+                <div className="text-center space-y-2">
+                    <h1 className="text-4xl font-black tracking-tighter text-white">SUBMISSION ANALYZER</h1>
+                    <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Enter a handle to explore performance metrics</p>
+                </div>
+                <form onSubmit={handleSearch} className="flex gap-4 w-full max-w-md">
+                    <div className="relative flex-1 group">
+                        <Input
+                            placeholder="CODEFORCES HANDLE"
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                            className="h-14 pl-6 bg-zinc-900/50 border-white/10 rounded-2xl text-lg font-bold tracking-tight focus:ring-primary/50 focus:border-primary/50 transition-all uppercase placeholder:text-zinc-700"
+                        />
+                    </div>
+                    <Button type="submit" size="lg" className="h-14 px-8 rounded-2xl font-black uppercase tracking-widest">
+                        Analyze
                     </Button>
                 </form>
             </div>
@@ -66,14 +75,14 @@ export default function SubmissionsClient() {
     }
 
     if (userStatus.isLoading) {
-        return <LoadingSpinner label={`Fetching submissions for ${handle}...`} />;
+        return <LoadingSpinner label={`Decryption: ${handle}...`} />;
     }
 
     if (userStatus.isError) {
         return (
             <ErrorState
-                title="Failed to fetch user"
-                message="Could not find user or submissions. Please check the handle."
+                title="USER NOT FOUND"
+                message="The specified handle could not be located in the archive."
                 onRetry={() => router.push("/submissions")}
             />
         );
@@ -93,62 +102,78 @@ export default function SubmissionsClient() {
     const topLang = Object.entries(langCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A";
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold tracking-tight">Submissions: {handle}</h1>
-                <form onSubmit={handleSearch} className="flex gap-2 w-full max-w-xs">
+        <div className="space-y-10 pb-20 animate-in fade-in slide-in-from-bottom-6 duration-1000">
+            {/* Header */}
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+                <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                        <div className="w-2 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(var(--primary),0.5)]" />
+                        <h1 className="text-5xl font-black tracking-tighter text-white uppercase">
+                            {handle}
+                        </h1>
+                    </div>
+                    <p className="text-zinc-500 font-bold text-sm max-w-2xl leading-relaxed uppercase tracking-widest pl-5">
+                        Submission Archive & Performance Analytics
+                    </p>
+                </div>
+                <form onSubmit={handleSearch} className="flex gap-3 w-full max-w-sm">
                     <Input
-                        placeholder="Search another user"
+                        placeholder="SEARCH USER..."
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
-                        className="h-9"
+                        className="h-12 bg-zinc-900/40 border-white/5 rounded-xl text-xs font-black uppercase tracking-widest placeholder:text-zinc-700 focus:border-white/10"
                     />
-                    <Button type="submit" size="sm">Search</Button>
+                    <Button type="submit" className="h-12 w-12 rounded-xl p-0" variant="secondary">
+                        <Search className="w-4 h-4" />
+                    </Button>
                 </form>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <Card className="border-border/50">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">Total Submissions</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{total}</div>
-                    </CardContent>
-                </Card>
-                <Card className="border-border/50">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">Accepted</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-green-500">{ac}</div>
-                    </CardContent>
-                </Card>
-                <Card className="border-border/50">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">Accuracy</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{acRate}%</div>
-                    </CardContent>
-                </Card>
-                <Card className="border-border/50">
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">Top Language</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold truncate" title={topLang}>
-                            {topLang}
-                        </div>
-                    </CardContent>
-                </Card>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[
+                    { label: "Total Submissions", value: total, icon: Activity, color: "text-blue-500", bg: "bg-blue-500/10", border: "border-blue-500/20" },
+                    { label: "Accepted", value: ac, icon: CheckCircle2, color: "text-green-500", bg: "bg-green-500/10", border: "border-green-500/20" },
+                    { label: "Accuracy", value: `${acRate}%`, icon: Target, color: "text-orange-500", bg: "bg-orange-500/10", border: "border-orange-500/20" },
+                    { label: "Top Language", value: topLang, icon: Code2, color: "text-purple-500", bg: "bg-purple-500/10", border: "border-purple-500/20" },
+                ].map((stat, i) => (
+                    <Card key={i} className={`bg-zinc-900/40 border-white/5 backdrop-blur-xl transition-all duration-300 hover:border-white/10 group overflow-hidden`}>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
+                                {stat.label}
+                            </CardTitle>
+                            <div className={`p-2 rounded-lg ${stat.bg} ${stat.border} border`}>
+                                <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div className={`text-2xl font-black tracking-tight text-white group-hover:scale-105 transition-transform duration-300 truncate`}>
+                                {stat.value}
+                            </div>
+                        </CardContent>
+                        {/* Glow Effect */}
+                        <div className={`absolute -right-6 -bottom-6 w-24 h-24 ${stat.bg} blur-3xl opacity-0 group-hover:opacity-50 transition-opacity duration-500 rounded-full`} />
+                    </Card>
+                ))}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="md:col-span-2">
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-8 relative items-start">
+                <div className="xl:col-span-3 space-y-6">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-xl font-black tracking-tight text-white flex items-center gap-2">
+                            <History className="w-5 h-5 text-zinc-500" />
+                            RECENT ACTIVITY
+                        </h2>
+                    </div>
                     <SubmissionsTable submissions={submissions} />
                 </div>
-                <div className="md:col-span-1">
+                <div className="xl:col-span-1 space-y-6 sticky top-6">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-xl font-black tracking-tight text-white flex items-center gap-2">
+                            <PieChartIcon className="w-5 h-5 text-zinc-500" />
+                            ANALYTICS
+                        </h2>
+                    </div>
                     <VerdictChart submissions={submissions} />
                 </div>
             </div>

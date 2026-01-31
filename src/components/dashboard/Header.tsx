@@ -80,11 +80,6 @@ export function Header() {
                         </div>
                     </SheetContent>
                 </Sheet>
-                <Link href="/" className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center lg:hidden">
-                        <Code className="text-primary-foreground w-5 h-5" />
-                    </div>
-                </Link>
             </div>
 
             {/* Search Bar */}
@@ -99,7 +94,7 @@ export function Header() {
                         className="pl-10 h-10 w-full bg-zinc-100/50 dark:bg-zinc-800/50 border-none transition-all focus-visible:ring-2 focus-visible:ring-primary/20"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                    />
+                        />
                 </form>
             </div>
 
@@ -121,7 +116,10 @@ export function Header() {
                     <DropdownMenuContent align="end" className="w-56">
                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => router.push("/profile/me")}>
+                        <DropdownMenuItem onClick={() => router.push("/")}>
+                           Home
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => router.push("/profile")}>
                             Profile
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => router.push("/settings")}>

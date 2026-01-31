@@ -35,36 +35,54 @@ export function VerdictChart({ submissions }: VerdictChartProps) {
     };
 
     return (
-        <Card className="h-full border-border/50">
-            <CardHeader>
-                <CardTitle className="text-sm font-medium">Verdict Distribution</CardTitle>
+        <Card className="bg-zinc-900/40 border-white/5 backdrop-blur-xl shadow-xl">
+            <CardHeader className="pb-0 border-b border-white/5">
+                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-zinc-500 py-4">Verdict Distribution</CardTitle>
             </CardHeader>
-            <CardContent>
-                <div className="h-[250px] w-full">
+            <CardContent className="p-6">
+                <div className="h-[300px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
                                 data={data}
                                 cx="50%"
                                 cy="50%"
-                                innerRadius={60}
-                                outerRadius={80}
-                                paddingAngle={2}
+                                innerRadius={80}
+                                outerRadius={100}
+                                paddingAngle={3}
                                 dataKey="value"
+                                stroke="none"
                             >
                                 {data.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={getColor(entry.name)} />
+                                    <Cell key={`cell-${index}`} fill={getColor(entry.name)} className="stroke-zinc-900 stroke-2" />
                                 ))}
                             </Pie>
                             <Tooltip
                                 contentStyle={{
-                                    backgroundColor: "hsl(var(--card))",
-                                    borderColor: "hsl(var(--border))",
-                                    borderRadius: "var(--radius)",
-                                    color: "hsl(var(--foreground))"
+                                    backgroundColor: "#09090b",
+                                    borderColor: "rgba(255,255,255,0.1)",
+                                    borderRadius: "12px",
+                                    color: "#fff",
+                                    fontSize: "12px",
+                                    fontWeight: "bold",
+                                    boxShadow: "0 10px 30px -10px rgba(0,0,0,0.5)"
+                                }}
+                                itemStyle={{ color: "#a1a1aa" }}
+                            />
+                            <Legend
+                                verticalAlign="bottom"
+                                height={36}
+                                iconType="circle"
+                                iconSize={8}
+                                wrapperStyle={{
+                                    fontSize: "10px",
+                                    fontWeight: "700",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "0.1em",
+                                    color: "#71717a",
+                                    paddingTop: "20px"
                                 }}
                             />
-                            <Legend />
                         </PieChart>
                     </ResponsiveContainer>
                 </div>

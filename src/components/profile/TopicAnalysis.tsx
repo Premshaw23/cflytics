@@ -91,20 +91,35 @@ export function TopicAnalysis({ submissions, isLoading }: TopicAnalysisProps) {
                         bottom: 5,
                     }}
                 >
-                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="var(--border)" opacity={0.4} />
+                    <defs>
+                        <linearGradient id="barGradient" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.8} />
+                            <stop offset="100%" stopColor="#8b5cf6" stopOpacity={1} />
+                        </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="rgba(255,255,255,0.05)" />
                     <XAxis type="number" hide />
                     <YAxis
                         dataKey="name"
                         type="category"
                         width={100}
-                        tick={{ fontSize: 12, fill: "var(--muted-foreground)" }}
+                        tick={{ fontSize: 11, fill: "#71717a", fontWeight: "bold" }}
                         tickLine={false}
                         axisLine={false}
                     />
-                    <Tooltip cursor={{ fill: 'var(--accent)', opacity: 0.2 }} content={<CustomTooltip />} />
-                    <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={20}>
+                    <Tooltip
+                        cursor={{ fill: 'rgba(255,255,255,0.05)' }}
+                        contentStyle={{
+                            backgroundColor: "#09090b",
+                            borderColor: "rgba(255,255,255,0.1)",
+                            borderRadius: "12px",
+                            boxShadow: "0 10px 30px -10px rgba(0,0,0,0.5)"
+                        }}
+                        content={<CustomTooltip />}
+                    />
+                    <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={16}>
                         {data.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill="var(--primary)" opacity={0.8 + (index * 0.02)} />
+                            <Cell key={`cell-${index}`} fill="url(#barGradient)" />
                         ))}
                     </Bar>
                 </BarChart>

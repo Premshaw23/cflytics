@@ -72,33 +72,38 @@ export function GoalsList({ handle, refreshKey }: GoalsListProps) {
         <div className="space-y-4">
             {goals.map((goal) => {
                 const progress = Math.min(100, Math.max(0, (goal.current / goal.target) * 100));
+                const isCompleted = goal.completed || progress >= 100;
 
                 return (
-                    <Card key={goal.id} className={`transition-all ${goal.completed ? "border-green-500/50 bg-green-500/5" : ""}`}>
-                        <CardHeader className="pb-2">
+                    <Card key={goal.id} className={`transition-all duration-300 relative overflow-hidden group border-white/5 bg-zinc-900/40 backdrop-blur-xl hover:border-white/10 ${isCompleted ? "border-green-500/20 bg-green-950/10" : ""}`}>
+                        {/* Glow Effect */}
+                        <div className={`absolute -right-10 -top-10 w-40 h-40 blur-[80px] rounded-full opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none ${isCompleted ? 'bg-green-500' : 'bg-primary'}`} />
+
+                        <CardHeader className="pb-3 relative z-10">
                             <div className="flex justify-between items-start">
-                                <div>
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <Badge variant={goal.completed ? "default" : "outline"} className={goal.completed ? "bg-green-500 hover:bg-green-600" : ""}>
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <Badge variant="outline" className={`uppercase text-[10px] font-black tracking-widest py-0.5 px-2 border-white/10 ${isCompleted ? "bg-green-500/10 text-green-500" : "bg-primary/10 text-primary"}`}>
                                             {goal.type.replace("_", " ")}
                                         </Badge>
                                         {goal.deadline && (
-                                            <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1">
                                                 <Calendar className="w-3 h-3" />
-                                                Before {formatIST(new Date(goal.deadline), "dd/MM/yyyy")} IST
+                                                {formatIST(new Date(goal.deadline), "MMM dd")}
                                             </span>
                                         )}
                                     </div>
-                                    <CardTitle className="text-lg">
-                                        Target: {goal.target}
+                                    <CardTitle className="text-2xl font-black italic tracking-tight">
+                                        {goal.target}
                                     </CardTitle>
+                                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Target Value</p>
                                 </div>
                                 <div className="flex gap-2">
                                     <Button
                                         variant="ghost"
                                         size="icon"
                                         onClick={() => toggleComplete(goal)}
-                                        className={goal.completed ? "text-green-500" : "text-muted-foreground"}
+                                        className={`rounded-lg hover:bg-white/5 ${goal.completed ? "text-green-500 bg-green-500/10" : "text-muted-foreground hover:text-white"}`}
                                     >
                                         <Check className="w-4 h-4" />
                                     </Button>
@@ -106,20 +111,27 @@ export function GoalsList({ handle, refreshKey }: GoalsListProps) {
                                         variant="ghost"
                                         size="icon"
                                         onClick={() => deleteGoal(goal.id)}
-                                        className="text-red-500 hover:text-red-600"
+                                        className="rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-500"
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </Button>
                                 </div>
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-sm text-muted-foreground">Progress: {goal.current} / {goal.target}</span>
-                                    <span className="text-sm font-bold">{progress.toFixed(0)}%</span>
+                        <CardContent className="relative z-10">
+                            <div className="space-y-3">
+                                <div className="flex justify-between text-xs font-bold uppercase tracking-wider">
+                                    <span className="text-zinc-400">Progress</span>
+                                    <span className={isCompleted ? "text-green-500" : "text-white"}>
+                                        {goal.current} / {goal.target} ({progress.toFixed(0)}%)
+                                    </span>
                                 </div>
-                                <Progress value={progress} className="h-2" />
+                                <div className="h-2 w-full bg-zinc-950 rounded-full overflow-hidden border border-white/5">
+                                    <div
+                                        className={`h-full transition-all duration-1000 ease-out rounded-full ${isCompleted ? 'bg-gradient-to-r from-green-600 to-emerald-400' : 'bg-gradient-to-r from-blue-600 to-cyan-400'}`}
+                                        style={{ width: `${progress}%` }}
+                                    />
+                                </div>
                             </div>
                         </CardContent>
                     </Card>

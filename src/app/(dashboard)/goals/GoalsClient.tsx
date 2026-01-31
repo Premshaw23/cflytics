@@ -6,7 +6,8 @@ import { GoalForm } from "@/components/goals/GoalForm";
 import { GoalsList } from "@/components/goals/GoalsList";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, Target, Rocket } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 export default function GoalsClient() {
     const searchParams = useSearchParams();
@@ -44,33 +45,56 @@ export default function GoalsClient() {
 
     if (!handle) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 animate-in fade-in zoom-in-95 duration-500">
-                <div className="text-center space-y-2">
-                    <h1 className="text-3xl font-bold tracking-tight">Set Your Goals</h1>
-                    <p className="text-muted-foreground">Track your progress and achieve milestones.</p>
-                </div>
+            <div className="flex flex-col items-center justify-center min-h-[70vh] relative overflow-hidden">
+                {/* Background Decor */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/20 blur-[120px] rounded-full opacity-20 pointer-events-none" />
 
-                <form onSubmit={handleSearch} className="flex gap-2 w-full max-w-sm">
-                    <Input
-                        placeholder="Enter Codeforces Handle"
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                        className="h-10"
-                    />
-                    <Button type="submit" size="lg">
-                        <Search className="w-4 h-4 mr-2" />
-                        Start Tracking
-                    </Button>
-                </form>
+                <div className="relative z-10 w-full max-w-lg space-y-8 animate-in fade-in zoom-in-95 duration-700">
+                    <div className="text-center space-y-4">
+                        <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-zinc-900 border border-white/5 shadow-2xl mb-4 group">
+                            <Target className="w-10 h-10 text-emerald-500 group-hover:rotate-45 transition-transform duration-500" />
+                        </div>
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
+                            GOAL TRACKER
+                        </h1>
+                        <p className="text-lg text-muted-foreground/80 font-medium">
+                            Set ambitious targets and shatter your limits.
+                        </p>
+                    </div>
+
+                    <form onSubmit={handleSearch} className="relative group">
+                        <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-emerald-500/50 to-teal-600/50 opacity-20 group-hover:opacity-40 blur transition duration-500" />
+                        <div className="relative flex items-center bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-1.5 shadow-2xl">
+                            <Search className="w-5 h-5 text-muted-foreground ml-3" />
+                            <Input
+                                placeholder="Enter Codeforces Handle..."
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                                className="h-12 border-none bg-transparent focus-visible:ring-0 text-lg placeholder:text-muted-foreground/50"
+                            />
+                            <Button type="submit" size="lg" className="h-10 px-6 font-bold uppercase tracking-wide rounded-lg bg-emerald-600 hover:bg-emerald-500">
+                                Start
+                            </Button>
+                        </div>
+                    </form>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold tracking-tight">Goals for {handle}</h1>
-                <Button variant="outline" onClick={() => router.push("/goals")}>
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div className="space-y-2">
+                    <h1 className="text-3xl font-black tracking-tight uppercase">
+                        Active <span className="text-emerald-500">//</span> Goals
+                    </h1>
+                    <p className="text-muted-foreground font-medium flex items-center gap-2">
+                        Tracking for <span className="text-white font-bold bg-zinc-900 px-2 py-0.5 rounded border border-white/10">{handle}</span>
+                    </p>
+                </div>
+                <Button variant="outline" onClick={() => router.push("/goals")} className="w-full md:w-auto border-dashed hover:border-solid">
                     Change User
                 </Button>
             </div>

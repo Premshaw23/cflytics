@@ -5,10 +5,15 @@ import { CACHE_TTL } from "@/config/constants";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const handle = searchParams.get("handle");
+  let handle = searchParams.get("handle");
   
   if (!handle) {
     return NextResponse.json({ error: "Handle parameter is required" }, { status: 400 });
+  }
+
+  // Fallback for 'me' or invalid handles to a demo user
+  if (handle.toLowerCase() === "me" || handle.length < 3) {
+    handle = "tourist";
   }
 
   try {
