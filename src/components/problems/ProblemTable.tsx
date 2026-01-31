@@ -5,7 +5,8 @@ import {
     ExternalLink,
     ArrowUpDown,
     ArrowUp,
-    ArrowDown
+    ArrowDown,
+    Bookmark
 } from "lucide-react";
 import {
     Table,
@@ -19,15 +20,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { CFProblem } from "@/types";
+import { BookmarkButton } from "./BookmarkButton";
+import { NoteDialog } from "./NoteDialog";
 
 export interface ProblemTableProps {
     problems: CFProblem[];
     isLoading: boolean;
     sortConfig: { key: keyof CFProblem | 'solvedCount'; direction: 'asc' | 'desc' } | null;
     onSort: (key: keyof CFProblem | 'solvedCount') => void;
+    handle?: string;
 }
 
-export function ProblemTable({ problems, isLoading, sortConfig, onSort }: ProblemTableProps) {
+export function ProblemTable({ problems, isLoading, sortConfig, onSort, handle = "" }: ProblemTableProps) {
     const renderSortIcon = (columnKey: keyof CFProblem | 'solvedCount') => {
         if (sortConfig?.key !== columnKey) return <ArrowUpDown className="ml-2 h-4 w-4" />;
         return sortConfig.direction === 'asc' ?
@@ -41,7 +45,7 @@ export function ProblemTable({ problems, isLoading, sortConfig, onSort }: Proble
                 <Table>
                     <TableHeader>
                         <TableRow className="hover:bg-transparent">
-                            <TableHead className="w-[100px] font-bold">#</TableHead>
+                            <TableHead className="w-[80px] font-bold">#</TableHead>
                             <TableHead className="font-bold">
                                 <Button
                                     variant="ghost"
@@ -63,7 +67,7 @@ export function ProblemTable({ problems, isLoading, sortConfig, onSort }: Proble
                                 </Button>
                             </TableHead>
                             <TableHead className="font-bold hidden md:table-cell">Tags</TableHead>
-                            <TableHead className="w-[100px] text-right font-bold">Link</TableHead>
+                            <TableHead className="w-[120px] text-right font-bold pr-6">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -74,7 +78,7 @@ export function ProblemTable({ problems, isLoading, sortConfig, onSort }: Proble
                                     <TableCell><div className="h-4 w-48 bg-zinc-200 dark:bg-zinc-800 animate-pulse rounded" /></TableCell>
                                     <TableCell><div className="h-4 w-16 bg-zinc-200 dark:bg-zinc-800 animate-pulse rounded" /></TableCell>
                                     <TableCell className="hidden md:table-cell"><div className="h-4 w-64 bg-zinc-200 dark:bg-zinc-800 animate-pulse rounded" /></TableCell>
-                                    <TableCell className="text-right"><div className="h-8 w-8 ml-auto bg-zinc-200 dark:bg-zinc-800 animate-pulse rounded" /></TableCell>
+                                    <TableCell className="text-right"><div className="h-8 w-16 ml-auto bg-zinc-200 dark:bg-zinc-800 animate-pulse rounded" /></TableCell>
                                 </TableRow>
                             ))
                         ) : problems.length === 0 ? (
@@ -84,8 +88,8 @@ export function ProblemTable({ problems, isLoading, sortConfig, onSort }: Proble
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            problems.map((problem) => (
-                                <TableRow key={`${problem.contestId}${problem.index}`} className="group hover:bg-muted/50">
+                            problems.map((problem, idx) => (
+                                <TableRow key={`${problem.contestId}-${problem.index}-${problem.name}-${idx}`} className="group hover:bg-muted/50">
                                     <TableCell className="font-bold text-muted-foreground">
                                         {problem.contestId}{problem.index}
                                     </TableCell>
@@ -116,9 +120,9 @@ export function ProblemTable({ problems, isLoading, sortConfig, onSort }: Proble
                                     </TableCell>
                                     <TableCell className="hidden md:table-cell">
                                         <div className="flex flex-wrap gap-1">
-                                            {problem.tags.slice(0, 3).map(tag => (
+                                            {problem.tags.slice(0, 3).map((tag, tagIdx) => (
                                                 <Badge
-                                                    key={tag}
+                                                    key={`${tag}-${tagIdx}`}
                                                     variant="secondary"
                                                     className="bg-zinc-100 dark:bg-zinc-800 text-[10px] font-bold py-0 h-5"
                                                 >
@@ -132,16 +136,29 @@ export function ProblemTable({ problems, isLoading, sortConfig, onSort }: Proble
                                             )}
                                         </div>
                                     </TableCell>
-                                    <TableCell className="text-right">
-                                        <Button variant="ghost" size="icon" asChild className="h-8 w-8 rounded-full outline-none">
-                                            <a
-                                                href={`https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                <ExternalLink className="w-4 h-4" />
-                                            </a>
-                                        </Button>
+                                    <TableCell className="text-right pr-6">
+                                        <div className="flex items-center justify-end gap-1">
+                                            <NoteDialog
+                                                handle={handle}
+                                                problemId={`${problem.contestId}${problem.index}`}
+                                                problemName={problem.name}
+                                            />
+                                            <BookmarkButton
+                                                handle={handle}
+                                                problemId={`${problem.contestId}${problem.index}`}
+                                                name={problem.name}
+                                                rating={problem.rating}
+                                            />
+                                            <Button variant="ghost" size="icon" asChild className="h-8 w-8 rounded-full outline-none">
+                                                <a
+                                                    href={`https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <ExternalLink className="w-4 h-4" />
+                                                </a>
+                                            </Button>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -152,3 +169,4 @@ export function ProblemTable({ problems, isLoading, sortConfig, onSort }: Proble
         </div>
     );
 }
+

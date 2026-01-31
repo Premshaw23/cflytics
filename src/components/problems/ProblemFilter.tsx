@@ -91,9 +91,9 @@ export function ProblemFilter({ filters, onChange }: ProblemFilterProps) {
                             <DropdownMenuContent align="end" className="w-[240px] max-h-[400px] overflow-y-auto">
                                 <DropdownMenuLabel>Filter by Tags</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
-                                {CF_TAGS.map(tag => (
+                                {CF_TAGS.map((tag, idx) => (
                                     <DropdownMenuCheckboxItem
-                                        key={tag}
+                                        key={`${tag}-${idx}`}
                                         checked={filters.tags.includes(tag)}
                                         onCheckedChange={() => toggleTag(tag)}
                                     >
@@ -212,9 +212,9 @@ export function ProblemFilter({ filters, onChange }: ProblemFilterProps) {
                 {/* Active Filters Display */}
                 {filters.tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-border/50">
-                        {filters.tags.map(tag => (
+                        {filters.tags.map((tag, idx) => (
                             <Badge
-                                key={tag}
+                                key={`${tag}-${idx}`}
                                 variant="secondary"
                                 className="gap-1 px-3 py-1 cursor-pointer hover:bg-destructive/10 hover:text-destructive transition-colors"
                                 onClick={() => toggleTag(tag)}
