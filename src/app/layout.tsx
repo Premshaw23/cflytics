@@ -61,9 +61,19 @@ export const metadata: Metadata = {
     creator: "@premshaw",
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
   manifest: `${siteConfig.url}/site.webmanifest`,
+  alternates: {
+    canonical: siteConfig.url,
+    languages: {
+      'en-US': '/en-US',
+    },
+  },
 };
 
 import { Toaster } from "sonner";
@@ -87,6 +97,24 @@ export default function RootLayout({
           <QueryProvider>
             {children}
             <Toaster richColors position="top-right" />
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "WebApplication",
+                  "name": siteConfig.name,
+                  "description": siteConfig.description,
+                  "url": siteConfig.url,
+                  "applicationCategory": "EducationalApplication",
+                  "operatingSystem": "All",
+                  "author": {
+                    "@type": "Person",
+                    "name": "Prem Shaw"
+                  }
+                })
+              }}
+            />
           </QueryProvider>
         </ThemeProvider>
       </body>

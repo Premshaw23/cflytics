@@ -132,9 +132,9 @@ export default function ContestDetailPage() {
 
             {/* Problems List */}
             {!isBefore && problems && problems.length > 0 && (
-                <Card>
+                <Card className="border-border/50">
                     <CardHeader>
-                        <CardTitle>Problems</CardTitle>
+                        <CardTitle>Contest Problems</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <Table>
@@ -175,6 +175,52 @@ export default function ContestDetailPage() {
                                                     <ExternalLink className="w-4 h-4" />
                                                 </a>
                                             </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
+            )}
+
+            {/* Standings Section */}
+            {!isBefore && data?.rows && data.rows.length > 0 && (
+                <Card className="border-border/50">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Trophy className="w-5 h-5 text-yellow-500" /> Top {data.rows.length} Standings
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead className="w-[80px] font-bold">Rank</TableHead>
+                                    <TableHead className="font-bold">Handle</TableHead>
+                                    <TableHead className="text-right font-bold w-[100px]">Points</TableHead>
+                                    <TableHead className="text-right font-bold w-[100px]">Penalty</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {data.rows.map((row: any) => (
+                                    <TableRow key={row.party.members[0].handle} className="hover:bg-muted/50">
+                                        <TableCell className="font-bold">
+                                            {row.rank === 1 ? "🥇" : row.rank === 2 ? "🥈" : row.rank === 3 ? "🥉" : row.rank}
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex flex-col">
+                                                <span className="font-bold text-primary">{row.party.members[0].handle}</span>
+                                                <span className="text-[10px] text-muted-foreground uppercase font-black">
+                                                    {row.party.participantType}
+                                                </span>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="text-right font-mono font-bold text-green-600">
+                                            {row.points}
+                                        </TableCell>
+                                        <TableCell className="text-right font-mono text-muted-foreground">
+                                            {row.penalty}
                                         </TableCell>
                                     </TableRow>
                                 ))}

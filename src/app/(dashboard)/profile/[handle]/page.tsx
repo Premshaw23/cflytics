@@ -11,7 +11,9 @@ import { ActivityHeatmap } from "@/components/profile/ActivityHeatmap";
 import { TopicAnalysis } from "@/components/profile/TopicAnalysis";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
-import { BarChart, Info } from "lucide-react";
+import { BarChart, Info, Trophy } from "lucide-react";
+import { Achievements } from "@/components/profile/Achievements";
+import { AdvancedInsights } from "@/components/analytics/AdvancedInsights";
 
 export default function ProfilePage() {
     const params = useParams();
@@ -68,6 +70,24 @@ export default function ProfilePage() {
                         <TopicAnalysis submissions={userStatus.data || []} isLoading={isLoading} />
                     </CardContent>
                 </Card>
+            </div>
+
+            {/* Bottom Section: Achievements & Insights */}
+            <div className="grid gap-6 lg:grid-cols-3">
+                <div className="lg:col-span-1">
+                    <Achievements
+                        submissions={userStatus.data || []}
+                        rating={userInfo.data?.rating}
+                        maxRating={userInfo.data?.maxRating}
+                    />
+                </div>
+                <div className="lg:col-span-2">
+                    <AdvancedInsights
+                        submissions={userStatus.data || []}
+                        ratingHistory={ratingHistory.data || []}
+                        currentRating={userInfo.data?.rating}
+                    />
+                </div>
             </div>
         </div>
     );
