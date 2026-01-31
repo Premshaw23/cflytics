@@ -65,6 +65,7 @@ export function Sidebar() {
                         <Link
                             key={item.href}
                             href={item.href}
+                            aria-label={item.title}
                             className={cn(
                                 "flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all group relative",
                                 isActive
@@ -90,6 +91,7 @@ export function Sidebar() {
             <div className="p-3 border-t space-y-1">
                 <Link
                     href="/settings"
+                    aria-label="Settings"
                     className={cn(
                         "flex items-center space-x-3 px-3 py-2.5 rounded-lg text-muted-foreground hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-foreground transition-all group relative",
                         pathname === "/settings" && "bg-zinc-100 dark:bg-zinc-800 text-foreground"
@@ -102,6 +104,7 @@ export function Sidebar() {
                 <Button
                     variant="ghost"
                     size="icon"
+                    aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
                     className="w-full h-10 mt-2 justify-center hover:bg-zinc-100 dark:hover:bg-zinc-800"
                     onClick={() => setIsCollapsed(!isCollapsed)}
                 >

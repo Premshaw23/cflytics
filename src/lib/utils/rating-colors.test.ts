@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { getRatingColor, getRankTitle, getRatingBadgeClass } from './rating-colors';
 
 describe('Rating Colors Utilities', () => {
