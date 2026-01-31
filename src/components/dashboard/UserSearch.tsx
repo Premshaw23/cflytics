@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 
 export function UserSearch({ className }: { className?: string }) {
     const [handle, setHandle] = useState("");
+    const [mounted, setMounted] = useState(false);
     const [recentSearches, setRecentSearches] = useState<string[]>([]);
     const [showDropdown, setShowDropdown] = useState(false);
     const router = useRouter();
@@ -18,6 +19,7 @@ export function UserSearch({ className }: { className?: string }) {
         if (saved) {
             setRecentSearches(JSON.parse(saved));
         }
+        setMounted(true);
     }, []);
 
     const saveSearch = (searchHandle: string) => {
@@ -76,7 +78,7 @@ export function UserSearch({ className }: { className?: string }) {
             </form>
 
             {/* Dropdown for Recent Searches */}
-            {showDropdown && recentSearches.length > 0 && (
+            {mounted && showDropdown && recentSearches.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-card border rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                     <div className="flex items-center justify-between px-4 py-2 bg-zinc-100/50 dark:bg-zinc-800/50 border-b">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">

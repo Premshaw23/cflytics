@@ -7,12 +7,15 @@ import { Button } from "@/components/ui/button";
 import { ExternalLink, Tag } from 'lucide-react';
 import { CFProblem } from '@/types';
 import { cn } from "@/lib/utils";
+import { BookmarkButton } from '../problems/BookmarkButton';
+import { NoteDialog } from '../problems/NoteDialog';
 
 interface ProblemCardProps {
     problem: CFProblem;
+    handle?: string;
 }
 
-export function ProblemCard({ problem }: ProblemCardProps) {
+export function ProblemCard({ problem, handle = "" }: ProblemCardProps) {
     // Color code rating
     const getRatingColor = (rating?: number) => {
         if (!rating) return "bg-gray-500";
@@ -26,9 +29,22 @@ export function ProblemCard({ problem }: ProblemCardProps) {
     };
 
     return (
-        <Card className="flex flex-col h-full hover:shadow-md transition-shadow border-border/50 group">
+        <Card className="flex flex-col h-full hover:shadow-md transition-shadow border-border/50 group relative">
+            <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                <NoteDialog
+                    handle={handle}
+                    problemId={`${problem.contestId}${problem.index}`}
+                    problemName={problem.name}
+                />
+                <BookmarkButton
+                    handle={handle}
+                    problemId={`${problem.contestId}${problem.index}`}
+                    name={problem.name}
+                    rating={problem.rating}
+                />
+            </div>
             <CardHeader className="pb-3">
-                <div className="flex justify-between items-start gap-2">
+                <div className="flex justify-between items-start gap-2 pr-8">
                     <CardTitle className="text-lg font-bold line-clamp-2 leading-tight group-hover:text-primary transition-colors">
                         {problem.index}. {problem.name}
                     </CardTitle>
@@ -66,3 +82,4 @@ export function ProblemCard({ problem }: ProblemCardProps) {
         </Card>
     );
 }
+

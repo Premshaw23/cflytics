@@ -16,17 +16,23 @@ export async function GET() {
     // Check DB
     await prisma.$queryRaw`SELECT 1`;
     status.services.database = "online";
-  } catch (e: any) {
-    console.error("Health check DB error:", e.message);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "DB Offline";
+    console.error("Health check DB error:", message);
     status.services.database = "offline";
   }
 
   try {
     // Check Redis
-    await redis.ping();
-    status.services.redis = "online";
-  } catch (e: any) {
-    console.error("Health check Redis error:", e.message);
+    if (redis) {
+      await redis.ping();
+      status.services.redis = "online";
+    } else {
+      status.services.redis = "not_configured";
+    }
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Redis Offline";
+    console.error("Health check Redis error:", message);
     status.services.redis = "offline";
   }
 

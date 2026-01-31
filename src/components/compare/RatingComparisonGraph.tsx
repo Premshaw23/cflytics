@@ -10,7 +10,8 @@ import {
     Tooltip,
     Legend,
     ResponsiveContainer,
-    ReferenceLine
+    ReferenceLine,
+    TooltipProps
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CFRatingChange } from '@/types';
@@ -29,7 +30,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
         return (
             <div className="bg-popover border border-border p-3 rounded-lg shadow-lg">
-                <p className="text-muted-foreground text-xs mb-2">
+                <p className="text-muted-foreground text-[10px] mb-2 font-bold uppercase tracking-wider">
                     {format(new Date(label * 1000), 'MMM d, yyyy')}
                 </p>
 
@@ -37,7 +38,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                     <div key={index} className="flex items-center gap-2 text-sm mb-1">
                         <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
                         <span className="font-bold">{entry.name}:</span>
-                        <span>{entry.value}</span>
+                        <span className="text-primary">{entry.value}</span>
                     </div>
                 ))}
             </div>

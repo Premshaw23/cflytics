@@ -2,12 +2,14 @@
 
 import React from "react";
 import Image from "next/image";
-import { MapPin, Building2, Users, Star, ExternalLink } from "lucide-react";
+import { MapPin, Building2, Users, Star, ExternalLink, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SkeletonLoader } from "@/components/shared/LoadingSpinner";
 import { getRatingColor, getRatingBadgeClass } from "@/lib/utils/rating-colors";
 import { CFUser } from "@/types";
+import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 
 interface ProfileHeaderProps {
     user?: CFUser;
@@ -15,6 +17,23 @@ interface ProfileHeaderProps {
 }
 
 export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
+    const [isMyHandle, setIsMyHandle] = useState(false);
+
+    useEffect(() => {
+        if (user) {
+            const active = localStorage.getItem("codey_active_handle");
+            setIsMyHandle(active === user.handle);
+        }
+    }, [user]);
+
+    const setAsActive = () => {
+        if (user) {
+            localStorage.setItem("codey_active_handle", user.handle);
+            setIsMyHandle(true);
+            window.dispatchEvent(new Event('storage')); // Notify other components
+        }
+    };
+
     if (isLoading) {
         return (
             <div className="flex flex-col md:flex-row gap-6 items-start animate-pulse">
@@ -61,6 +80,11 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                                     {user.rank}
                                 </Badge>
                             )}
+                            {isMyHandle && (
+                                <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20 font-bold">
+                                    My Handle
+                                </Badge>
+                            )}
                         </div>
                         {(user.firstName || user.lastName) && (
                             <p className="text-muted-foreground font-medium mt-1">
@@ -69,11 +93,22 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                         )}
                     </div>
 
-                    <Button variant="outline" className="gap-2 shrink-0" asChild>
-                        <a href={`https://codeforces.com/profile/${user.handle}`} target="_blank" rel="noopener noreferrer">
-                            Codeforces Profile <ExternalLink className="w-4 h-4" />
-                        </a>
-                    </Button>
+                    <div className="flex items-center gap-2">
+                        {!isMyHandle && (
+                            <Button
+                                variant="outline"
+                                className="gap-2 group"
+                                onClick={setAsActive}
+                            >
+                                <Heart className="w-4 h-4 group-hover:fill-primary transition-colors" /> Set as Mine
+                            </Button>
+                        )}
+                        <Button variant="outline" className="gap-2 shrink-0" asChild>
+                            <a href={`https://codeforces.com/profile/${user.handle}`} target="_blank" rel="noopener noreferrer">
+                                Codeforces Profile <ExternalLink className="w-4 h-4" />
+                            </a>
+                        </Button>
+                    </div>
                 </div>
 
                 <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground font-medium">
@@ -102,3 +137,4 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
         </div>
     );
 }
+

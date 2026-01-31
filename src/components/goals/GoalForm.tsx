@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Goal } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 
 interface GoalFormProps {
@@ -51,7 +50,7 @@ export function GoalForm({ handle, onGoalCreated }: GoalFormProps) {
             setTarget("");
             setDeadline("");
             onGoalCreated();
-        } catch (err) {
+        } catch {
             setError("Failed to create goal. Please try again.");
         } finally {
             setLoading(false);

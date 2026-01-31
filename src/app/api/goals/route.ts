@@ -7,7 +7,6 @@ const createGoalSchema = z.object({
   type: z.enum(["RATING", "PROBLEMS_SOLVED", "CONTEST_RANK"]),
   target: z.number().int().positive(),
   deadline: z.string().optional(), // ISO date string
-  description: z.string().optional(),
 });
 
 const updateGoalSchema = z.object({
@@ -50,7 +49,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: result.error.issues }, { status: 400 });
     }
 
-    const { handle, type, target, deadline, description } = result.data;
+    const { handle, type, target, deadline } = result.data;
 
     // Ensure user exists
     let user = await prisma.user.findUnique({ where: { handle } });

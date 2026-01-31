@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Users, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,11 @@ interface CompareSearchProps {
 export function CompareSearch({ onCompare }: CompareSearchProps) {
     const [handle1, setHandle1] = useState('');
     const [handle2, setHandle2] = useState('');
+
+    useEffect(() => {
+        const saved = localStorage.getItem("codey_active_handle");
+        if (saved) setHandle1(saved);
+    }, []);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();

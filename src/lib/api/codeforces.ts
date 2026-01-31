@@ -39,7 +39,7 @@ async function fetchFromCF<T>(path: string, params: Record<string, string | numb
 
   const url = `${CF_API_BASE_URL}${path}?${queryParams.toString()}`;
   
-  let lastError: any;
+  let lastError: unknown;
   for (let i = 0; i < retries; i++) {
     try {
       const response = await fetch(url);
@@ -54,19 +54,20 @@ async function fetchFromCF<T>(path: string, params: Record<string, string | numb
       }
 
       return data.result;
-    } catch (error: any) {
+    } catch (error: unknown) {
       lastError = error;
+      const message = error instanceof Error ? error.message : String(error);
       
       // Don't retry if user not found or bad request
-      if (error.message && (
-        error.message.includes("not found") || 
-        error.message.includes("handle: User") || 
-        error.message.includes("handles: User")
+      if (message && (
+        message.includes("not found") || 
+        message.includes("handle: User") || 
+        message.includes("handles: User")
       )) {
         throw error;
       }
 
-      console.warn(`Attempt ${i + 1} failed for ${path}:`, error.message);
+      console.warn(`Attempt ${i + 1} failed for ${path}:`, message);
       if (i < retries - 1) {
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
       }

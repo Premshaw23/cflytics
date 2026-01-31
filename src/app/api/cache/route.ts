@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import redis from "@/lib/db/redis";
+import { deleteCache, getFromCache } from "@/lib/db/redis";
 
 export async function DELETE(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -10,10 +10,11 @@ export async function DELETE(request: NextRequest) {
   }
 
   try {
-    await redis.del(key);
+    await deleteCache(key);
     return NextResponse.json({ message: `Cache key ${key} deleted successfully` });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
@@ -26,12 +27,13 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const data = await redis.get(key);
+    const data = await getFromCache<any>(key);
     if (!data) {
       return NextResponse.json({ message: "Key not found" }, { status: 404 });
     }
-    return NextResponse.json(JSON.parse(data));
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(data);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { codeforcesApi } from "@/lib/api/codeforces";
 import { getFromCache, setCache } from "@/lib/db/redis";
-import { CACHE_TTL } from "@/config/constants";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -23,12 +22,12 @@ export async function GET(request: NextRequest) {
     const contestData = await codeforcesApi.getContestStandings(parseInt(id), 1, count, false);
     
     // Cache for shorter time if contest is running, longer if finished
-    // But for simplicity, use a standard TTL for now, maybe shorter than full list
     await setCache(cacheKey, contestData, 300); // 5 minutes
 
     return NextResponse.json(contestData);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("API Route Error (contest):", error);
-    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
+    const message = error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

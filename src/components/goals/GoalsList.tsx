@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { format } from "date-fns";
-import { Check, Trash2, Calendar, Target } from "lucide-react";
+import { Check, Trash2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
     CardHeader,
-    CardTitle,
-    CardDescription
+    CardTitle
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -24,11 +23,7 @@ export function GoalsList({ handle, refreshKey }: GoalsListProps) {
     const [goals, setGoals] = useState<Goal[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchGoals();
-    }, [handle, refreshKey]);
-
-    const fetchGoals = async () => {
+    const fetchGoals = useCallback(async () => {
         try {
             const res = await fetch(`/api/goals?handle=${handle}`);
             const data = await res.json();
@@ -40,7 +35,11 @@ export function GoalsList({ handle, refreshKey }: GoalsListProps) {
         } finally {
             setLoading(false);
         }
-    };
+    }, [handle]);
+
+    useEffect(() => {
+        fetchGoals();
+    }, [fetchGoals, refreshKey]);
 
     const deleteGoal = async (id: string) => {
         if (!confirm("Are you sure?")) return;
@@ -86,7 +85,7 @@ export function GoalsList({ handle, refreshKey }: GoalsListProps) {
                                         {goal.deadline && (
                                             <span className="text-xs text-muted-foreground flex items-center gap-1">
                                                 <Calendar className="w-3 h-3" />
-                                                Defore {format(new Date(goal.deadline), "MMM d, yyyy")}
+                                                Before {format(new Date(goal.deadline), "MMM d, yyyy")}
                                             </span>
                                         )}
                                     </div>

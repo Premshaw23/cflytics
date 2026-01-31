@@ -11,38 +11,30 @@ interface ContestCountdownProps {
 }
 
 export function ContestCountdown({ targetTimeSeconds, className, onTimerEnd }: ContestCountdownProps) {
-    const [timeLeft, setTimeLeft] = useState<{
-        days: number;
-        hours: number;
-        minutes: number;
-        seconds: number;
-    } | null>(null);
+    const calculateTimeLeft = () => {
+        const now = new Date().getTime();
+        const difference = targetTimeSeconds * 1000 - now;
+
+        if (difference > 0) {
+            return {
+                days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+                hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+                minutes: Math.floor((difference / 1000 / 60) % 60),
+                seconds: Math.floor((difference / 1000) % 60),
+            };
+        } else {
+            return null;
+        }
+    };
+
+    const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft());
 
     useEffect(() => {
-        const calculateTimeLeft = () => {
-            const now = new Date().getTime();
-            const difference = targetTimeSeconds * 1000 - now;
-
-            if (difference > 0) {
-                return {
-                    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-                    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-                    minutes: Math.floor((difference / 1000 / 60) % 60),
-                    seconds: Math.floor((difference / 1000) % 60),
-                };
-            } else {
-                if (onTimerEnd) onTimerEnd();
-                return null;
-            }
-        };
-
-        // Initial calculation
-        setTimeLeft(calculateTimeLeft());
-
         const timer = setInterval(() => {
             const remaining = calculateTimeLeft();
             setTimeLeft(remaining);
             if (!remaining) {
+                if (onTimerEnd) onTimerEnd();
                 clearInterval(timer);
             }
         }, 1000);

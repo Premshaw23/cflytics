@@ -12,7 +12,6 @@ import {
     Legend
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Info } from "lucide-react";
 import { CFSubmission } from '@/types';
 

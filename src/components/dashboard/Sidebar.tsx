@@ -13,6 +13,9 @@ import {
     GitCompare,
     Settings,
     Bookmark,
+    Target,
+    FileText,
+    Settings as SettingsIcon,
     ChevronLeft,
     ChevronRight,
     Code
@@ -26,9 +29,11 @@ const navItems = [
     { title: "Problems", href: "/problems", icon: Code2 },
     { title: "Contests", href: "/contests", icon: Trophy },
     { title: "Submissions", href: "/submissions", icon: History },
+    { title: "Goals", href: "/goals", icon: Target },
     { title: "Analytics", href: "/analytics", icon: BarChart },
     { title: "Compare", href: "/compare", icon: GitCompare },
     { title: "Bookmarks", href: "/bookmarks", icon: Bookmark },
+    { title: "Notes", href: "/notes", icon: FileText },
 ];
 
 export function Sidebar() {

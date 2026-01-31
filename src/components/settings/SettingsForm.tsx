@@ -11,15 +11,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { Save } from "lucide-react";
 
+import { toast } from "sonner";
+
 export function SettingsForm() {
     const preferences = usePreferences();
-    const { setTheme } = useTheme(); // use next-themes
+    const { setTheme } = useTheme();
 
     const [handle, setHandle] = useState(preferences.defaultHandle);
 
     const handleSave = () => {
         preferences.setDefaultHandle(handle);
-        // Toast or feedback
+        localStorage.setItem("codey_active_handle", handle);
+        window.dispatchEvent(new Event('storage'));
+        toast.success("Preferences updated successfully");
     };
 
     return (

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRecommendations } from '@/lib/hooks/useRecommendations';
 import { ProblemCard } from '@/components/recommend/ProblemCard';
 import { Input } from '@/components/ui/input';
@@ -21,6 +21,14 @@ export default function RecommendPage() {
     const [handle, setHandle] = useState('');
     const [submittedHandle, setSubmittedHandle] = useState('');
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
+
+    useEffect(() => {
+        const saved = localStorage.getItem("codey_active_handle");
+        if (saved) {
+            setHandle(saved);
+            setSubmittedHandle(saved);
+        }
+    }, []);
 
     const { recommendations, isLoading, userRating } = useRecommendations({
         handle: submittedHandle,
@@ -133,10 +141,15 @@ export default function RecommendPage() {
             ) : (
                 <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {recommendations.map(problem => (
-                        <ProblemCard key={`${problem.contestId}-${problem.index}`} problem={problem} />
+                        <ProblemCard
+                            key={`${problem.contestId}-${problem.index}`}
+                            problem={problem}
+                            handle={submittedHandle}
+                        />
                     ))}
                 </div>
             )}
         </div>
     );
 }
+
