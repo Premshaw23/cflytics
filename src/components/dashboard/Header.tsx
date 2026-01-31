@@ -21,12 +21,48 @@ import { navItems } from "@/config/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/store/useAuth";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 export function Header() {
     const [search, setSearch] = useState("");
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
+    const authStatus = useAuth((s) => s.status);
+    const authUser = useAuth((s) => s.user);
+    const logout = useAuth((s) => s.logout);
+    const isConnected = authStatus === "connected" && !!authUser;
+    const connectedHandle = isConnected ? (authUser.handle ?? "") : "";
+
+    const [activeHandle, setActiveHandle] = useState<string>("");
+
+    useEffect(() => {
+        const update = () => {
+            const current = localStorage.getItem("codey_active_handle") || "";
+            setActiveHandle(current);
+        };
+
+        const id = setTimeout(update, 0);
+        window.addEventListener("storage", update);
+        return () => {
+            clearTimeout(id);
+            window.removeEventListener("storage", update);
+        };
+    }, []);
+
+    const isViewingOther =
+        !!connectedHandle &&
+        !!activeHandle &&
+        connectedHandle.toLowerCase() !== activeHandle.toLowerCase();
+
+    const backToMyHandle = () => {
+        if (!connectedHandle) return;
+        localStorage.setItem("codey_active_handle", connectedHandle);
+        window.dispatchEvent(new Event("storage"));
+        router.refresh();
+    };
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -100,9 +136,30 @@ export function Header() {
 
             {/* Actions */}
             <div className="flex items-center space-x-4">
+                {isViewingOther && (
+                    <div className="hidden md:flex items-center gap-2">
+                        <Badge variant="outline" className="font-bold">
+                            Viewing <span className="text-primary">@{activeHandle}</span>
+                        </Badge>
+                        <Button
+                            variant="secondary"
+                            className="h-9 font-bold"
+                            onClick={backToMyHandle}
+                            title={`Back to your handle (@${connectedHandle})`}
+                        >
+                            Back to @${connectedHandle}
+                        </Button>
+                    </div>
+                )}
                 <ThemeToggle />
 
-                <Button variant="outline" size="icon" className="h-9 w-9 border-border/50 relative">
+                <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-9 w-9 border-border/50 relative"
+                    onClick={() => toast.message("Notifications coming soon")}
+                    title="Notifications (coming soon)"
+                >
                     <Bell className="h-[1.2rem] w-[1.2rem]" />
                     <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-background" />
                 </Button>
@@ -114,7 +171,14 @@ export function Header() {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-56">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuLabel className="space-y-1">
+                            <div className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+                                {isConnected ? "Connected" : "Guest Mode"}
+                            </div>
+                            <div className="text-sm font-bold">
+                                {isConnected ? `@${authUser.handle}` : "Not connected"}
+                            </div>
+                        </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => router.push("/")}>
                            Home
@@ -122,13 +186,29 @@ export function Header() {
                         <DropdownMenuItem onClick={() => router.push("/profile")}>
                             Profile
                         </DropdownMenuItem>
+                        {isViewingOther && (
+                            <DropdownMenuItem onClick={backToMyHandle}>
+                                Back to @{connectedHandle}
+                            </DropdownMenuItem>
+                        )}
                         <DropdownMenuItem onClick={() => router.push("/settings")}>
                             Settings
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem className="text-red-500 focus:text-red-500">
-                            Log out
+                        <DropdownMenuItem onClick={() => router.push("/connect")}>
+                            {isConnected ? "Manage Connection" : "Connect Account"}
                         </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        {isConnected && (
+                            <DropdownMenuItem
+                                className="text-red-500 focus:text-red-500"
+                                onClick={async () => {
+                                    await logout();
+                                    router.push("/");
+                                }}
+                            >
+                                Disconnect
+                            </DropdownMenuItem>
+                        )}
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>

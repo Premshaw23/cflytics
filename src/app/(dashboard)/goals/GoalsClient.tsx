@@ -1,39 +1,41 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { GoalForm } from "@/components/goals/GoalForm";
 import { GoalsList } from "@/components/goals/GoalsList";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Target, Rocket } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Search, Target } from "lucide-react";
+import { useAuth } from "@/lib/store/useAuth";
 
 export default function GoalsClient() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const urlHandle = searchParams.get("handle");
 
-    const [handle, setHandle] = useState<string | null>(urlHandle);
-    const [searchInput, setSearchInput] = useState(urlHandle || "");
+    const [savedHandle, setSavedHandle] = useState<string>("");
+    const [searchInput, setSearchInput] = useState(urlHandle ?? "");
     const [refreshKey, setRefreshKey] = useState(0);
+    const authStatus = useAuth((s) => s.status);
+    const authUser = useAuth((s) => s.user);
+    const isConnected = authStatus === "connected";
 
     useEffect(() => {
-        if (!urlHandle) {
-            const saved = localStorage.getItem("codey_active_handle");
-            if (saved) {
-                setHandle(saved);
-                setSearchInput(saved);
-                router.replace(`/goals?handle=${saved}`);
+        const id = setTimeout(() => {
+            const saved = localStorage.getItem("codey_active_handle") || "";
+            setSavedHandle(saved);
+            // Prefill search only if URL didn't provide and user hasn't typed
+            if (!urlHandle) {
+                setSearchInput((prev) => (prev.trim().length > 0 ? prev : saved));
             }
-        } else {
-            setHandle(urlHandle);
-            setSearchInput(urlHandle);
-        }
-    }, [urlHandle, router]);
+        }, 0);
+        return () => clearTimeout(id);
+    }, [urlHandle]);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
+        if (isConnected) return;
         if (searchInput.trim()) {
             router.push(`/goals?handle=${searchInput.trim()}`);
         }
@@ -43,7 +45,13 @@ export default function GoalsClient() {
         setRefreshKey(prev => prev + 1);
     };
 
-    if (!handle) {
+    if (authStatus === "loading") {
+        return <div className="p-6 text-sm text-muted-foreground">Loading…</div>;
+    }
+
+    const effectiveHandle = isConnected ? (authUser?.handle ?? "") : (urlHandle ?? savedHandle);
+
+    if (!effectiveHandle) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[70vh] relative overflow-hidden">
                 {/* Background Decor */}
@@ -91,23 +99,25 @@ export default function GoalsClient() {
                         Active <span className="text-emerald-500">//</span> Goals
                     </h1>
                     <p className="text-muted-foreground font-medium flex items-center gap-2">
-                        Tracking for <span className="text-zinc-900 dark:text-white font-bold bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-white/10">{handle}</span>
+                        Tracking for <span className="text-zinc-900 dark:text-white font-bold bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-white/10">{effectiveHandle}</span>
                     </p>
                 </div>
-                <Button variant="outline" onClick={() => router.push("/goals")} className="w-full md:w-auto border-dashed hover:border-solid">
-                    Change User
-                </Button>
+                {!isConnected && (
+                    <Button variant="outline" onClick={() => router.push("/goals")} className="w-full md:w-auto border-dashed hover:border-solid">
+                        Change User
+                    </Button>
+                )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Left Column: Create Goal Form */}
                 <div className="md:col-span-1">
-                    <GoalForm handle={handle} onGoalCreated={onGoalCreated} />
+                    <GoalForm handle={effectiveHandle} onGoalCreated={onGoalCreated} />
                 </div>
 
                 {/* Right Column: Goals List */}
                 <div className="md:col-span-2">
-                    <GoalsList handle={handle} refreshKey={refreshKey} />
+                    <GoalsList handle={effectiveHandle} refreshKey={refreshKey} />
                 </div>
             </div>
         </div>

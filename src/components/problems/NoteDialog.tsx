@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { FileText, Save, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/store/useAuth";
+import { guestStorage } from "@/lib/storage/guest";
 
 interface NoteDialogProps {
     handle: string;
@@ -25,6 +27,8 @@ export function NoteDialog({ handle, problemId, problemName }: NoteDialogProps) 
     const [isLoading, setIsLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const authStatus = useAuth((s) => s.status);
+    const isConnected = authStatus === "connected";
 
     useEffect(() => {
         if (isOpen && handle && problemId) {
@@ -35,12 +39,21 @@ export function NoteDialog({ handle, problemId, problemName }: NoteDialogProps) 
     const fetchNote = async () => {
         setIsLoading(true);
         try {
-            const res = await fetch(`/api/notes?handle=${handle}&problemId=${problemId}`);
-            const data = await res.json();
-            if (data.note) {
-                setNote(data.note.content);
+            if (isConnected) {
+                const res = await fetch(`/api/notes?problemId=${problemId}`);
+                const data = await res.json();
+                if (data.note) {
+                    setNote(data.note.content);
+                } else {
+                    setNote("");
+                }
             } else {
-                setNote("");
+                if (!handle) {
+                    setNote("");
+                } else {
+                    const existing = guestStorage.notes.get(handle, problemId);
+                    setNote(existing?.content ?? "");
+                }
             }
         } catch (err) {
             console.error("Failed to fetch note", err);
@@ -52,17 +65,20 @@ export function NoteDialog({ handle, problemId, problemName }: NoteDialogProps) 
     const saveNote = async () => {
         setIsSaving(true);
         try {
-            const res = await fetch("/api/notes", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ handle, problemId, content: note }),
-            });
-            if (res.ok) {
-                toast.success("Note saved successfully");
-                setIsOpen(false);
+            if (isConnected) {
+                const res = await fetch("/api/notes", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ problemId, content: note }),
+                });
+                if (!res.ok) throw new Error("Failed to save");
             } else {
-                throw new Error("Failed to save");
+                if (!handle) throw new Error("No handle set");
+                guestStorage.notes.upsert(handle, problemId, note);
             }
+
+            toast.success("Note saved successfully");
+            setIsOpen(false);
         } catch (err) {
             toast.error("Failed to save note");
         } finally {

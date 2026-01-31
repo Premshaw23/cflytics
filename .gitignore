@@ -41,6 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 codey-weekwise-plan.md
+codey-auth-plan.md
 
 /src/generated/prisma
 

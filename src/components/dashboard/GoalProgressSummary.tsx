@@ -8,19 +8,28 @@ import { Badge } from "@/components/ui/badge";
 import { Target, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { SkeletonLoader } from "@/components/shared/LoadingSpinner";
+import { useAuth } from "@/lib/store/useAuth";
+import { guestStorage } from "@/lib/storage/guest";
 
 export function GoalProgressSummary({ handle }: { handle: string }) {
     const [goals, setGoals] = useState<Goal[]>([]);
     const [loading, setLoading] = useState(true);
+    const authStatus = useAuth((s) => s.status);
+    const isConnected = authStatus === "connected";
 
     useEffect(() => {
         const fetchGoals = async () => {
             try {
-                const res = await fetch(`/api/goals?handle=${handle}`);
-                const data = await res.json();
-                if (data.goals) {
-                    // Show only active/incomplete goals on dashboard
-                    setGoals(data.goals.filter((g: Goal) => !g.completed).slice(0, 3));
+                if (isConnected) {
+                    const res = await fetch(`/api/goals`);
+                    const data = await res.json();
+                    if (data.goals) {
+                        setGoals(data.goals.filter((g: Goal) => !g.completed).slice(0, 3));
+                    }
+                } else {
+                    if (!handle) return;
+                    const data = guestStorage.goals.list(handle).map((g) => ({ ...g, userId: "guest" }));
+                    setGoals(data.filter((g: Goal) => !g.completed).slice(0, 3));
                 }
             } catch (err) {
                 console.error("Failed to fetch goals for dashboard", err);
@@ -30,7 +39,7 @@ export function GoalProgressSummary({ handle }: { handle: string }) {
         };
 
         if (handle) fetchGoals();
-    }, [handle]);
+    }, [handle, isConnected]);
 
     if (loading) {
         return (

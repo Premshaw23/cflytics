@@ -13,6 +13,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Goal } from "@/types";
+import { useAuth } from "@/lib/store/useAuth";
+import { guestStorage } from "@/lib/storage/guest";
 
 interface GoalsListProps {
     handle: string;
@@ -22,20 +24,32 @@ interface GoalsListProps {
 export function GoalsList({ handle, refreshKey }: GoalsListProps) {
     const [goals, setGoals] = useState<Goal[]>([]);
     const [loading, setLoading] = useState(true);
+    const authStatus = useAuth((s) => s.status);
+    const isConnected = authStatus === "connected";
 
     const fetchGoals = useCallback(async () => {
         try {
-            const res = await fetch(`/api/goals?handle=${handle}`);
-            const data = await res.json();
-            if (data.goals) {
-                setGoals(data.goals);
+            if (isConnected) {
+                const res = await fetch(`/api/goals`);
+                const data = await res.json();
+                if (data.goals) {
+                    setGoals(data.goals);
+                }
+            } else {
+                const items = handle ? guestStorage.goals.list(handle) : [];
+                setGoals(
+                    items.map((g) => ({
+                        ...g,
+                        userId: "guest",
+                    }))
+                );
             }
         } catch (err) {
             console.error("Failed to fetch goals", err);
         } finally {
             setLoading(false);
         }
-    }, [handle]);
+    }, [handle, isConnected]);
 
     useEffect(() => {
         fetchGoals();
@@ -43,19 +57,32 @@ export function GoalsList({ handle, refreshKey }: GoalsListProps) {
 
     const deleteGoal = async (id: string) => {
         if (!confirm("Are you sure?")) return;
-        await fetch(`/api/goals?id=${id}`, { method: "DELETE" });
-        fetchGoals();
+        if (isConnected) {
+            await fetch(`/api/goals?id=${id}`, { method: "DELETE" });
+            fetchGoals();
+        } else {
+            if (!handle) return;
+            guestStorage.goals.remove(handle, id);
+            fetchGoals();
+        }
     };
 
     const toggleComplete = async (goal: Goal) => {
-        await fetch("/api/goals", {
-            method: "PUT",
-            body: JSON.stringify({
-                id: goal.id,
-                completed: !goal.completed
-            })
-        });
-        fetchGoals();
+        if (isConnected) {
+            await fetch("/api/goals", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: goal.id,
+                    completed: !goal.completed
+                })
+            });
+            fetchGoals();
+        } else {
+            if (!handle) return;
+            guestStorage.goals.update(handle, goal.id, { completed: !goal.completed });
+            fetchGoals();
+        }
     };
 
     if (loading) return <div>Loading goals...</div>;

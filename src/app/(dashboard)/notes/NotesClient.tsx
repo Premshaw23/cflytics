@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { ErrorState } from "@/components/shared/ErrorState";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { FileText, ExternalLink, Calendar, Search, Edit3 } from "lucide-react";
@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { NoteDialog } from "@/components/problems/NoteDialog";
 import { formatIST } from "@/lib/utils/date-utils";
+import { useAuth } from "@/lib/store/useAuth";
+import { guestStorage } from "@/lib/storage/guest";
 
 interface Note {
     id: string;
@@ -26,6 +28,9 @@ export default function NotesClient() {
     const [isError, setIsError] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const router = useRouter();
+    const authStatus = useAuth((s) => s.status);
+    const authUser = useAuth((s) => s.user);
+    const isConnected = authStatus === "connected";
 
     useEffect(() => {
         const saved = localStorage.getItem("codey_active_handle");
@@ -33,21 +38,27 @@ export default function NotesClient() {
     }, []);
 
     useEffect(() => {
-        if (handle) {
-            fetchNotes();
-        } else if (handle === "") {
+        if (authStatus === "loading") return;
+        const effectiveHandle = isConnected ? (authUser?.handle ?? "") : (handle ?? "");
+        if (!effectiveHandle) {
             setIsLoading(false);
+            return;
         }
-    }, [handle]);
+        fetchNotes(effectiveHandle);
+    }, [authStatus, isConnected, authUser?.handle, handle]);
 
-    const fetchNotes = async () => {
+    const fetchNotes = async (effectiveHandle: string) => {
         setIsLoading(true);
         setIsError(false);
         try {
-            const res = await fetch(`/api/notes?handle=${handle}`);
-            if (!res.ok) throw new Error("Failed to fetch");
-            const data = await res.json();
-            setNotes(data.notes || []);
+            if (isConnected) {
+                const res = await fetch(`/api/notes`);
+                if (!res.ok) throw new Error("Failed to fetch");
+                const data = await res.json();
+                setNotes(data.notes || []);
+            } else {
+                setNotes(guestStorage.notes.list(effectiveHandle));
+            }
         } catch (err) {
             console.error(err);
             setIsError(true);
@@ -61,20 +72,28 @@ export default function NotesClient() {
         note.content.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    if (!handle && handle !== null) {
+    if (authStatus === "loading") return <LoadingSpinner label="Loading..." />;
+
+    const effectiveHandle = isConnected ? (authUser?.handle ?? "") : (handle ?? "");
+
+    if (!effectiveHandle) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6">
                 <div className="text-center space-y-2">
                     <h1 className="text-3xl font-bold tracking-tight">Personal Notes</h1>
-                    <p className="text-muted-foreground text-sm font-medium">Set your handle to start tracking your progress.</p>
+                    <p className="text-muted-foreground text-sm font-medium">
+                        {isConnected ? "Connect a Codeforces handle to sync notes across devices." : "Set your handle to start tracking your progress."}
+                    </p>
                 </div>
-                <Button onClick={() => router.push("/")}>Set Handle</Button>
+                <Button onClick={() => router.push(isConnected ? "/connect" : "/")}>
+                    {isConnected ? "Connect Account" : "Set Handle"}
+                </Button>
             </div>
         );
     }
 
     if (isLoading) return <LoadingSpinner label="Compiling your notes..." />;
-    if (isError) return <ErrorState message="Could not load your notes. Please try again." onRetry={fetchNotes} />;
+    if (isError) return <ErrorState message="Could not load your notes. Please try again." onRetry={() => fetchNotes(effectiveHandle)} />;
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -84,7 +103,7 @@ export default function NotesClient() {
                         <FileText className="w-8 h-8 text-primary" /> My Study Notes
                     </h1>
                     <p className="text-muted-foreground font-medium text-sm">
-                        Documenting strategies and reflections for <span className="text-primary font-bold">@{handle}</span>
+                        Documenting strategies and reflections for <span className="text-primary font-bold">@{effectiveHandle}</span>
                     </p>
                 </div>
                 <div className="relative w-full md:w-72">
@@ -117,7 +136,9 @@ export default function NotesClient() {
                 </Card>
             ) : filteredNotes.length === 0 ? (
                 <div className="text-center py-20">
-                    <p className="text-muted-foreground">No notes found matching "{searchQuery}"</p>
+                    <p className="text-muted-foreground">
+                        No notes found matching &quot;{searchQuery}&quot;
+                    </p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 gap-6">
@@ -136,7 +157,7 @@ export default function NotesClient() {
                                 </div>
                                 <div className="flex gap-2">
                                     <NoteDialog
-                                        handle={handle!}
+                                        handle={effectiveHandle}
                                         problemId={note.problemId}
                                         problemName={`Problem ${note.problemId}`}
                                     />

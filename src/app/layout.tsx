@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/shared/ThemeProvider";
 import { QueryProvider } from "@/lib/providers/QueryProvider";
 import { siteConfig } from "@/config/site";
+import { AuthBootstrap } from "@/components/shared/AuthBootstrap";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -97,6 +98,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
+            <AuthBootstrap />
             {children}
             <Toaster richColors position="top-right" />
             <script

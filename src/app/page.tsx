@@ -15,15 +15,13 @@ import {
   Code,
   ArrowRight,
   Sparkles,
-  Users,
   LineChart
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
-import Image from "next/image";
+import { siteConfig } from "@/config/site";
 
 const features = [
   {
@@ -94,7 +92,7 @@ export default function LandingPage() {
       </div>
 
       {/* Navigation */}
-      <nav className="fixed top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+      <nav className="fixed top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-md supports-backdrop-filter:bg-background/60">
         <div className="container mx-auto px-6 md:px-12 lg:px-16 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2 group">
             <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform duration-300 shadow-lg shadow-primary/20">
@@ -110,7 +108,7 @@ export default function LandingPage() {
           <div className="flex items-center space-x-3">
             <ThemeToggle />
             <Button variant="ghost" className="text-muted-foreground hover:text-foreground hidden sm:flex px-2" asChild>
-              <Link href="/dashboard">Log in</Link>
+              <Link href="/connect">Log in</Link>
             </Button>
             <Button className="h-9 px-4 md:px-6 font-bold transition-all text-sm" asChild>
               <Link href="/dashboard">Get Started</Link>
@@ -136,7 +134,7 @@ export default function LandingPage() {
             </Badge>
             <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-6 md:mb-10 leading-[1.1] md:leading-[0.95] text-foreground">
               MASTER THE <br />
-              <span className="bg-clip-text text-transparent bg-gradient-to-b from-foreground via-foreground/90 to-foreground/40">
+              <span className="bg-clip-text text-transparent bg-linear-to-b from-foreground via-foreground/90 to-foreground/40">
                 ALGORITHM
               </span>
             </h1>
@@ -234,7 +232,7 @@ export default function LandingPage() {
       </section>
 
       <section className="py-20 md:py-32 bg-muted/30 border-y border-border relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-primary/5 rounded-full blur-[80px] md:blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-75 md:w-150 h-75 md:h-150 bg-primary/5 rounded-full blur-[80px] md:blur-[120px] pointer-events-none" />
         <div className="container mx-auto px-6 md:px-12 lg:px-16 relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-12 md:gap-20">
             <div className="flex-1 space-y-8 md:space-y-10 text-center lg:text-left">
@@ -289,7 +287,7 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="relative max-w-6xl mx-auto rounded-[3rem] overflow-hidden p-12 md:p-24 text-center border border-border bg-card shadow-xl"
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 via-primary/5 to-purple-500/10 pointer-events-none" />
+            <div className="absolute inset-0 bg-linear-to-tr from-primary/20 via-primary/5 to-purple-500/10 pointer-events-none" />
             <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/20 rounded-full blur-[120px]" />
             <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px]" />
 
@@ -328,9 +326,36 @@ export default function LandingPage() {
                 Empowering the next generation of algorithmic masterminds with elite data visualization and tracking.
               </p>
               <div className="flex gap-6">
-                {["Twitter", "GitHub", "Discord"].map(s => (
-                  <Link key={s} href="#" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">{s}</Link>
-                ))}
+                <Link
+                  href={siteConfig.links.x}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  X
+                </Link>
+                <Link
+                  href={siteConfig.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  GitHub
+                </Link>
+                <Link
+                  href={siteConfig.links.codeforces}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Codeforces
+                </Link>
+                <Link
+                  href={siteConfig.links.email}
+                  className="text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Email
+                </Link>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-12 md:col-span-2">

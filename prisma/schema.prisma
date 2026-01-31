@@ -67,6 +67,18 @@ model UserPreference {
   notifications Boolean @default(true)
 }
 
+model LoginChallenge {
+  id         String    @id @default(cuid())
+  handle     String
+  token      String
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([handle])
+  @@index([expiresAt])
+}
+
 enum GoalType {
   RATING
   PROBLEMS_SOLVED

@@ -10,6 +10,8 @@ import { getRatingColor, getRatingBadgeClass } from "@/lib/utils/rating-colors";
 import { CFUser } from "@/types";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/store/useAuth";
+import { useRouter } from "next/navigation";
 
 interface ProfileHeaderProps {
     user?: CFUser;
@@ -17,21 +19,62 @@ interface ProfileHeaderProps {
 }
 
 export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
-    const [isMyHandle, setIsMyHandle] = useState(false);
+    const router = useRouter();
+    const authStatus = useAuth((s) => s.status);
+    const authUser = useAuth((s) => s.user);
+    const logout = useAuth((s) => s.logout);
+    const isConnected = authStatus === "connected" && !!authUser?.handle;
+
+    const [activeHandle, setActiveHandle] = useState<string>("");
 
     useEffect(() => {
-        if (user) {
-            const active = localStorage.getItem("codey_active_handle");
-            setIsMyHandle(active === user.handle);
-        }
-    }, [user]);
+        const update = () => {
+            const current = localStorage.getItem("codey_active_handle") || "";
+            setActiveHandle(current);
+        };
+
+        // Defer to avoid SSR access + satisfy react-hooks/set-state-in-effect rule
+        const id = setTimeout(update, 0);
+        window.addEventListener("storage", update);
+        return () => {
+            clearTimeout(id);
+            window.removeEventListener("storage", update);
+        };
+    }, []);
+
+    const connectedHandle = isConnected ? (authUser?.handle ?? "") : "";
+    const isMyAccount = !!user && !!connectedHandle && user.handle === connectedHandle;
+    const isActiveAnalysis = !!user && !!activeHandle && user.handle === activeHandle;
+    const isViewingOtherWhileConnected = !!user && !!connectedHandle && !isMyAccount;
 
     const setAsActive = () => {
         if (user) {
             localStorage.setItem("codey_active_handle", user.handle);
-            setIsMyHandle(true);
+            setActiveHandle(user.handle);
             window.dispatchEvent(new Event('storage')); // Notify other components
         }
+    };
+
+    const backToMyHandle = () => {
+        if (!connectedHandle) return;
+        localStorage.setItem("codey_active_handle", connectedHandle);
+        setActiveHandle(connectedHandle);
+        window.dispatchEvent(new Event("storage"));
+        router.push(`/profile/${connectedHandle}`);
+    };
+
+    const switchConnectedAccount = async () => {
+        if (!user) return;
+        if (isMyAccount) return;
+
+        const ok = confirm(
+            `You are currently connected as @${connectedHandle || "unknown"}.\n\nSwitch connected account to @${user.handle}? This will log you out and you will need to verify @${user.handle}.`
+        );
+        if (!ok) return;
+
+        await logout();
+        localStorage.setItem("codey_active_handle", user.handle);
+        router.push(`/connect?handle=${encodeURIComponent(user.handle)}`);
     };
 
     if (isLoading) {
@@ -82,6 +125,27 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
 
                 {/* Info Section */}
                 <div className="flex-1 space-y-4 w-full">
+                    {isViewingOtherWhileConnected && (
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-2xl border border-border bg-muted/30 px-4 py-3">
+                            <div className="text-sm">
+                                <span className="text-muted-foreground font-bold">Connected as</span>{" "}
+                                <span className="font-black">@{connectedHandle}</span>
+                                <span className="text-muted-foreground font-bold"> • Viewing</span>{" "}
+                                <span className="font-black text-primary">@{user.handle}</span>
+                            </div>
+                            <div className="flex gap-2">
+                                <Button
+                                    variant="secondary"
+                                    className="h-9 font-bold"
+                                    onClick={backToMyHandle}
+                                    title={`Back to your profile (@${connectedHandle})`}
+                                >
+                                    Back to @{connectedHandle}
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                         <div className="space-y-1">
                             <div className="flex items-center gap-4 flex-wrap">
@@ -93,9 +157,14 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                                         Grandmaster
                                     </Badge>
                                 )}
-                                {isMyHandle && (
-                                    <Badge variant="secondary" className="bg-primary/20 text-primary border-primary/30 uppercase tracking-widest font-black text-[10px] px-2 py-1">
-                                        Verified Owner
+                                {isMyAccount && (
+                                    <Badge variant="secondary" className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 uppercase tracking-widest font-black text-[10px] px-2 py-1">
+                                        This is your account
+                                    </Badge>
+                                )}
+                                {isActiveAnalysis && !isMyAccount && (
+                                    <Badge variant="secondary" className="bg-primary/15 text-primary border-primary/30 uppercase tracking-widest font-black text-[10px] px-2 py-1">
+                                        Active analysis
                                     </Badge>
                                 )}
                             </div>
@@ -112,21 +181,32 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
 
                         <div className="flex items-center gap-3">
                             <Button
-                                variant={isMyHandle ? "secondary" : "outline"}
+                                variant={isActiveAnalysis ? "secondary" : "outline"}
                                 size="lg"
                                 className={cn(
                                     "rounded-xl font-bold uppercase tracking-widest text-xs h-12 px-6 transition-all",
-                                    !isMyHandle && "bg-zinc-900 border-white/10 hover:border-white/20 hover:bg-zinc-800 text-white dark:bg-zinc-900 dark:border-white/10 dark:hover:bg-white dark:hover:text-black"
+                                    !isActiveAnalysis && "bg-zinc-900 border-white/10 hover:border-white/20 hover:bg-zinc-800 text-white dark:bg-zinc-900 dark:border-white/10 dark:hover:bg-white dark:hover:text-black"
                                 )}
                                 onClick={setAsActive}
-                                disabled={isMyHandle}
+                                disabled={isActiveAnalysis}
                             >
-                                {isMyHandle ? (
-                                    <><CheckCircle2 className="w-4 h-4 mr-2" /> Active Profile</>
+                                {isActiveAnalysis ? (
+                                    <><CheckCircle2 className="w-4 h-4 mr-2" /> Active</>
                                 ) : (
-                                    <><Heart className="w-4 h-4 mr-2" /> Set as Main</>
+                                    <><Heart className="w-4 h-4 mr-2" /> Set active</>
                                 )}
                             </Button>
+
+                            {isConnected && !isMyAccount && (
+                                <Button
+                                    variant="outline"
+                                    size="lg"
+                                    className="rounded-xl font-bold uppercase tracking-widest text-xs h-12 px-6"
+                                    onClick={switchConnectedAccount}
+                                >
+                                    Switch account
+                                </Button>
+                            )}
 
                             <Button variant="outline" size="icon" className="h-12 w-12 rounded-xl bg-zinc-900 border-white/10 hover:bg-zinc-800 text-white dark:bg-zinc-900 dark:border-white/10 dark:hover:bg-white dark:hover:text-black" asChild>
                                 <a href={`https://codeforces.com/profile/${user.handle}`} target="_blank" rel="noopener noreferrer">

@@ -13,6 +13,8 @@ import {
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/lib/store/useAuth";
+import { guestStorage, type GuestGoalType } from "@/lib/storage/guest";
 
 interface GoalFormProps {
     handle: string;
@@ -25,6 +27,8 @@ export function GoalForm({ handle, onGoalCreated }: GoalFormProps) {
     const [deadline, setDeadline] = useState<string>("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>("");
+    const authStatus = useAuth((s) => s.status);
+    const isConnected = authStatus === "connected";
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -32,19 +36,27 @@ export function GoalForm({ handle, onGoalCreated }: GoalFormProps) {
         setError("");
 
         try {
-            const response = await fetch("/api/goals", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    handle,
-                    type,
-                    target: parseInt(target),
-                    deadline: deadline || undefined
-                })
-            });
+            if (isConnected) {
+                const response = await fetch("/api/goals", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        type,
+                        target: parseInt(target),
+                        deadline: deadline || undefined
+                    })
+                });
 
-            if (!response.ok) {
-                throw new Error("Failed to create goal");
+                if (!response.ok) {
+                    throw new Error("Failed to create goal");
+                }
+            } else {
+                if (!handle) throw new Error("No handle set");
+                guestStorage.goals.create(handle, {
+                    type: type as GuestGoalType,
+                    target: parseInt(target),
+                    deadline: deadline ? new Date(deadline).toISOString() : null,
+                });
             }
 
             setTarget("");

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db/prisma";
 import { z } from "zod";
+import { requireAuthUser } from "@/lib/auth/session";
 
 const createGoalSchema = z.object({
-  handle: z.string().min(1),
   type: z.enum(["RATING", "PROBLEMS_SOLVED", "CONTEST_RANK"]),
   target: z.number().int().positive(),
   deadline: z.string().optional(), // ISO date string
@@ -15,25 +15,18 @@ const updateGoalSchema = z.object({
   completed: z.boolean().optional(),
 });
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const handle = searchParams.get("handle");
-
-  if (!handle) {
-    return NextResponse.json({ error: "Handle is required" }, { status: 400 });
+export async function GET(_req: NextRequest) {
+  const authUser = await requireAuthUser();
+  if (!authUser) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { handle },
-      include: { goals: { orderBy: { createdAt: "desc" } } },
+    const goals = await prisma.goal.findMany({
+      where: { userId: authUser.id },
+      orderBy: { createdAt: "desc" },
     });
-
-    if (!user) {
-      return NextResponse.json({ goals: [] });
-    }
-
-    return NextResponse.json({ goals: user.goals });
+    return NextResponse.json({ goals });
   } catch (error) {
     console.error("Error fetching goals:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
@@ -41,6 +34,11 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const authUser = await requireAuthUser();
+  if (!authUser) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await req.json();
     const result = createGoalSchema.safeParse(body);
@@ -49,25 +47,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: result.error.issues }, { status: 400 });
     }
 
-    const { handle, type, target, deadline } = result.data;
-
-    // Ensure user exists
-    let user = await prisma.user.findUnique({ where: { handle } });
-    
-    if (!user) {
-      // If user doesn't exist, create them. Usually we fetch details from CF first, 
-      // but for goals purpose, we need minimal user record.
-      user = await prisma.user.create({
-        data: { 
-            handle,
-            // Only create with handle initially. Other fields are optional or updated later.
-        }
-      });
-    }
+    const { type, target, deadline } = result.data;
 
     const goal = await prisma.goal.create({
       data: {
-        userId: user.id,
+        userId: authUser.id,
         type,
         target,
         deadline: deadline ? new Date(deadline) : null,
@@ -82,6 +66,11 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
+    const authUser = await requireAuthUser();
+    if (!authUser) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const body = await req.json();
         const result = updateGoalSchema.safeParse(body);
@@ -92,14 +81,19 @@ export async function PUT(req: NextRequest) {
 
         const { id, current, completed } = result.data;
 
-        const goal = await prisma.goal.update({
-            where: { id },
+        const updated = await prisma.goal.updateMany({
+            where: { id, userId: authUser.id },
             data: {
                 current,
                 completed
             }
         });
 
+        if (updated.count === 0) {
+            return NextResponse.json({ error: "Not found" }, { status: 404 });
+        }
+
+        const goal = await prisma.goal.findFirst({ where: { id, userId: authUser.id } });
         return NextResponse.json({ goal });
     } catch (error) {
         console.error("Error updating goal:", error);
@@ -108,6 +102,11 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+    const authUser = await requireAuthUser();
+    if (!authUser) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
@@ -116,9 +115,13 @@ export async function DELETE(req: NextRequest) {
     }
 
     try {
-        await prisma.goal.delete({
-            where: { id }
+        const deleted = await prisma.goal.deleteMany({
+            where: { id, userId: authUser.id }
         });
+
+        if (deleted.count === 0) {
+            return NextResponse.json({ error: "Not found" }, { status: 404 });
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {

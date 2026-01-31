@@ -5,6 +5,7 @@ import { Bookmark as BookmarkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBookmarks } from "@/lib/hooks/useBookmarks";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/store/useAuth";
 
 interface BookmarkButtonProps {
     handle: string;
@@ -14,6 +15,8 @@ interface BookmarkButtonProps {
 }
 
 export function BookmarkButton({ handle, problemId, name, rating }: BookmarkButtonProps) {
+    const authStatus = useAuth((s) => s.status);
+    const isConnected = authStatus === "connected";
     const { isBookmarked, toggleBookmark } = useBookmarks(handle);
     const bookmarked = isBookmarked(problemId);
 
@@ -30,10 +33,10 @@ export function BookmarkButton({ handle, problemId, name, rating }: BookmarkButt
             onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                if (!handle) return;
+                if (!handle && !isConnected) return;
                 toggleBookmark.mutate({ problemId, name, rating });
             }}
-            disabled={!handle || toggleBookmark.isPending}
+            disabled={(!handle && !isConnected) || toggleBookmark.isPending}
         >
             <BookmarkIcon
                 className={cn(

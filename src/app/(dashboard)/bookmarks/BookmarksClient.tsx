@@ -1,36 +1,50 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useBookmarks } from "@/lib/hooks/useBookmarks";
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bookmark as BookmarkIcon, ExternalLink, Trash2, Search, Target } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Bookmark as BookmarkIcon, ExternalLink, Trash2, Target } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { formatIST } from "@/lib/utils/date-utils";
+import { useAuth } from "@/lib/store/useAuth";
 
 export default function BookmarksClient() {
-    const [handle, setHandle] = useState<string | null>(null);
+    const [guestHandle, setGuestHandle] = useState<string>("");
     const router = useRouter();
+    const authStatus = useAuth((s) => s.status);
+    const authUser = useAuth((s) => s.user);
+    const isConnected = authStatus === "connected";
 
     useEffect(() => {
-        const saved = localStorage.getItem("codey_active_handle");
-        setHandle(saved || "");
+        // Defer state update to avoid SSR `localStorage` + lint rule
+        const id = setTimeout(() => {
+            const saved = localStorage.getItem("codey_active_handle") || "";
+            setGuestHandle(saved);
+        }, 0);
+        return () => clearTimeout(id);
     }, []);
 
-    const { bookmarks, isLoading, isError, toggleBookmark } = useBookmarks(handle || "");
+    const effectiveHandle = isConnected ? (authUser?.handle ?? "") : guestHandle;
+    const { bookmarks, isLoading, isError, toggleBookmark } = useBookmarks(effectiveHandle);
 
-    if (!handle && handle !== null) {
+    if (authStatus === "loading") return <LoadingSpinner label="Loading..." />;
+
+    if (!effectiveHandle) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 animate-in fade-in zoom-in-95 duration-500">
                 <div className="text-center space-y-2">
                     <h1 className="text-3xl font-bold tracking-tight">Your Saved Problems</h1>
-                    <p className="text-muted-foreground text-sm font-medium">Please set a handle to view your bookmarks.</p>
+                    <p className="text-muted-foreground text-sm font-medium">
+                        {isConnected ? "Connect a Codeforces handle to view your bookmarks." : "Please set a handle to view your bookmarks."}
+                    </p>
                 </div>
-                <Button onClick={() => router.push("/")}>Set Handle</Button>
+                <Button onClick={() => router.push(isConnected ? "/connect" : "/")}>
+                    {isConnected ? "Connect Account" : "Set Handle"}
+                </Button>
             </div>
         );
     }
@@ -46,7 +60,7 @@ export default function BookmarksClient() {
                         <BookmarkIcon className="w-8 h-8 text-primary" /> Saved Problems
                     </h1>
                     <p className="text-muted-foreground font-medium text-sm">
-                        Curated collection of challenges for <span className="text-primary font-bold">@{handle}</span>
+                        Curated collection of challenges for <span className="text-primary font-bold">@{effectiveHandle}</span>
                     </p>
                 </div>
             </div>
