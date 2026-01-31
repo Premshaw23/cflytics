@@ -132,7 +132,7 @@ export default function ContestDetailPage() {
 
             {/* Problems List */}
             {!isBefore && problems && problems.length > 0 && (
-                <Card className="border-border/50">
+                <Card className="bg-white dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 backdrop-blur-xl shadow-lg">
                     <CardHeader>
                         <CardTitle>Contest Problems</CardTitle>
                     </CardHeader>
@@ -186,7 +186,7 @@ export default function ContestDetailPage() {
 
             {/* Standings Section */}
             {!isBefore && data?.rows && data.rows.length > 0 && (
-                <Card className="border-border/50">
+                <Card className="bg-white dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 backdrop-blur-xl shadow-lg">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Trophy className="w-5 h-5 text-yellow-500" /> Top {data.rows.length} Standings

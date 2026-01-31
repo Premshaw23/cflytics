@@ -58,13 +58,13 @@ export function GoalForm({ handle, onGoalCreated }: GoalFormProps) {
     };
 
     return (
-        <Card className="w-full bg-zinc-900/40 border-white/5 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
+        <Card className="w-full bg-white/80 dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
             {/* Decor */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[60px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
 
             <CardHeader className="relative">
-                <CardTitle className="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60 font-black uppercase tracking-wider flex items-center gap-2">
-                    <div className="p-2 rounded-lg bg-zinc-800/50 border border-white/5">
+                <CardTitle className="bg-clip-text text-transparent bg-gradient-to-r from-zinc-900 to-zinc-600 dark:from-white dark:to-white/60 font-black uppercase tracking-wider flex items-center gap-2">
+                    <div className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-white/5">
                         <Loader2 className="w-4 h-4 text-primary animate-spin-slow" />
                     </div>
                     Set New Goal
@@ -75,10 +75,10 @@ export function GoalForm({ handle, onGoalCreated }: GoalFormProps) {
                     <div className="space-y-2">
                         <Label className="uppercase text-xs font-bold text-zinc-500 tracking-wider">Goal Type</Label>
                         <Select value={type} onValueChange={setType}>
-                            <SelectTrigger className="bg-zinc-950/50 border-white/10 h-10">
+                            <SelectTrigger className="bg-white dark:bg-zinc-950/50 border-zinc-200 dark:border-white/10 h-10">
                                 <SelectValue placeholder="Select type" />
                             </SelectTrigger>
-                            <SelectContent className="bg-zinc-900 border-white/10">
+                            <SelectContent className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-white/10">
                                 <SelectItem value="RATING">Rating Target</SelectItem>
                                 <SelectItem value="PROBLEMS_SOLVED">Problems Solved</SelectItem>
                                 <SelectItem value="CONTEST_RANK">Contest Rank</SelectItem>
@@ -94,7 +94,7 @@ export function GoalForm({ handle, onGoalCreated }: GoalFormProps) {
                             value={target}
                             onChange={(e) => setTarget(e.target.value)}
                             required
-                            className="bg-zinc-950/50 border-white/10 h-10 focus-visible:ring-primary/50"
+                            className="bg-white dark:bg-zinc-950/50 border-zinc-200 dark:border-white/10 h-10 focus-visible:ring-primary/50"
                         />
                     </div>
 
@@ -104,11 +104,11 @@ export function GoalForm({ handle, onGoalCreated }: GoalFormProps) {
                             type="date"
                             value={deadline}
                             onChange={(e) => setDeadline(e.target.value)}
-                            className="bg-zinc-950/50 border-white/10 h-10 w-full block focus-visible:ring-primary/50"
+                            className="bg-white dark:bg-zinc-950/50 border-zinc-200 dark:border-white/10 h-10 w-full block focus-visible:ring-primary/50"
                         />
                     </div>
 
-                    {error && <p className="text-sm font-bold text-red-400 bg-red-500/10 p-3 rounded-lg border border-red-500/20">{error}</p>}
+                    {error && <p className="text-sm font-bold text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-500/10 p-3 rounded-lg border border-red-200 dark:border-red-500/20">{error}</p>}
 
                     <Button type="submit" disabled={loading} className="w-full h-11 font-bold uppercase tracking-widest bg-primary hover:bg-primary/90 text-primary-foreground">
                         {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : "Create Goal"}

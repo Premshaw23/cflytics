@@ -107,22 +107,22 @@ export function ActivityHeatmap({ submissions, isLoading }: ActivityHeatmapProps
     }, [selectedYear]);
 
     const getActivityColor = (count: number) => {
-        if (count === 0) return "bg-zinc-900";
+        if (count === 0) return "bg-zinc-100 dark:bg-zinc-900";
         // Scale based on max submissions slightly, or fixed thresholds
-        if (count <= 2) return "bg-emerald-900/40 opacity-100 ring-1 ring-emerald-500/30";
-        if (count <= 5) return "bg-emerald-600/40 opacity-100 ring-1 ring-emerald-500/50";
+        if (count <= 2) return "bg-emerald-200/50 dark:bg-emerald-900/40 opacity-100 ring-1 ring-emerald-500/30";
+        if (count <= 5) return "bg-emerald-400/50 dark:bg-emerald-600/40 opacity-100 ring-1 ring-emerald-500/50";
         if (count <= 8) return "bg-emerald-500/60 opacity-100 ring-1 ring-emerald-400/60";
-        return "bg-emerald-400 opacity-100 shadow-[0_0_10px_rgba(52,211,153,0.5)]";
+        return "bg-emerald-500 dark:bg-emerald-400 opacity-100 shadow-[0_0_10px_rgba(52,211,153,0.5)]";
     };
 
     if (isLoading) return <SkeletonLoader className="h-[300px] w-full rounded-[24px]" />;
 
     return (
-        <Card className="bg-zinc-900/40 border-white/5 backdrop-blur-xl shadow-2xl overflow-hidden group">
-            <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-white/5 bg-white/[0.01]">
+        <Card className="bg-white dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 backdrop-blur-xl shadow-2xl overflow-hidden group">
+            <CardHeader className="flex flex-col md:flex-row items-start md:items-center justify-between pb-6 border-b border-zinc-200 dark:border-white/5 bg-zinc-50/50 dark:bg-white/[0.01]">
                 {/* ... Header Content ... */}
                 <div className="space-y-1">
-                    <CardTitle className="flex items-center gap-3 text-lg font-black uppercase tracking-widest text-white">
+                    <CardTitle className="flex items-center gap-3 text-lg font-black uppercase tracking-widest text-zinc-900 dark:text-white">
                         <Calendar className="w-5 h-5 text-emerald-500" />
                         Code Frequency
                     </CardTitle>
@@ -139,8 +139,8 @@ export function ActivityHeatmap({ submissions, isLoading }: ActivityHeatmapProps
                             className={cn(
                                 "px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all",
                                 selectedYear === y
-                                    ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shadow-lg shadow-emerald-500/10"
-                                    : "text-zinc-600 hover:text-zinc-300 hover:bg-white/5"
+                                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-500 border border-emerald-500/20 shadow-lg shadow-emerald-500/10"
+                                    : "text-zinc-500 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-white/5"
                             )}
                         >
                             {y}
@@ -152,14 +152,14 @@ export function ActivityHeatmap({ submissions, isLoading }: ActivityHeatmapProps
             <CardContent className="p-0">
                 <div className="relative w-full overflow-hidden">
                     {/* Scroll fade masks */}
-                    <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-black/20 to-transparent z-10 pointer-events-none md:hidden" />
-                    <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black/20 to-transparent z-10 pointer-events-none md:hidden" />
+                    <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white/80 dark:from-black/20 to-transparent z-10 pointer-events-none md:hidden" />
+                    <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white/80 dark:from-black/20 to-transparent z-10 pointer-events-none md:hidden" />
 
-                    <div className="overflow-x-auto pb-4 pt-4 px-6 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
+                    <div className="overflow-x-auto pb-4 pt-4 px-6 scrollbar-thin scrollbar-thumb-zinc-300 dark:scrollbar-thumb-zinc-800 scrollbar-track-transparent">
                         <div className="min-w-max">
                             <div className="flex items-start gap-4">
                                 {/* Labels Column */}
-                                <div className="flex flex-col gap-[1.5px] mt-[1.5rem] mr-2 text-[9px] text-zinc-600 font-bold uppercase justify-between h-[6.5rem]">
+                                <div className="flex flex-col gap-[1.5px] mt-[1.5rem] mr-2 text-[9px] text-zinc-500 dark:text-zinc-600 font-bold uppercase justify-between h-[6.5rem]">
                                     <span>Sun</span>
                                     <span>Mon</span>
                                     <span>Tue</span>
@@ -194,16 +194,16 @@ export function ActivityHeatmap({ submissions, isLoading }: ActivityHeatmapProps
                                                                         <TooltipTrigger asChild>
                                                                             <div
                                                                                 className={cn(
-                                                                                    "w-3 h-3 rounded-[2px] transition-all duration-200 hover:ring-1 hover:ring-white/50 cursor-pointer",
+                                                                                    "w-3 h-3 rounded-[2px] transition-all duration-200 hover:ring-1 hover:ring-zinc-400 dark:hover:ring-white/50 cursor-pointer",
                                                                                     getActivityColor(count)
                                                                                 )}
                                                                             />
                                                                         </TooltipTrigger>
                                                                         <TooltipContent
                                                                             side="top"
-                                                                            className="bg-zinc-900/90 border-white/10 text-[10px] font-bold uppercase tracking-wider backdrop-blur-md shadow-xl p-2"
+                                                                            className="bg-white/95 dark:bg-zinc-900/90 border-zinc-200 dark:border-white/10 text-[10px] font-bold uppercase tracking-wider backdrop-blur-md shadow-xl p-2"
                                                                         >
-                                                                            <span className="text-emerald-400">{count} submissions</span>
+                                                                            <span className="text-emerald-500 dark:text-emerald-400">{count} submissions</span>
                                                                             <span className="text-zinc-500 block">{formatIST(day, "MMM dd, yyyy")}</span>
                                                                         </TooltipContent>
                                                                     </Tooltip>
@@ -222,13 +222,13 @@ export function ActivityHeatmap({ submissions, isLoading }: ActivityHeatmapProps
                 </div>
 
                 <div className="px-6 pb-6 pt-2 flex items-center justify-end gap-3">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Less</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-600">Less</span>
                     <div className="flex gap-1">
                         {[0, 2, 5, 8, 12].map((level, i) => (
-                            <div key={i} className={cn("w-3 h-3 rounded-[2px] border", getActivityColor(level))} />
+                            <div key={i} className={cn("w-3 h-3 rounded-[2px] border border-transparent", getActivityColor(level))} />
                         ))}
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-600">More</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-600">More</span>
                 </div>
             </CardContent>
         </Card>

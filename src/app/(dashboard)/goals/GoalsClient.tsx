@@ -51,10 +51,10 @@ export default function GoalsClient() {
 
                 <div className="relative z-10 w-full max-w-lg space-y-8 animate-in fade-in zoom-in-95 duration-700">
                     <div className="text-center space-y-4">
-                        <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-zinc-900 border border-white/5 shadow-2xl mb-4 group">
+                        <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 shadow-2xl mb-4 group">
                             <Target className="w-10 h-10 text-emerald-500 group-hover:rotate-45 transition-transform duration-500" />
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-zinc-900 to-zinc-500 dark:from-white dark:to-white/60">
                             GOAL TRACKER
                         </h1>
                         <p className="text-lg text-muted-foreground/80 font-medium">
@@ -64,7 +64,7 @@ export default function GoalsClient() {
 
                     <form onSubmit={handleSearch} className="relative group">
                         <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-emerald-500/50 to-teal-600/50 opacity-20 group-hover:opacity-40 blur transition duration-500" />
-                        <div className="relative flex items-center bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-1.5 shadow-2xl">
+                        <div className="relative flex items-center bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-zinc-200 dark:border-white/10 rounded-xl p-1.5 shadow-2xl">
                             <Search className="w-5 h-5 text-muted-foreground ml-3" />
                             <Input
                                 placeholder="Enter Codeforces Handle..."
@@ -72,7 +72,7 @@ export default function GoalsClient() {
                                 onChange={(e) => setSearchInput(e.target.value)}
                                 className="h-12 border-none bg-transparent focus-visible:ring-0 text-lg placeholder:text-muted-foreground/50"
                             />
-                            <Button type="submit" size="lg" className="h-10 px-6 font-bold uppercase tracking-wide rounded-lg bg-emerald-600 hover:bg-emerald-500">
+                            <Button type="submit" size="lg" className="h-10 px-6 font-bold uppercase tracking-wide rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white">
                                 Start
                             </Button>
                         </div>
@@ -91,7 +91,7 @@ export default function GoalsClient() {
                         Active <span className="text-emerald-500">//</span> Goals
                     </h1>
                     <p className="text-muted-foreground font-medium flex items-center gap-2">
-                        Tracking for <span className="text-white font-bold bg-zinc-900 px-2 py-0.5 rounded border border-white/10">{handle}</span>
+                        Tracking for <span className="text-zinc-900 dark:text-white font-bold bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-white/10">{handle}</span>
                     </p>
                 </div>
                 <Button variant="outline" onClick={() => router.push("/goals")} className="w-full md:w-auto border-dashed hover:border-solid">

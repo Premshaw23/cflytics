@@ -103,18 +103,12 @@ export function TopicAnalysis({ submissions, isLoading }: TopicAnalysisProps) {
                         dataKey="name"
                         type="category"
                         width={100}
-                        tick={{ fontSize: 11, fill: "#71717a", fontWeight: "bold" }}
+                        tick={{ fontSize: 11, fill: "var(--muted-foreground)", fontWeight: "bold" }}
                         tickLine={false}
                         axisLine={false}
                     />
                     <Tooltip
-                        cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                        contentStyle={{
-                            backgroundColor: "#09090b",
-                            borderColor: "rgba(255,255,255,0.1)",
-                            borderRadius: "12px",
-                            boxShadow: "0 10px 30px -10px rgba(0,0,0,0.5)"
-                        }}
+                        cursor={{ fill: 'var(--muted)', opacity: 0.2 }}
                         content={<CustomTooltip />}
                     />
                     <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={16}>

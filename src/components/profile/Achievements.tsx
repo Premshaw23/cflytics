@@ -73,12 +73,12 @@ export function Achievements({ submissions, rating = 0, maxRating = 0 }: Achieve
     const earnedCount = achievements.filter(a => a.earned).length;
 
     return (
-        <Card className="border-border/50">
+        <Card className="bg-white dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 backdrop-blur-xl shadow-lg">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-lg flex items-center gap-2">
+                <CardTitle className="text-lg flex items-center gap-2 text-zinc-900 dark:text-white">
                     <Award className="w-5 h-5 text-primary" /> Achievements
                 </CardTitle>
-                <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                <div className="text-xs font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-600">
                     {earnedCount} / {achievements.length}
                 </div>
             </CardHeader>
@@ -90,8 +90,8 @@ export function Achievements({ submissions, rating = 0, maxRating = 0 }: Achieve
                             className={cn(
                                 "flex items-center gap-3 p-3 rounded-xl border transition-all",
                                 achievement.earned
-                                    ? "bg-card border-border/50 shadow-sm"
-                                    : "bg-muted/30 border-dashed border-muted-foreground/20 opacity-60 grayscale"
+                                    ? "bg-zinc-50 dark:bg-zinc-900/50 border-zinc-200 dark:border-white/10 shadow-sm"
+                                    : "bg-zinc-100/50 dark:bg-white/5 border-dashed border-zinc-300 dark:border-white/10 opacity-60 grayscale"
                             )}
                         >
                             <div className={cn("w-10 h-10 rounded-full flex items-center justify-center shrink-0",

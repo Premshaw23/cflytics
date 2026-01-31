@@ -39,7 +39,7 @@ export function DifficultyChart({ submissions }: DifficultyChartProps) {
         <div className="h-[350px] w-full">
             <ResponsiveContainer width="100%" height="100%">
                 <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                     <XAxis
                         dataKey="x"
                         domain={['auto', 'auto']}
@@ -62,21 +62,21 @@ export function DifficultyChart({ submissions }: DifficultyChartProps) {
                         dx={-10}
                     />
                     <Tooltip
-                        cursor={{ strokeDasharray: '3 3', stroke: 'rgba(255,255,255,0.2)' }}
+                        cursor={{ strokeDasharray: '3 3', stroke: 'hsl(var(--border))' }}
                         content={({ active, payload }) => {
                             if (active && payload && payload.length) {
                                 const d = payload[0].payload;
                                 return (
-                                    <div className="bg-black/90 border border-white/10 backdrop-blur-xl rounded-xl p-4 shadow-2xl">
-                                        <p className="font-black text-xs uppercase tracking-wider text-white mb-2">{d.name}</p>
+                                    <div className="bg-white/95 dark:bg-black/90 border border-zinc-200 dark:border-white/10 backdrop-blur-xl rounded-xl p-4 shadow-2xl">
+                                        <p className="font-black text-xs uppercase tracking-wider text-zinc-900 dark:text-white mb-2">{d.name}</p>
                                         <div className="flex justify-between items-center gap-6">
                                             <div className="flex flex-col">
                                                 <span className="text-[10px] uppercase font-bold text-zinc-500">Rating</span>
-                                                <span className="text-xl font-black text-cyan-400">{d.y}</span>
+                                                <span className="text-xl font-black text-cyan-500 dark:text-cyan-400">{d.y}</span>
                                             </div>
                                             <div className="flex flex-col text-right">
                                                 <span className="text-[10px] uppercase font-bold text-zinc-500">Date</span>
-                                                <span className="text-xs font-bold text-zinc-300">{formatIST(d.x, 'MMM dd, yyyy')}</span>
+                                                <span className="text-xs font-bold text-zinc-500 dark:text-zinc-300">{formatIST(d.x, 'MMM dd, yyyy')}</span>
                                             </div>
                                         </div>
                                     </div>

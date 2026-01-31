@@ -51,10 +51,10 @@ export default function SubmissionsClient() {
             <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 animate-in fade-in zoom-in duration-500">
                 <div className="relative">
                     <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full" />
-                    <Search className="w-24 h-24 text-white relative z-10" />
+                    <Search className="w-24 h-24 text-zinc-900 dark:text-white relative z-10" />
                 </div>
                 <div className="text-center space-y-2">
-                    <h1 className="text-4xl font-black tracking-tighter text-white">SUBMISSION ANALYZER</h1>
+                    <h1 className="text-4xl font-black tracking-tighter text-zinc-900 dark:text-white">SUBMISSION ANALYZER</h1>
                     <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Enter a handle to explore performance metrics</p>
                 </div>
                 <form onSubmit={handleSearch} className="flex gap-4 w-full max-w-md">
@@ -63,7 +63,7 @@ export default function SubmissionsClient() {
                             placeholder="CODEFORCES HANDLE"
                             value={searchInput}
                             onChange={(e) => setSearchInput(e.target.value)}
-                            className="h-14 pl-6 bg-zinc-900/50 border-white/10 rounded-2xl text-lg font-bold tracking-tight focus:ring-primary/50 focus:border-primary/50 transition-all uppercase placeholder:text-zinc-700"
+                            className="h-14 pl-6 bg-white dark:bg-zinc-900/50 border-zinc-200 dark:border-white/10 rounded-2xl text-lg font-bold tracking-tight focus:ring-primary/50 focus:border-primary/50 transition-all uppercase placeholder:text-zinc-400 dark:placeholder:text-zinc-700 text-zinc-900 dark:text-white"
                         />
                     </div>
                     <Button type="submit" size="lg" className="h-14 px-8 rounded-2xl font-black uppercase tracking-widest">
@@ -108,7 +108,7 @@ export default function SubmissionsClient() {
                 <div className="space-y-4">
                     <div className="flex items-center gap-3">
                         <div className="w-2 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(var(--primary),0.5)]" />
-                        <h1 className="text-5xl font-black tracking-tighter text-white uppercase">
+                        <h1 className="text-5xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase">
                             {handle}
                         </h1>
                     </div>
@@ -121,7 +121,7 @@ export default function SubmissionsClient() {
                         placeholder="SEARCH USER..."
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
-                        className="h-12 bg-zinc-900/40 border-white/5 rounded-xl text-xs font-black uppercase tracking-widest placeholder:text-zinc-700 focus:border-white/10"
+                        className="h-12 bg-white dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 rounded-xl text-xs font-black uppercase tracking-widest placeholder:text-zinc-500 dark:placeholder:text-zinc-700 focus:border-zinc-300 dark:focus:border-white/10 text-zinc-900 dark:text-white"
                     />
                     <Button type="submit" className="h-12 w-12 rounded-xl p-0" variant="secondary">
                         <Search className="w-4 h-4" />
@@ -137,7 +137,7 @@ export default function SubmissionsClient() {
                     { label: "Accuracy", value: `${acRate}%`, icon: Target, color: "text-orange-500", bg: "bg-orange-500/10", border: "border-orange-500/20" },
                     { label: "Top Language", value: topLang, icon: Code2, color: "text-purple-500", bg: "bg-purple-500/10", border: "border-purple-500/20" },
                 ].map((stat, i) => (
-                    <Card key={i} className={`bg-zinc-900/40 border-white/5 backdrop-blur-xl transition-all duration-300 hover:border-white/10 group overflow-hidden`}>
+                    <Card key={i} className={`bg-white/40 dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 backdrop-blur-xl transition-all duration-300 hover:border-zinc-300 dark:hover:border-white/10 group overflow-hidden`}>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-[10px] font-black uppercase tracking-widest text-zinc-500">
                                 {stat.label}
@@ -147,7 +147,7 @@ export default function SubmissionsClient() {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className={`text-2xl font-black tracking-tight text-white group-hover:scale-105 transition-transform duration-300 truncate`}>
+                            <div className={`text-2xl font-black tracking-tight text-zinc-900 dark:text-white group-hover:scale-105 transition-transform duration-300 truncate`}>
                                 {stat.value}
                             </div>
                         </CardContent>
@@ -160,7 +160,7 @@ export default function SubmissionsClient() {
             <div className="grid grid-cols-1 xl:grid-cols-4 gap-8 relative items-start">
                 <div className="xl:col-span-3 space-y-6">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-black tracking-tight text-white flex items-center gap-2">
+                        <h2 className="text-xl font-black tracking-tight text-zinc-900 dark:text-white flex items-center gap-2">
                             <History className="w-5 h-5 text-zinc-500" />
                             RECENT ACTIVITY
                         </h2>
@@ -169,7 +169,7 @@ export default function SubmissionsClient() {
                 </div>
                 <div className="xl:col-span-1 space-y-6 sticky top-6">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-black tracking-tight text-white flex items-center gap-2">
+                        <h2 className="text-xl font-black tracking-tight text-zinc-900 dark:text-white flex items-center gap-2">
                             <PieChartIcon className="w-5 h-5 text-zinc-500" />
                             ANALYTICS
                         </h2>

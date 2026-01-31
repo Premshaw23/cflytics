@@ -44,7 +44,7 @@ export function ProfileStats({ user, submissions, isLoading }: ProfileStatsProps
                 icon={BarChart}
                 description={
                     <span className="flex items-center gap-2">
-                        Max: <span className="text-white font-bold">{user?.maxRating || 0}</span>
+                        Max: <span className="text-zinc-900 dark:text-white font-bold">{user?.maxRating || 0}</span>
                         <span className="text-zinc-500 capitalize">({user?.maxRank})</span>
                     </span>
                 }

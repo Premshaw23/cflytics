@@ -31,23 +31,23 @@ export function SubmissionsTable({ submissions, isLoading }: SubmissionsTablePro
     const getVerdictStyle = (verdict: string) => {
         switch (verdict) {
             case "OK": return {
-                badge: "bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/20",
+                badge: "bg-green-100 text-green-700 dark:bg-green-500/10 dark:text-green-500 border-green-200 dark:border-green-500/20 hover:bg-green-200 dark:hover:bg-green-500/20",
                 icon: <Check className="w-3 h-3 mr-1.5" />
             };
             case "WRONG_ANSWER": return {
-                badge: "bg-red-500/10 text-red-500 border-red-500/20 hover:bg-red-500/20",
+                badge: "bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-500 border-red-200 dark:border-red-500/20 hover:bg-red-200 dark:hover:bg-red-500/20",
                 icon: <X className="w-3 h-3 mr-1.5" />
             };
             case "TIME_LIMIT_EXCEEDED": return {
-                badge: "bg-amber-500/10 text-amber-500 border-amber-500/20 hover:bg-amber-500/20",
+                badge: "bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-500 border-amber-200 dark:border-amber-500/20 hover:bg-amber-200 dark:hover:bg-amber-500/20",
                 icon: <Clock className="w-3 h-3 mr-1.5" />
             };
             case "MEMORY_LIMIT_EXCEEDED": return {
-                badge: "bg-orange-500/10 text-orange-500 border-orange-500/20 hover:bg-orange-500/20",
+                badge: "bg-orange-100 text-orange-700 dark:bg-orange-500/10 dark:text-orange-500 border-orange-200 dark:border-orange-500/20 hover:bg-orange-200 dark:hover:bg-orange-500/20",
                 icon: <AlertTriangle className="w-3 h-3 mr-1.5" />
             };
             default: return {
-                badge: "bg-zinc-800 text-zinc-400 border-white/5 hover:bg-zinc-700",
+                badge: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 border-zinc-200 dark:border-white/5 hover:bg-zinc-200 dark:hover:bg-zinc-700",
                 icon: null
             };
         }
@@ -57,7 +57,7 @@ export function SubmissionsTable({ submissions, isLoading }: SubmissionsTablePro
         return (
             <div className="space-y-4">
                 {[...Array(8)].map((_, i) => (
-                    <div key={i} className="h-16 bg-zinc-900/40 border border-white/5 rounded-xl animate-pulse" />
+                    <div key={i} className="h-16 bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-white/5 rounded-xl animate-pulse" />
                 ))}
             </div>
         );
@@ -65,11 +65,11 @@ export function SubmissionsTable({ submissions, isLoading }: SubmissionsTablePro
 
     return (
         <div className="space-y-6">
-            <div className="bg-zinc-900/40 border border-white/5 rounded-[24px] overflow-hidden shadow-xl backdrop-blur-sm">
+            <div className="bg-white/40 dark:bg-zinc-900/40 border border-zinc-200 dark:border-white/5 rounded-[24px] overflow-hidden shadow-xl backdrop-blur-sm">
                 <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
-                            <TableRow className="border-b border-white/5 hover:bg-transparent">
+                            <TableRow className="border-b border-zinc-200 dark:border-white/5 hover:bg-transparent">
                                 <TableHead className="w-[100px] font-black uppercase tracking-widest text-[10px] text-zinc-500 h-14 pl-6">ID</TableHead>
                                 <TableHead className="font-black uppercase tracking-widest text-[10px] text-zinc-500 h-14">Challenge</TableHead>
                                 <TableHead className="font-black uppercase tracking-widest text-[10px] text-zinc-500 h-14">Language</TableHead>
@@ -83,7 +83,7 @@ export function SubmissionsTable({ submissions, isLoading }: SubmissionsTablePro
                             {currentSubmissions.map((sub) => {
                                 const style = getVerdictStyle(sub.verdict || "TESTING");
                                 return (
-                                    <TableRow key={sub.id} className="border-b border-white/[0.02] hover:bg-white/[0.02] transition-colors group">
+                                    <TableRow key={sub.id} className="border-b border-zinc-100 dark:border-white/[0.02] hover:bg-white/50 dark:hover:bg-white/[0.02] transition-colors group">
                                         <TableCell className="font-mono text-xs font-bold text-zinc-500 pl-6 group-hover:text-primary transition-colors">
                                             <a
                                                 href={`https://codeforces.com/contest/${sub.contestId}/submission/${sub.id}`}
@@ -100,20 +100,20 @@ export function SubmissionsTable({ submissions, isLoading }: SubmissionsTablePro
                                                     href={`https://codeforces.com/contest/${sub.contestId}/problem/${sub.problem.index}`}
                                                     target="_blank"
                                                     rel="noreferrer"
-                                                    className="font-bold text-sm text-zinc-200 hover:text-white transition-colors line-clamp-1"
+                                                    className="font-bold text-sm text-zinc-700 dark:text-zinc-200 hover:text-zinc-900 dark:hover:text-white transition-colors line-clamp-1"
                                                 >
                                                     {sub.problem.index}. {sub.problem.name}
                                                 </a>
                                                 <div className="flex gap-1.5 flex-wrap">
                                                     {sub.problem.tags.slice(0, 3).map(tag => (
-                                                        <span key={tag} className="text-[9px] font-bold uppercase tracking-wider bg-zinc-800/50 border border-white/5 px-1.5 py-0.5 rounded text-zinc-500">
+                                                        <span key={tag} className="text-[9px] font-bold uppercase tracking-wider bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-white/5 px-1.5 py-0.5 rounded text-zinc-500">
                                                             {tag}
                                                         </span>
                                                     ))}
                                                 </div>
                                             </div>
                                         </TableCell>
-                                        <TableCell className="text-xs font-medium text-zinc-400">
+                                        <TableCell className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                                             {sub.programmingLanguage}
                                         </TableCell>
                                         <TableCell>
@@ -122,10 +122,10 @@ export function SubmissionsTable({ submissions, isLoading }: SubmissionsTablePro
                                                 {sub.verdict ? sub.verdict.replace(/_/g, " ") : "TESTING"}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell className="text-xs font-mono font-medium text-zinc-400">
+                                        <TableCell className="text-xs font-mono font-medium text-zinc-500 dark:text-zinc-400">
                                             {sub.timeConsumptionMillis} ms
                                         </TableCell>
-                                        <TableCell className="text-xs font-mono font-medium text-zinc-400">
+                                        <TableCell className="text-xs font-mono font-medium text-zinc-500 dark:text-zinc-400">
                                             {(sub.memoryConsumptionBytes / 1024).toFixed(0)} KB
                                         </TableCell>
                                         <TableCell className="text-right text-xs text-zinc-500 pr-6">
@@ -150,7 +150,7 @@ export function SubmissionsTable({ submissions, isLoading }: SubmissionsTablePro
                             size="sm"
                             onClick={() => setPage(p => Math.max(1, p - 1))}
                             disabled={page === 1}
-                            className="h-8 text-[10px] font-black uppercase tracking-widest bg-zinc-900 border-white/10 hover:bg-white hover:text-black hover:border-white transition-all"
+                            className="h-8 text-[10px] font-black uppercase tracking-widest bg-white dark:bg-zinc-900 border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white dark:hover:text-black dark:hover:border-white transition-all text-zinc-900 dark:text-white"
                         >
                             Previous
                         </Button>
@@ -167,7 +167,7 @@ export function SubmissionsTable({ submissions, isLoading }: SubmissionsTablePro
                             size="sm"
                             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                             disabled={page === totalPages}
-                            className="h-8 text-[10px] font-black uppercase tracking-widest bg-zinc-900 border-white/10 hover:bg-white hover:text-black hover:border-white transition-all"
+                            className="h-8 text-[10px] font-black uppercase tracking-widest bg-white dark:bg-zinc-900 border-zinc-200 dark:border-white/10 hover:bg-zinc-100 dark:hover:bg-white dark:hover:text-black dark:hover:border-white transition-all text-zinc-900 dark:text-white"
                         >
                             Next
                         </Button>

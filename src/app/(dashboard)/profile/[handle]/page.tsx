@@ -49,7 +49,7 @@ export default function ProfilePage() {
 
             {/* Charts Grid */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="lg:col-span-4 border-border/50">
+                <Card className="lg:col-span-4 bg-white dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 backdrop-blur-xl shadow-lg">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <BarChart className="w-5 h-5" /> Rating History
@@ -60,7 +60,7 @@ export default function ProfilePage() {
                     </CardContent>
                 </Card>
 
-                <Card className="lg:col-span-3 border-border/50">
+                <Card className="lg:col-span-3 bg-white dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 backdrop-blur-xl shadow-lg">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Info className="w-5 h-5" /> Strongest Topics

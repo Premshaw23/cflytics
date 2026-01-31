@@ -54,7 +54,7 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
     if (!user) return null;
 
     return (
-        <div className="relative overflow-hidden rounded-[32px] bg-zinc-900/40 border border-white/5 backdrop-blur-xl shadow-2xl p-8 lg:p-10 group">
+        <div className="relative overflow-hidden rounded-[32px] bg-white dark:bg-zinc-900/40 border border-zinc-200 dark:border-white/5 backdrop-blur-xl shadow-2xl p-8 lg:p-10 group">
             {/* Background Decor */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
@@ -63,12 +63,12 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                 <div className="relative shrink-0">
                     <div className={`absolute -inset-1 rounded-full blur-xl opacity-40 animate-pulse ${getRatingBadgeClass(user.rating).replace('bg-', 'bg-').split(' ')[1]}`} />
                     <div className={cn(
-                        "relative w-32 h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden border-4 bg-zinc-950 shadow-2xl",
+                        "relative w-32 h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden border-4 bg-zinc-100 dark:bg-zinc-950 shadow-2xl",
                         user.rating >= 3000 ? "border-red-600" :
                             user.rating >= 2400 ? "border-red-500" :
                                 user.rating >= 2100 ? "border-orange-500" :
                                     user.rating >= 1900 ? "border-violet-500" :
-                                        "border-white/10"
+                                        "border-zinc-200 dark:border-white/10"
                     )}>
                         <Image
                             src={user.titlePhoto || "https://userpic.codeforces.org/no-title.jpg"}
@@ -85,7 +85,7 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                         <div className="space-y-1">
                             <div className="flex items-center gap-4 flex-wrap">
-                                <h1 className={cn("text-4xl lg:text-5xl font-black tracking-tighter uppercase", getRatingColor(user.rating))}>
+                                <h1 className={cn("text-4xl lg:text-5xl font-black tracking-tighter uppercase text-zinc-900 dark:text-white", getRatingColor(user.rating))}>
                                     {user.handle}
                                 </h1>
                                 {user.rating >= 2400 && (
@@ -100,10 +100,10 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                                 )}
                             </div>
 
-                            <div className="flex items-center gap-3 text-lg font-medium text-zinc-400">
+                            <div className="flex items-center gap-3 text-lg font-medium text-zinc-500 dark:text-zinc-400">
                                 {user.rank && <span className={cn("capitalize font-bold", getRatingColor(user.rating))}>{user.rank}</span>}
                                 {user.maxRating && (
-                                    <span className="text-zinc-600 font-bold text-sm tracking-widest uppercase">
+                                    <span className="text-zinc-500 dark:text-zinc-600 font-bold text-sm tracking-widest uppercase">
                                         • Max Rating: <span className={getRatingColor(user.maxRating)}>{user.maxRating}</span>
                                     </span>
                                 )}
@@ -116,7 +116,7 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                                 size="lg"
                                 className={cn(
                                     "rounded-xl font-bold uppercase tracking-widest text-xs h-12 px-6 transition-all",
-                                    !isMyHandle && "bg-zinc-900 border-white/10 hover:border-white/20 hover:bg-white hover:text-black"
+                                    !isMyHandle && "bg-zinc-900 border-white/10 hover:border-white/20 hover:bg-zinc-800 text-white dark:bg-zinc-900 dark:border-white/10 dark:hover:bg-white dark:hover:text-black"
                                 )}
                                 onClick={setAsActive}
                                 disabled={isMyHandle}
@@ -128,7 +128,7 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                                 )}
                             </Button>
 
-                            <Button variant="outline" size="icon" className="h-12 w-12 rounded-xl bg-zinc-900 border-white/10 hover:bg-white hover:text-black" asChild>
+                            <Button variant="outline" size="icon" className="h-12 w-12 rounded-xl bg-zinc-900 border-white/10 hover:bg-zinc-800 text-white dark:bg-zinc-900 dark:border-white/10 dark:hover:bg-white dark:hover:text-black" asChild>
                                 <a href={`https://codeforces.com/profile/${user.handle}`} target="_blank" rel="noopener noreferrer">
                                     <ExternalLink className="w-5 h-5" />
                                 </a>
@@ -138,23 +138,23 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
 
                     <div className="flex flex-wrap gap-x-8 gap-y-3 pt-2">
                         {(user.firstName || user.lastName) && (
-                            <div className="flex items-center gap-2 text-zinc-400 text-sm font-bold uppercase tracking-wider">
-                                <Users className="w-4 h-4 text-zinc-600" />
+                            <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 text-sm font-bold uppercase tracking-wider">
+                                <Users className="w-4 h-4 text-zinc-400 dark:text-zinc-600" />
                                 {user.firstName} {user.lastName}
                             </div>
                         )}
                         {user.organization && (
-                            <div className="flex items-center gap-2 text-zinc-400 text-sm font-bold uppercase tracking-wider">
-                                <Building2 className="w-4 h-4 text-zinc-600" />
+                            <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 text-sm font-bold uppercase tracking-wider">
+                                <Building2 className="w-4 h-4 text-zinc-400 dark:text-zinc-600" />
                                 {user.organization}
                             </div>
                         )}
-                        <div className="flex items-center gap-2 text-zinc-400 text-sm font-bold uppercase tracking-wider">
-                            <MapPin className="w-4 h-4 text-zinc-600" />
+                        <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 text-sm font-bold uppercase tracking-wider">
+                            <MapPin className="w-4 h-4 text-zinc-400 dark:text-zinc-600" />
                             {user.city || "Unknown City"}, {user.country || "Earth"}
                         </div>
-                        <div className="flex items-center gap-2 text-zinc-400 text-sm font-bold uppercase tracking-wider">
-                            <Star className="w-4 h-4 text-zinc-600" />
+                        <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 text-sm font-bold uppercase tracking-wider">
+                            <Star className="w-4 h-4 text-zinc-400 dark:text-zinc-600" />
                             Contribution: <span className={user.contribution >= 0 ? "text-green-500" : "text-red-500"}>{user.contribution > 0 ? "+" : ""}{user.contribution}</span>
                         </div>
                     </div>

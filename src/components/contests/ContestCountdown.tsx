@@ -63,13 +63,13 @@ export function ContestCountdown({ targetTimeSeconds, className, onTimerEnd }: C
             ].filter(t => t.show).map((t, i, arr) => (
                 <React.Fragment key={t.label}>
                     <div className="flex items-end gap-0.5">
-                        <span className="text-lg md:text-xl font-black tracking-tighter text-white tabular-nums leading-none">
+                        <span className="text-lg md:text-xl font-black tracking-tighter text-zinc-900 dark:text-white tabular-nums leading-none">
                             {t.value.toString().padStart(2, '0')}
                         </span>
-                        <span className="text-[8px] font-black text-zinc-600 uppercase tracking-widest mb-0.5">{t.label}</span>
+                        <span className="text-[8px] font-black text-zinc-500 dark:text-zinc-600 uppercase tracking-widest mb-0.5">{t.label}</span>
                     </div>
                     {i < arr.length - 1 && (
-                        <div className="text-zinc-800 font-black text-sm select-none mb-0.5">:</div>
+                        <div className="text-zinc-300 dark:text-zinc-800 font-black text-sm select-none mb-0.5">:</div>
                     )}
                 </React.Fragment>
             ))}

@@ -75,7 +75,7 @@ export function AdvancedInsights({ submissions, ratingHistory, currentRating = 0
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Weak Areas & Suggestions */}
-            <Card className="border-border/50 shadow-sm">
+            <Card className="bg-white dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 backdrop-blur-xl shadow-lg">
                 <CardHeader>
                     <CardTitle className="text-xl flex items-center gap-2">
                         <AlertTriangle className="w-5 h-5 text-yellow-500" />
@@ -122,7 +122,7 @@ export function AdvancedInsights({ submissions, ratingHistory, currentRating = 0
             </Card>
 
             {/* Performance Insights & Projections */}
-            <Card className="border-border/50 shadow-sm">
+            <Card className="bg-white dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 backdrop-blur-xl shadow-lg">
                 <CardHeader>
                     <CardTitle className="text-xl flex items-center gap-2">
                         <Zap className="w-5 h-5 text-primary" />

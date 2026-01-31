@@ -35,8 +35,8 @@ export function VerdictChart({ submissions }: VerdictChartProps) {
     };
 
     return (
-        <Card className="bg-zinc-900/40 border-white/5 backdrop-blur-xl shadow-xl">
-            <CardHeader className="pb-0 border-b border-white/5">
+        <Card className="bg-white/40 dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 backdrop-blur-xl shadow-xl">
+            <CardHeader className="pb-0 border-b border-zinc-200 dark:border-white/5">
                 <CardTitle className="text-[10px] font-black uppercase tracking-widest text-zinc-500 py-4">Verdict Distribution</CardTitle>
             </CardHeader>
             <CardContent className="p-6">
@@ -54,20 +54,20 @@ export function VerdictChart({ submissions }: VerdictChartProps) {
                                 stroke="none"
                             >
                                 {data.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={getColor(entry.name)} className="stroke-zinc-900 stroke-2" />
+                                    <Cell key={`cell-${index}`} fill={getColor(entry.name)} className="stroke-white dark:stroke-zinc-900 stroke-2" />
                                 ))}
                             </Pie>
                             <Tooltip
                                 contentStyle={{
-                                    backgroundColor: "#09090b",
-                                    borderColor: "rgba(255,255,255,0.1)",
+                                    backgroundColor: "var(--tooltip-bg, rgba(255, 255, 255, 0.95))", // Default light mode
+                                    borderColor: "var(--tooltip-border, rgba(0,0,0,0.1))",
                                     borderRadius: "12px",
-                                    color: "#fff",
+                                    color: "var(--tooltip-text, #000)",
                                     fontSize: "12px",
                                     fontWeight: "bold",
-                                    boxShadow: "0 10px 30px -10px rgba(0,0,0,0.5)"
+                                    boxShadow: "0 10px 30px -10px rgba(0,0,0,0.2)"
                                 }}
-                                itemStyle={{ color: "#a1a1aa" }}
+                                itemStyle={{ color: "#71717a" }}
                             />
                             <Legend
                                 verticalAlign="bottom"

@@ -50,7 +50,7 @@ export function TimeOfDayChart({ submissions }: TimeOfDayChartProps) {
                             <stop offset="95%" stopColor="#eab308" stopOpacity={0.1} />
                         </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
                     <XAxis
                         dataKey="hour"
                         tick={{ fill: '#71717a', fontSize: 10, fontWeight: 700, letterSpacing: '0.05em' }}
@@ -64,19 +64,22 @@ export function TimeOfDayChart({ submissions }: TimeOfDayChartProps) {
                         tickLine={false}
                     />
                     <Tooltip
-                        cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                        contentStyle={{
-                            backgroundColor: "rgba(0,0,0,0.9)",
-                            borderColor: "rgba(255,255,255,0.1)",
-                            backdropFilter: "blur(12px)",
-                            color: "#fff",
-                            borderRadius: "12px",
-                            boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
-                            fontSize: "12px",
-                            fontWeight: "bold",
-                            textTransform: "uppercase"
+                        cursor={{ fill: 'hsl(var(--border))', opacity: 0.15 }}
+                        content={({ active, payload }) => {
+                            if (active && payload && payload.length) {
+                                return (
+                                    <div className="bg-white/95 dark:bg-black/90 border border-zinc-200 dark:border-white/10 backdrop-blur-xl rounded-xl p-3 shadow-2xl">
+                                        <p className="font-bold text-xs uppercase tracking-wider text-zinc-900 dark:text-white mb-1">
+                                            {payload[0].payload.hour}
+                                        </p>
+                                        <div className="text-2xl font-black text-yellow-500">
+                                            {payload[0].value} <span className="text-xs font-bold text-zinc-500 uppercase">Submissions</span>
+                                        </div>
+                                    </div>
+                                );
+                            }
+                            return null;
                         }}
-                        itemStyle={{ color: "#eab308" }}
                     />
                     <Bar dataKey="count" fill="url(#colorHour)" radius={[4, 4, 0, 0]}>
                         {data.map((entry, index) => (
