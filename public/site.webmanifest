@@ -2,7 +2,7 @@
     "name": "Codey",
     "short_name": "Codey",
     "description": "Advanced Codeforces Dashboard & Analytics Platform",
-    "start_url": "/",
+    "start_url": "./",
     "scope": "/",
     "icons": [
         {
@@ -31,5 +31,20 @@
     "theme_color": "#09090b",
     "background_color": "#ffffff",
     "display": "standalone",
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "screenshots": [
+        {
+            "src": "/og.png",
+            "sizes": "1024x1024",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Codey Dashboard Overview"
+        },
+        {
+            "src": "/poster.png",
+            "sizes": "986x986",
+            "type": "image/png",
+            "label": "Analyze Your Performance"
+        }
+    ]
 }

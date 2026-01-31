@@ -3,38 +3,15 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { navItems } from "@/config/navigation";
 import {
-    LayoutDashboard,
-    User,
-    Code2,
-    Trophy,
-    History,
-    BarChart,
-    GitCompare,
-    Settings,
-    Bookmark,
-    Target,
-    FileText,
-    Settings as SettingsIcon,
     ChevronLeft,
     ChevronRight,
-    Code
+    Code,
+    Settings
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-
-const navItems = [
-    { title: "Overview", href: "/dashboard", icon: LayoutDashboard },
-    { title: "Profile", href: "/profile", icon: User },
-    { title: "Problems", href: "/problems", icon: Code2 },
-    { title: "Contests", href: "/contests", icon: Trophy },
-    { title: "Submissions", href: "/submissions", icon: History },
-    { title: "Goals", href: "/goals", icon: Target },
-    { title: "Analytics", href: "/analytics", icon: BarChart },
-    { title: "Compare", href: "/compare", icon: GitCompare },
-    { title: "Bookmarks", href: "/bookmarks", icon: Bookmark },
-    { title: "Notes", href: "/notes", icon: FileText },
-];
 
 export function Sidebar() {
     const pathname = usePathname();
@@ -44,7 +21,7 @@ export function Sidebar() {
         <nav
             aria-label="Main Navigation"
             className={cn(
-                "relative flex flex-col h-screen border-r bg-card transition-all duration-300",
+                "relative hidden lg:flex flex-col h-screen border-r bg-card transition-all duration-300",
                 isCollapsed ? "w-20" : "w-64"
             )}
         >

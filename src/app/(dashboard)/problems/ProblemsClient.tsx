@@ -172,31 +172,39 @@ export default function ProblemsClient() {
 
             {/* Pagination Controls */}
             {!isLoading && filteredProblems.length > 0 && (
-                <div className="flex items-center justify-between">
-                    <div className="text-sm text-muted-foreground font-medium">
-                        Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredProblems.length)} of {filteredProblems.length} problems
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-border/50 pt-6">
+                    <div className="text-sm text-muted-foreground font-medium text-center sm:text-left order-2 sm:order-1">
+                        Showing <span className="text-foreground font-bold">{((currentPage - 1) * ITEMS_PER_PAGE) + 1}</span> to <span className="text-foreground font-bold">{Math.min(currentPage * ITEMS_PER_PAGE, filteredProblems.length)}</span> of <span className="text-foreground font-bold">{filteredProblems.length}</span> problems
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 order-1 sm:order-2">
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                            onClick={() => {
+                                setCurrentPage(prev => Math.max(1, prev - 1));
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
                             disabled={currentPage === 1}
+                            className="h-9 px-4 font-bold"
                         >
-                            <ChevronLeft className="h-4 w-4" />
-                            Previous
+                            <ChevronLeft className="h-4 w-4 mr-1" />
+                            Prev
                         </Button>
-                        <div className="text-sm font-bold mx-2">
-                            Page {currentPage} of {totalPages}
+                        <div className="bg-muted/50 px-3 py-1.5 rounded-md text-sm font-bold border border-border/50">
+                            {currentPage} / {totalPages}
                         </div>
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                            onClick={() => {
+                                setCurrentPage(prev => Math.min(totalPages, prev + 1));
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
                             disabled={currentPage === totalPages}
+                            className="h-9 px-4 font-bold"
                         >
                             Next
-                            <ChevronRight className="h-4 w-4" />
+                            <ChevronRight className="h-4 w-4 ml-1" />
                         </Button>
                     </div>
                 </div>
