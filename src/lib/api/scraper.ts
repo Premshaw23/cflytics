@@ -115,7 +115,7 @@ export async function scrapeProblem(contestId: string, index: string, force = fa
 
     const scrapeTask = (async () => {
         try {
-            return await performScrape(contestId, index);
+            return await performScrape(contestId, index, force);
         } finally {
             ongoingScrapes.delete(cacheKey);
         }
@@ -125,42 +125,44 @@ export async function scrapeProblem(contestId: string, index: string, force = fa
     return scrapeTask;
 }
 
-export async function performScrape(contestId: string, index: string): Promise<ScrapedProblem | null> {
+export async function performScrape(contestId: string, index: string, force = false): Promise<ScrapedProblem | null> {
     const cacheKey = `${contestId}${index}`;
     
     // Check memory cache first
     const cached = scraperCache.get(cacheKey);
-    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    if (!force && cached && Date.now() - cached.timestamp < CACHE_TTL) {
         return cached.data;
     }
 
     // Check database cache
-    try {
-        const prisma = (await import('@/lib/db/prisma')).default;
-        
-        const dbCached = await prisma.problemStatement.findUnique({
-            where: { problemId: cacheKey }
-        });
-
-        if (dbCached) {
-            const result: ScrapedProblem = {
-                id: dbCached.problemId,
-                name: dbCached.name,
-                timeLimit: dbCached.timeLimit,
-                memoryLimit: dbCached.memoryLimit,
-                description: dbCached.description,
-                inputSpecification: dbCached.inputSpecification,
-                outputSpecification: dbCached.outputSpecification,
-                sampleTestCases: dbCached.sampleTestCases as Array<{ input: string; output: string }>,
-                tags: dbCached.tags,
-                rating: dbCached.rating || undefined
-            };
+    if (!force) {
+        try {
+            const prisma = (await import('@/lib/db/prisma')).default;
             
-            scraperCache.set(cacheKey, { data: result, timestamp: Date.now() });
-            return result;
+            const dbCached = await prisma.problemStatement.findUnique({
+                where: { problemId: cacheKey }
+            });
+
+            if (dbCached) {
+                const result: ScrapedProblem = {
+                    id: dbCached.problemId,
+                    name: dbCached.name,
+                    timeLimit: dbCached.timeLimit,
+                    memoryLimit: dbCached.memoryLimit,
+                    description: dbCached.description,
+                    inputSpecification: dbCached.inputSpecification,
+                    outputSpecification: dbCached.outputSpecification,
+                    sampleTestCases: dbCached.sampleTestCases as Array<{ input: string; output: string }>,
+                    tags: dbCached.tags,
+                    rating: dbCached.rating || undefined
+                };
+                
+                scraperCache.set(cacheKey, { data: result, timestamp: Date.now() });
+                return result;
+            }
+        } catch (error) {
+            console.error('Database cache check failed:', error);
         }
-    } catch (error) {
-        console.error('Database cache check failed:', error);
     }
 
     const urls = [

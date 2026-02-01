@@ -94,10 +94,10 @@ export function ProblemDescription({ problemId }: ProblemDescriptionProps) {
                         ))}
                     </div>
                 </div>
-                <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={handleRefresh} 
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleRefresh}
                     disabled={loading}
                     className="h-8 w-8 rounded-xl bg-muted/30 hover:bg-indigo-500/10 hover:text-indigo-500 transition-all shrink-0"
                     title="Refresh from Codeforces"
@@ -141,13 +141,13 @@ export function ProblemDescription({ problemId }: ProblemDescriptionProps) {
                             <div key={index} className="space-y-4">
                                 <div className="space-y-2">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">input</p>
-                                    <pre className="bg-muted/30 p-4 rounded-2xl text-xs font-mono overflow-x-auto border border-border/50 shadow-inner">
+                                    <pre className="bg-muted/30 p-4 rounded-2xl text-xs font-mono overflow-x-auto border border-border/50 shadow-inner whitespace-pre-wrap">
                                         {sample.input}
                                     </pre>
                                 </div>
                                 <div className="space-y-2">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">output</p>
-                                    <pre className="bg-indigo-500/[0.03] p-4 rounded-2xl text-xs font-mono overflow-x-auto border border-indigo-500/10 shadow-inner text-indigo-500/80">
+                                    <pre className="bg-indigo-500/[0.03] p-4 rounded-2xl text-xs font-mono overflow-x-auto border border-indigo-500/10 shadow-inner text-indigo-500/80 whitespace-pre-wrap">
                                         {sample.output}
                                     </pre>
                                 </div>
