@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { formatIST } from "@/lib/utils/date-utils";
 import {
     Table,
@@ -12,7 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Check, X, Clock, AlertTriangle } from "lucide-react";
+import { ExternalLink, Check, X, Clock, AlertTriangle,Code2 } from "lucide-react";
 import { CFSubmission } from "@/types";
 
 interface SubmissionsTableProps {
@@ -76,12 +77,14 @@ export function SubmissionsTable({ submissions, isLoading }: SubmissionsTablePro
                                 <TableHead className="font-black uppercase tracking-widest text-[10px] text-zinc-500 h-14">Status</TableHead>
                                 <TableHead className="font-black uppercase tracking-widest text-[10px] text-zinc-500 h-14">Runtime</TableHead>
                                 <TableHead className="font-black uppercase tracking-widest text-[10px] text-zinc-500 h-14">Memory</TableHead>
+                                <TableHead className="font-black uppercase tracking-widest text-[10px] text-zinc-500 h-14 text-center">IDE</TableHead>
                                 <TableHead className="text-right font-black uppercase tracking-widest text-[10px] text-zinc-500 h-14 pr-6">Timestamp</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {currentSubmissions.map((sub) => {
                                 const style = getVerdictStyle(sub.verdict || "TESTING");
+                                const problemId = `${sub.contestId}${sub.problem.index}`;
                                 return (
                                     <TableRow key={sub.id} className="border-b border-zinc-100 dark:border-white/[0.02] hover:bg-white/50 dark:hover:bg-white/[0.02] transition-colors group">
                                         <TableCell className="font-mono text-xs font-bold text-zinc-500 pl-6 group-hover:text-primary transition-colors">
@@ -127,6 +130,19 @@ export function SubmissionsTable({ submissions, isLoading }: SubmissionsTablePro
                                         </TableCell>
                                         <TableCell className="text-xs font-mono font-medium text-zinc-500 dark:text-zinc-400">
                                             {(sub.memoryConsumptionBytes / 1024).toFixed(0)} KB
+                                        </TableCell>
+                                        <TableCell className="text-center">
+                                            <Button
+                                                asChild
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary transition-all group/btn"
+                                                title="Open in Codey IDE"
+                                            >
+                                                <Link href={`/compiler?problemId=${problemId}`}>
+                                                    <Code2 className="w-4 h-4" />
+                                                </Link>
+                                            </Button>
                                         </TableCell>
                                         <TableCell className="text-right text-xs text-zinc-500 pr-6">
                                             {formatIST(sub.creationTimeSeconds * 1000, "MMM dd, HH:mm")}

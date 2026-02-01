@@ -42,6 +42,7 @@ next-env.d.ts
 
 codey-weekwise-plan.md
 codey-auth-plan.md
+compiler-plan.md
 
 /src/generated/prisma
 

@@ -3,12 +3,17 @@
 import React from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export default function DashboardLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const pathname = usePathname();
+    const isCompiler = pathname === "/compiler";
+
     return (
         <div className="flex h-screen bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
             {/* Sidebar */}
@@ -18,8 +23,14 @@ export default function DashboardLayout({
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
                 <Header />
 
-                <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-10">
-                    <div className="mx-auto max-w-7xl h-full">
+                <main className={cn(
+                    "flex-1",
+                    isCompiler ? "p-0 overflow-hidden" : "p-4 md:p-6 lg:p-10 pb-6 overflow-y-auto"
+                )}>
+                    <div className={cn(
+                        "w-full",
+                        isCompiler ? "max-w-none h-full" : "mx-auto max-w-7xl"
+                    )}>
                         {children}
                     </div>
                 </main>

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CFProblem } from "@/types";
 import { getRatingColor } from "@/lib/utils/rating-colors";
-import { Trophy, Users, ExternalLink, Bookmark } from "lucide-react";
+import { Trophy, Users, ExternalLink, Bookmark, CheckCircle2, Clock, CircleDashed } from "lucide-react";
 import Link from "next/link";
 import { BookmarkButton } from "./BookmarkButton";
 import { NoteDialog } from "./NoteDialog";
@@ -14,9 +14,17 @@ interface ProblemCardsProps {
     problems: CFProblem[];
     isLoading: boolean;
     handle: string;
+    solvedIds?: string[];
+    attemptedIds?: string[];
 }
 
-export function ProblemCards({ problems, isLoading, handle }: ProblemCardsProps) {
+export function ProblemCards({
+    problems,
+    isLoading,
+    handle,
+    solvedIds = [],
+    attemptedIds = []
+}: ProblemCardsProps) {
     if (isLoading) {
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -37,30 +45,44 @@ export function ProblemCards({ problems, isLoading, handle }: ProblemCardsProps)
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {problems.map((problem) => {
                 const color = getRatingColor(problem.rating || 0);
+                const problemIdStr = `${problem.contestId}${problem.index}`;
 
                 return (
-                    <Card key={`${problem.contestId}${problem.index}`} className="group hover:shadow-lg transition-all duration-300 border-border/50 bg-card overflow-hidden flex flex-col">
+                    <Card key={problemIdStr} className="group hover:shadow-lg transition-all duration-300 border-border/50 bg-card overflow-hidden flex flex-col">
                         <CardHeader className="p-4 pb-2 space-y-1 shrink-0">
                             <div className="flex items-start justify-between gap-2">
                                 <Badge variant="outline" className="font-mono text-[10px] py-0 px-2">
-                                    {problem.contestId}{problem.index}
+                                    {problemIdStr}
                                 </Badge>
                                 <div className="flex items-center gap-1">
+                                    {solvedIds.includes(problemIdStr) ? (
+                                        <div className="bg-emerald-500/10 p-1 rounded-full border border-emerald-500/20 mr-1" title="Solved">
+                                            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                                        </div>
+                                    ) : attemptedIds.includes(problemIdStr) ? (
+                                        <div className="bg-amber-500/10 p-1 rounded-full border border-amber-500/20 mr-1" title="Attempted">
+                                            <Clock className="w-4 h-4 text-amber-500" />
+                                        </div>
+                                    ) : (
+                                        <div className="bg-muted/30 p-1 rounded-full border border-border/50 mr-1 opacity-20" title="Unattempted">
+                                            <CircleDashed className="w-4 h-4 text-muted-foreground" />
+                                        </div>
+                                    )}
                                     <BookmarkButton
                                         handle={handle}
-                                        problemId={`${problem.contestId}${problem.index}`}
+                                        problemId={problemIdStr}
                                         name={problem.name}
                                         rating={problem.rating}
                                     />
                                     <NoteDialog
                                         handle={handle}
-                                        problemId={`${problem.contestId}${problem.index}`}
+                                        problemId={problemIdStr}
                                         problemName={problem.name}
                                     />
                                 </div>
                             </div>
                             <Link
-                                href={`/problems/${problem.contestId}-${problem.index}`}
+                                href={`/problems/${problemIdStr}`}
                                 className="block"
                             >
                                 <CardTitle className="text-sm font-bold line-clamp-2 leading-tight group-hover:text-primary transition-colors min-h-[40px]">

@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { useProblems } from "@/lib/hooks/useProblems";
+import { useUserProblemStatus } from "@/lib/hooks/useUserProblemStatus";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { ProblemTable } from "@/components/problems/ProblemTable";
 import { ProblemFilter, FilterState } from "@/components/problems/ProblemFilter";
@@ -41,23 +42,51 @@ export default function ProblemsClient() {
     }, []);
 
     const { data, isLoading, isError, refetch } = useProblems({ tags: filters.tags });
+    const { data: statusData } = useUserProblemStatus();
 
     const filteredProblems = useMemo(() => {
         if (!data?.problems) return [];
 
+        const solvedIds = new Set(statusData?.solvedIds || []);
+        const attemptedIds = new Set(statusData?.attemptedIds || []);
+
         const result = data.problems.filter(p => {
+            const problemId = `${p.contestId}${p.index}`;
             const matchesSearch = p.name.toLowerCase().includes(filters.search.toLowerCase()) ||
-                `${p.contestId}${p.index}`.toLowerCase().includes(filters.search.toLowerCase());
+                problemId.toLowerCase().includes(filters.search.toLowerCase());
 
             // Handle missing rating (some problems don't have ratings)
             const problemRating = p.rating || 0;
             const matchesRating = (filters.minRating === 0 && filters.maxRating === 4000) ||
                 (problemRating >= filters.minRating && problemRating <= filters.maxRating);
 
-            // Status and Division filtering would go here if we had that data/logic
-            // For now, these are placeholders in the UI as the backend/data isn't fully ready for them
+            // Status filtering
+            let matchesStatus = true;
+            if (filters.status === 'solved') {
+                matchesStatus = solvedIds.has(problemId);
+            } else if (filters.status === 'attempted') {
+                // Attempted but NOT yet solved
+                matchesStatus = attemptedIds.has(problemId) && !solvedIds.has(problemId);
+            } else if (filters.status === 'unsolved') {
+                // Never even touched/submitted
+                matchesStatus = !attemptedIds.has(problemId);
+            }
 
-            return matchesSearch && matchesRating;
+            // Division filtering
+            let matchesDivision = true;
+            if (filters.division !== 'all') {
+                // Approximate division based on problem index and rating
+                // Div 4: often A,B,C rating < 1200
+                // Div 3: often A,B,C,D rating < 1600
+                // This is a rough estimation as Codeforces doesn't expose division directly in problems
+                const rating = p.rating || 0;
+                if (filters.division === '4') matchesDivision = rating > 0 && rating <= 1100;
+                else if (filters.division === '3') matchesDivision = rating > 1100 && rating <= 1400;
+                else if (filters.division === '2') matchesDivision = rating > 1400 && rating <= 1900;
+                else if (filters.division === '1') matchesDivision = rating > 1900;
+            }
+
+            return matchesSearch && matchesRating && matchesStatus && matchesDivision;
         });
 
         // Sorting
@@ -161,12 +190,16 @@ export default function ProblemsClient() {
                     sortConfig={sortConfig}
                     onSort={handleSort}
                     handle={handle}
+                    solvedIds={statusData?.solvedIds || []}
+                    attemptedIds={statusData?.attemptedIds || []}
                 />
             ) : (
                 <ProblemCards
                     problems={paginatedProblems}
                     isLoading={isLoading}
                     handle={handle}
+                    solvedIds={statusData?.solvedIds || []}
+                    attemptedIds={statusData?.attemptedIds || []}
                 />
             )}
 

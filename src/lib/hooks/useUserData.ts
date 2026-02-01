@@ -46,7 +46,7 @@ export function useUserData({ handle, enabled = true }: UseUserDataProps) {
   const userStatus = useQuery({
     queryKey: ["user", "status", handle],
     queryFn: async (): Promise<CFSubmission[]> => {
-      const response = await fetch(`/api/codeforces/submissions?handle=${handle}`);
+      const response = await fetch(`/api/analytics/submissions?handle=${handle}`);
       if (!response.ok) throw new Error("Failed to fetch submissions");
       return response.json();
     },

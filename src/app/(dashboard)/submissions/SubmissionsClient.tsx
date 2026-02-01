@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { useUserData } from "@/lib/hooks/useUserData";
 import { SubmissionsTable } from "@/components/submissions/SubmissionsTable";
 import { VerdictChart } from "@/components/submissions/VerdictChart";
@@ -16,6 +17,7 @@ export default function SubmissionsClient() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const urlHandle = searchParams.get("handle");
+    const problemId = searchParams.get("problemId") || searchParams.get("problemid");
 
     const [handle, setHandle] = useState<string | null>(urlHandle);
     const [searchInput, setSearchInput] = useState(urlHandle || "");
@@ -88,7 +90,9 @@ export default function SubmissionsClient() {
         );
     }
 
-    const submissions = userStatus.data || [];
+    const submissions = (userStatus.data || []).filter(s =>
+        !problemId || `${s.contestId}${s.problem.index}`.toLowerCase() === problemId.toLowerCase()
+    );
 
     // Calculate basic stats
     const total = submissions.length;
@@ -108,25 +112,41 @@ export default function SubmissionsClient() {
                 <div className="space-y-4">
                     <div className="flex items-center gap-3">
                         <div className="w-2 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(var(--primary),0.5)]" />
-                        <h1 className="text-5xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase">
+                        <h1 className="text-5xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase transition-all">
                             {handle}
                         </h1>
                     </div>
                     <p className="text-zinc-500 font-bold text-sm max-w-2xl leading-relaxed uppercase tracking-widest pl-5">
-                        Submission Archive & Performance Analytics
+                        {problemId ? `Submissions for Problem ${problemId}` : 'Submission Archive & Performance Analytics'}
                     </p>
                 </div>
-                <form onSubmit={handleSearch} className="flex gap-3 w-full max-w-sm">
-                    <Input
-                        placeholder="SEARCH USER..."
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.target.value)}
-                        className="h-12 bg-white dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 rounded-xl text-xs font-black uppercase tracking-widest placeholder:text-zinc-500 dark:placeholder:text-zinc-700 focus:border-zinc-300 dark:focus:border-white/10 text-zinc-900 dark:text-white"
-                    />
-                    <Button type="submit" className="h-12 w-12 rounded-xl p-0" variant="secondary">
-                        <Search className="w-4 h-4" />
+                <div className="flex flex-wrap gap-3">
+                    {problemId && (
+                        <Button asChild size="lg" className="h-12 px-6 rounded-xl font-black uppercase tracking-widest bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20">
+                            <Link href={`/compiler?problemId=${problemId}`}>
+                                <Code2 className="mr-2 h-4 w-4" />
+                                Open IDE
+                            </Link>
+                        </Button>
+                    )}
+                    <Button asChild size="lg" className="h-12 px-6 rounded-xl font-black uppercase tracking-widest" variant="outline">
+                        <Link href="/compiler/submissions">
+                            <History className="mr-2 h-4 w-4" />
+                            Local Archive
+                        </Link>
                     </Button>
-                </form>
+                    <form onSubmit={handleSearch} className="flex gap-3 w-full max-w-sm">
+                        <Input
+                            placeholder="SEARCH USER..."
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                            className="h-12 bg-white dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 rounded-xl text-xs font-black uppercase tracking-widest placeholder:text-zinc-500 dark:placeholder:text-zinc-700 focus:border-zinc-300 dark:focus:border-white/10 text-zinc-900 dark:text-white"
+                        />
+                        <Button type="submit" className="h-12 w-12 rounded-xl p-0" variant="secondary">
+                            <Search className="w-4 h-4" />
+                        </Button>
+                    </form>
+                </div>
             </div>
 
             {/* Stats Grid */}

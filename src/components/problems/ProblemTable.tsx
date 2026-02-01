@@ -1,12 +1,17 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import {
     ExternalLink,
     ArrowUpDown,
     ArrowUp,
     ArrowDown,
-    Bookmark
+    Bookmark,
+    CheckCircle2,
+    Clock,
+    CircleDashed,
+    Code2
 } from "lucide-react";
 import {
     Table,
@@ -29,9 +34,19 @@ export interface ProblemTableProps {
     sortConfig: { key: keyof CFProblem | 'solvedCount'; direction: 'asc' | 'desc' } | null;
     onSort: (key: keyof CFProblem | 'solvedCount') => void;
     handle?: string;
+    solvedIds?: string[];
+    attemptedIds?: string[];
 }
 
-export function ProblemTable({ problems, isLoading, sortConfig, onSort, handle = "" }: ProblemTableProps) {
+export function ProblemTable({
+    problems,
+    isLoading,
+    sortConfig,
+    onSort,
+    handle = "",
+    solvedIds = [],
+    attemptedIds = []
+}: ProblemTableProps) {
     const renderSortIcon = (columnKey: keyof CFProblem | 'solvedCount') => {
         if (sortConfig?.key !== columnKey) return <ArrowUpDown className="ml-2 h-4 w-4" />;
         return sortConfig.direction === 'asc' ?
@@ -89,14 +104,32 @@ export function ProblemTable({ problems, isLoading, sortConfig, onSort, handle =
                             </TableRow>
                         ) : (
                             problems.map((problem, idx) => (
-                                <TableRow key={`${problem.contestId}-${problem.index}-${problem.name}-${idx}`} className="group hover:bg-muted/50">
+                                <TableRow
+                                    key={`${problem.contestId}-${problem.index}-${problem.name}-${idx}`}
+                                    className="group hover:bg-muted/50 transition-colors"
+                                >
                                     <TableCell className="font-bold text-muted-foreground">
                                         {problem.contestId}{problem.index}
                                     </TableCell>
                                     <TableCell>
-                                        <p className="font-bold group-hover:text-primary transition-colors cursor-pointer capitalize">
-                                            {problem.name}
-                                        </p>
+                                        <div className="flex items-center gap-2">
+                                            {solvedIds.includes(`${problem.contestId}${problem.index}`) ? (
+                                                <span title="Solved"><CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" /></span>
+                                            ) : attemptedIds.includes(`${problem.contestId}${problem.index}`) ? (
+                                                <span title="Attempted"><Clock className="w-4 h-4 text-amber-500 shrink-0" /></span>
+                                            ) : (
+                                                <span title="Unattempted"><CircleDashed className="w-4 h-4 text-muted-foreground/30 shrink-0" /></span>
+                                            )}
+                                            <a
+                                                href={`/problems/${problem.contestId}${problem.index}`}
+                                                className={cn(
+                                                    "font-bold group-hover:text-primary transition-colors cursor-pointer capitalize",
+                                                    solvedIds.includes(`${problem.contestId}${problem.index}`) && "text-emerald-600 dark:text-emerald-400"
+                                                )}
+                                            >
+                                                {problem.name}
+                                            </a>
+                                        </div>
                                     </TableCell>
                                     <TableCell>
                                         {problem.rating ? (
@@ -149,7 +182,12 @@ export function ProblemTable({ problems, isLoading, sortConfig, onSort, handle =
                                                 name={problem.name}
                                                 rating={problem.rating}
                                             />
-                                            <Button variant="ghost" size="icon" asChild className="h-8 w-8 rounded-full outline-none">
+                                            <Button variant="ghost" size="icon" asChild className="h-8 w-8 rounded-full text-indigo-500 hover:text-indigo-600 hover:bg-indigo-500/10" title="Open in IDE">
+                                                <Link href={`/compiler?problemId=${problem.contestId}${problem.index}`}>
+                                                    <Code2 className="w-4 h-4" />
+                                                </Link>
+                                            </Button>
+                                            <Button variant="ghost" size="icon" asChild className="h-8 w-8 rounded-full outline-none" title="View on Codeforces">
                                                 <a
                                                     href={`https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}`}
                                                     target="_blank"

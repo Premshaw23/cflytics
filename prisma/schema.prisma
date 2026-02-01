@@ -84,3 +84,73 @@ enum GoalType {
   PROBLEMS_SOLVED
   CONTEST_RANK
 }
+
+model Submission {
+  id            String   @id @default(cuid())
+  userId        String?  // Optional: for logged-in users
+  problemId     String   // Codeforces problem ID (e.g., "1234-A")
+  language      String
+  code          String   @db.Text
+  verdict       String   // AC, WA, TLE, etc.
+  runtime       Float?
+  memory        Int?
+  testsPassed   Int
+  testsTotal    Int
+  tags          String[] @default([])
+  rating        Int?
+  createdAt     DateTime @default(now())
+  
+  @@index([userId])
+  @@index([problemId])
+  @@index([createdAt])
+}
+
+model CodeTemplate {
+  id          String @id @default(cuid())
+  language    String
+  problemId   String
+  template    String @db.Text
+  
+  @@unique([language, problemId])
+}
+
+model CustomTestCase {
+  id             String   @id @default(cuid())
+  userId         String
+  problemId      String
+  input          String   @db.Text
+  expectedOutput String   @db.Text
+  createdAt      DateTime @default(now())
+
+  @@index([userId, problemId])
+}
+
+model SharedSolution {
+  id        String   @id @default(cuid())
+  code      String   @db.Text
+  language  String
+  problemId String
+  userId    String?
+  createdAt DateTime @default(now())
+
+  @@index([id])
+}
+
+model ProblemStatement {
+  id                    String   @id @default(cuid())
+  problemId             String   @unique // e.g., "1234A"
+  name                  String
+  timeLimit             String
+  memoryLimit           String
+  description           String   @db.Text
+  inputSpecification    String   @db.Text
+  outputSpecification   String   @db.Text
+  sampleTestCases       Json     // Array of {input, output}
+  tags                  String[]
+  rating                Int?
+  scrapedAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  @@index([problemId])
+  @@index([rating])
+}
