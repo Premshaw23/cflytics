@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Editor } from '@monaco-editor/react'
 import { useTheme } from 'next-themes'
 
@@ -20,11 +20,20 @@ export function CodeEditor({
     readOnly = false,
 }: CodeEditorProps) {
     const { resolvedTheme } = useTheme()
-    const [mounted, setMounted] = React.useState(false)
+    const [mounted, setMounted] = useState(false)
+    const completionProviderRef = useRef<any>(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         setMounted(true)
     }, [])
+
+    useEffect(() => {
+        return () => {
+            if (completionProviderRef.current) {
+                completionProviderRef.current.dispose();
+            }
+        };
+    }, []);
 
     // Map our language values to Monaco language IDs
     const monacoLanguage = language === 'cpp' ? 'cpp' :
@@ -41,8 +50,13 @@ export function CodeEditor({
     const editorTheme = resolvedTheme === 'dark' ? 'vs-dark' : 'light'
 
     const handleEditorDidMount = (editor: any, monaco: any) => {
+        // Dispose old if exists
+        if (completionProviderRef.current) {
+            completionProviderRef.current.dispose();
+        }
+
         // Register custom completions for C++ (The "Best" solution for browser IntelliSense)
-        monaco.languages.registerCompletionItemProvider('cpp', {
+        completionProviderRef.current = monaco.languages.registerCompletionItemProvider('cpp', {
             provideCompletionItems: (model: any, position: any) => {
                 const word = model.getWordUntilPosition(position);
                 const range = {

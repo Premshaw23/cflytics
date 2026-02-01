@@ -8,6 +8,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
+import { cn } from '@/lib/utils'
 
 export const LANGUAGES = [
     { value: 'cpp', label: 'C++ (GCC 9.2)', icon: '🔧' },
@@ -24,9 +25,11 @@ interface LanguageSelectorProps {
 }
 
 export function LanguageSelector({ value, onChange }: LanguageSelectorProps) {
+    const selectedLang = LANGUAGES.find(l => l.value === value)
+
     return (
         <Select value={value} onValueChange={onChange}>
-            <SelectTrigger className="w-[180px] bg-background">
+            <SelectTrigger className={cn("w-[110px] sm:w-[180px] bg-background text-xs sm:text-sm px-2 sm:px-3", !value && "text-muted-foreground")}>
                 <SelectValue placeholder="Select Language" />
             </SelectTrigger>
             <SelectContent>

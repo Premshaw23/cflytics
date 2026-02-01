@@ -7,7 +7,7 @@ import { TestCasePanel } from '@/components/compiler/TestCasePanel'
 import { ProblemDescription } from '@/components/compiler/ProblemDescription'
 import { LanguageSelector } from '@/components/compiler/LanguageSelector'
 import { Button } from '@/components/ui/button'
-import { Maximize2, Minimize2, RotateCcw, ChevronLeft, ChevronRight, LayoutPanelTop, PanelRightClose, PanelRightOpen, History as HistoryIcon, Play, Send, Share2, Database, CheckCircle2 } from 'lucide-react'
+import { Maximize2, Minimize2, RotateCcw, ChevronLeft, ChevronRight, LayoutPanelTop, PanelRightClose, PanelRightOpen, History as HistoryIcon, Play, Send, Share2, Database, CheckCircle2, MoreHorizontal } from 'lucide-react'
 import { getTemplate } from '@/lib/compiler/templates'
 import Link from 'next/link'
 import { toast } from 'sonner'
@@ -15,6 +15,13 @@ import { useAuth } from '@/lib/store/useAuth'
 import { cn } from '@/lib/utils'
 import { useUserProblemStatus } from '@/lib/hooks/useUserProblemStatus'
 import { useQueryClient } from '@tanstack/react-query'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 function CompilerContent() {
     const searchParams = useSearchParams()
@@ -287,54 +294,57 @@ function CompilerContent() {
     return (
         <div className={`flex flex-col bg-background ${isFullScreen ? 'fixed inset-0 z-50 overflow-hidden' : 'h-full'}`}>
             {/* Header */}
-            <div className="flex items-center justify-between border-b px-6 py-3 shrink-0 bg-card/30 backdrop-blur-sm">
-                <div className="flex items-center gap-4">
-                    <Link href="/problems" className="hover:bg-muted p-1.5 rounded-md transition-colors">
+            <div className="flex items-center justify-between border-b px-4 py-2 sm:px-6 sm:py-3 shrink-0 bg-card/30 backdrop-blur-sm gap-2 relative z-20">
+                <div className="flex items-center gap-2 sm:gap-4 overflow-hidden">
+                    <Link href="/problems" className="hover:bg-muted p-1.5 rounded-md transition-colors shrink-0">
                         <ChevronLeft className="h-4 w-4" />
                     </Link>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col min-w-0">
                         <div className="flex items-center gap-2">
-                            <h1 className="text-sm font-bold tracking-tight">Code Editor</h1>
+                            <h1 className="text-sm font-bold tracking-tight hidden sm:block">Code Editor</h1>
                             {isSyncing ? (
-                                <span className="flex items-center gap-1.5 text-[10px] text-indigo-500 font-bold animate-pulse">
+                                <span className="flex items-center gap-1.5 text-[10px] text-indigo-500 font-bold animate-pulse shrink-0">
                                     <Database className="w-2.5 h-2.5" />
-                                    SYNCING...
+                                    <span className="hidden sm:inline">SYNCING...</span>
                                 </span>
                             ) : (
-                                <span className="flex items-center gap-1.5 text-[10px] text-emerald-500 font-bold opacity-60">
+                                <span className="flex items-center gap-1.5 text-[10px] text-emerald-500 font-bold opacity-60 shrink-0">
                                     <CheckCircle2 className="w-2.5 h-2.5" />
-                                    SAVED CLOUD
+                                    <span className="hidden sm:inline">SAVED</span>
                                 </span>
                             )}
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 overflow-hidden">
                             {problemId && (
-                                <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest">
-                                    ID: {problemId}
+                                <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-widest truncate">
+                                    {problemId}
                                 </span>
                             )}
-                            {isSolved ? (
-                                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                                    <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-tight">Solved</span>
-                                </div>
-                            ) : isAttempted ? (
-                                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
-                                    <HistoryIcon className="w-3.5 h-3.5 text-amber-500" />
-                                    <span className="text-[10px] font-bold text-amber-500 uppercase tracking-tight">Attempted</span>
-                                </div>
-                            ) : problemId && (
-                                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-muted/20 border border-border/50">
-                                    <Database className="w-3.5 h-3.5 text-muted-foreground" />
-                                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">Unsolved</span>
-                                </div>
-                            )}
+                            <div className="hidden sm:flex items-center">
+                                {isSolved ? (
+                                    <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                                        <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-tight">Solved</span>
+                                    </div>
+                                ) : isAttempted ? (
+                                    <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+                                        <HistoryIcon className="w-3.5 h-3.5 text-amber-500" />
+                                        <span className="text-[10px] font-bold text-amber-500 uppercase tracking-tight">Attempted</span>
+                                    </div>
+                                ) : problemId && (
+                                    <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-muted/20 border border-border/50">
+                                        <Database className="w-3.5 h-3.5 text-muted-foreground" />
+                                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">Unsolved</span>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 mr-2">
+                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                    {/* Desktop Actions */}
+                    <div className="hidden md:flex items-center gap-2 mr-2">
                         <Button
                             variant="outline"
                             size="icon"
@@ -374,14 +384,45 @@ function CompilerContent() {
                         </Button>
                     </div>
 
-                    <div className="h-6 w-[1px] bg-border/50 mx-1"></div>
+                    {/* Mobile Actions Dropdown */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="icon" className="h-8 w-8 md:hidden text-muted-foreground">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48">
+                            <DropdownMenuItem asChild>
+                                <Link href={`/compiler/submissions${problemId ? `?problemId=${problemId}` : ''}`} className="flex items-center">
+                                    <HistoryIcon className="mr-2 h-4 w-4" />
+                                    <span>History</span>
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleResetCode}>
+                                <RotateCcw className="mr-2 h-4 w-4" />
+                                <span>Reset Code</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleShare}>
+                                <Share2 className="mr-2 h-4 w-4" />
+                                <span>Share</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => setShowDescription(!showDescription)}>
+                                {showDescription ? <PanelRightClose className="mr-2 h-4 w-4" /> : <PanelRightOpen className="mr-2 h-4 w-4" />}
+                                <span>{showDescription ? "Hide Problem" : "Show Problem"}</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    <div className="h-6 w-[1px] bg-border/50 mx-1 hidden sm:block"></div>
 
                     <LanguageSelector value={language} onChange={setLanguage} />
 
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-9 w-9"
+                        className="h-9 w-9 hidden sm:flex"
                         onClick={() => setIsFullScreen(!isFullScreen)}
                     >
                         {isFullScreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
@@ -390,21 +431,24 @@ function CompilerContent() {
             </div>
 
             {/* Main content */}
-            <div ref={containerRef} className="flex flex-1 overflow-hidden relative">
+            <div ref={containerRef} className="flex flex-col lg:flex-row flex-1 overflow-hidden relative">
                 {/* Left: Problem Description (collapsible) */}
                 {showDescription && (
                     <>
                         <div
-                            style={{ width: `${leftPanelWidth}px` }}
-                            className="shrink-0 border-r bg-card/5 animate-in slide-in-from-left duration-300 overflow-y-auto"
+                            style={{ "--left-panel-width": `${leftPanelWidth}px` } as React.CSSProperties}
+                            className={cn(
+                                "shrink-0 border-r bg-card/5 animate-in slide-in-from-left duration-300 overflow-y-auto",
+                                "w-full lg:w-[var(--left-panel-width)] h-[30vh] md:h-[40vh] lg:h-full"
+                            )}
                         >
                             <ProblemDescription problemId={problemId} />
                         </div>
 
-                        {/* Vertical Resizer Handle */}
+                        {/* Vertical Resizer Handle - Hidden on mobile */}
                         <div
                             className={cn(
-                                "w-1 hover:w-1.5 active:w-1.5 bg-border hover:bg-indigo-500 active:bg-indigo-600 cursor-col-resize transition-all z-20 shrink-0",
+                                "hidden lg:block w-1 hover:w-1.5 active:w-1.5 bg-border hover:bg-indigo-500 active:bg-indigo-600 cursor-col-resize transition-all z-20 shrink-0",
                                 isResizing && "bg-indigo-600 w-1.5"
                             )}
                             onMouseDown={() => setIsResizing(true)}
@@ -414,7 +458,7 @@ function CompilerContent() {
 
                 {/* Right: Editor & Test Cases */}
                 <div className="flex flex-1 flex-col overflow-hidden bg-muted/20 relative">
-                    <div className="flex-1 min-h-0">
+                    <div className="flex-1 min-h-[200px] lg:min-h-0">
                         <CodeEditor
                             language={language}
                             value={code}
@@ -424,7 +468,7 @@ function CompilerContent() {
                     </div>
 
                     {/* Test Cases Panel */}
-                    <div className="h-[40%] min-h-[300px] border-t bg-background shadow-2xl relative z-10">
+                    <div className="h-[40%] min-h-[200px] border-t bg-background shadow-2xl relative z-10">
                         <TestCasePanel
                             problemId={problemId}
                             results={results}

@@ -81,14 +81,14 @@ export function Header() {
                             <Menu className="h-5 w-5" />
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-[280px] p-0">
+                    <SheetContent side="left" className="w-[280px] p-0" aria-describedby="header-mobile-menu-description">
                         <SheetHeader className="h-16 border-b px-6 flex flex-row items-center gap-2 space-y-0 text-left">
                             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                                 <Code className="text-primary-foreground w-5 h-5" />
                             </div>
                             <div className="flex flex-col">
                                 <SheetTitle className="text-xl font-bold tracking-tight">Codey</SheetTitle>
-                                <SheetDescription className="sr-only">
+                                <SheetDescription id="header-mobile-menu-description" className="sr-only">
                                     Mobile navigation menu for Codey dashboard
                                 </SheetDescription>
                             </div>
@@ -130,7 +130,7 @@ export function Header() {
                         className="pl-10 h-10 w-full bg-zinc-100/50 dark:bg-zinc-800/50 border-none transition-all focus-visible:ring-2 focus-visible:ring-primary/20"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        />
+                    />
                 </form>
             </div>
 
@@ -181,7 +181,7 @@ export function Header() {
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => router.push("/")}>
-                           Home
+                            Home
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => router.push("/profile")}>
                             Profile

@@ -242,29 +242,31 @@ export function TestCasePanel({
     return (
         <div className="flex h-full flex-col bg-background">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col h-full">
-                <div className="flex items-center justify-between border-b px-4 py-1.5 shrink-0 bg-muted/30">
-                    <TabsList className="h-8 bg-transparent">
-                        <TabsTrigger value="sample" className="px-3 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                            Sample Tests ({sampleTestCases.length})
-                        </TabsTrigger>
-                        <TabsTrigger value="custom" className="px-3 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                            Custom Tests ({customTestCases.length})
-                        </TabsTrigger>
-                        <TabsTrigger value="results" className="px-3 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                            Results {results.length > 0 && `(${results.length})`}
-                        </TabsTrigger>
-                        <TabsTrigger value="history" className="px-3 text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                            History
-                        </TabsTrigger>
-                    </TabsList>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between border-b px-4 py-2 sm:py-1.5 shrink-0 bg-muted/30 gap-2">
+                    <div className="overflow-x-auto scrollbar-none -mx-2 px-2">
+                        <TabsList className="h-8 bg-transparent w-full justify-start sm:w-auto">
+                            <TabsTrigger value="sample" className="px-3 text-[10px] sm:text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                                Sample Tests ({sampleTestCases.length})
+                            </TabsTrigger>
+                            <TabsTrigger value="custom" className="px-3 text-[10px] sm:text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                                Custom Tests ({customTestCases.length})
+                            </TabsTrigger>
+                            <TabsTrigger value="results" className="px-3 text-[10px] sm:text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                                Results {results.length > 0 && `(${results.length})`}
+                            </TabsTrigger>
+                            <TabsTrigger value="history" className="px-3 text-[10px] sm:text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                                History
+                            </TabsTrigger>
+                        </TabsList>
+                    </div>
 
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-2 sm:flex gap-2 w-full sm:w-auto">
                         {problemId && results.length > 0 && results.every(r => r.verdict === 'AC') && (
                             <Button
                                 asChild
                                 size="sm"
                                 variant="outline"
-                                className="h-8 text-xs font-bold border-indigo-500/30 text-indigo-600 hover:bg-indigo-500/10 hover:text-indigo-600 animate-in zoom-in-95 duration-300"
+                                className="col-span-2 sm:col-span-1 h-9 sm:h-8 text-xs font-bold border-indigo-500/30 text-indigo-600 hover:bg-indigo-500/10 hover:text-indigo-600 animate-in zoom-in-95 duration-300"
                             >
                                 {(() => {
                                     const match = problemId.match(/^(\d+)([a-zA-Z0-9]+)$/) || problemId.match(/^(\d+)-([a-zA-Z0-9]+)$/);
@@ -287,19 +289,19 @@ export function TestCasePanel({
                             disabled={isRunning || !problemId}
                             size="sm"
                             variant="secondary"
-                            className="h-8 text-xs font-medium"
+                            className="h-9 sm:h-8 text-xs font-medium pl-3 sm:pl-4"
                         >
                             {isRunning ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : <Play className="mr-2 h-3.5 w-3.5 fill-current" />}
-                            Run Code
+                            Run
                         </Button>
                         <Button
                             onClick={() => onSubmit(customTestCases)}
                             disabled={isRunning || !problemId}
                             size="sm"
-                            className="h-8 text-xs font-medium bg-indigo-600 hover:bg-indigo-700 text-white"
+                            className="h-9 sm:h-8 text-xs font-medium bg-indigo-600 hover:bg-indigo-700 text-white"
                         >
                             <Send className="mr-2 h-3.5 w-3.5" />
-                            Submit Solution
+                            Submit
                         </Button>
                     </div>
                 </div>

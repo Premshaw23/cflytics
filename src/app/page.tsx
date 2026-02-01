@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
+import { MobileNav } from "@/components/shared/MobileNav";
 import { siteConfig } from "@/config/site";
 
 const features = [
@@ -105,7 +106,7 @@ export default function LandingPage() {
             <Link href="/contests" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Contests</Link>
             <Link href="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Dashboard</Link>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2 md:space-x-3">
             <ThemeToggle />
             <Button variant="ghost" className="text-muted-foreground hover:text-foreground hidden sm:flex px-2" asChild>
               <Link href="/connect">Log in</Link>
@@ -113,6 +114,13 @@ export default function LandingPage() {
             <Button className="h-9 px-4 md:px-6 font-bold transition-all text-sm" asChild>
               <Link href="/dashboard">Get Started</Link>
             </Button>
+            <MobileNav items={[
+              { title: "Problems", href: "/problems" },
+              { title: "Contests", href: "/contests" },
+              { title: "Dashboard", href: "/dashboard" },
+              { title: "Compare", href: "/compare" },
+              { title: "About", href: "/about" },
+            ]} />
           </div>
         </div>
       </nav>
