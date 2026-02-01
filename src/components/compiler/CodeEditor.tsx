@@ -116,10 +116,25 @@ export function CodeEditor({
                     { label: 'NO', kind: monaco.languages.CompletionItemKind.Snippet, insertText: 'cout << "NO" << endl;' },
                 ];
 
-                const suggestions = commonCpp.map(item => ({
-                    ...item,
-                    range: range
-                }));
+                // Extract words from the current code content to suggest as "local variables"
+                const text = model.getValue();
+                const words = text.match(/[a-zA-Z_]\w*/g) || [];
+                const distinctWords = Array.from(new Set(words));
+
+                const localVariables = distinctWords
+                    .filter((w: any) => !commonCpp.some(item => item.label === w)) // Don't duplicate
+                    .map((w: any) => ({
+                        label: w,
+                        kind: monaco.languages.CompletionItemKind.Variable,
+                        insertText: w,
+                        detail: 'Local Identifier',
+                        range: range
+                    }));
+
+                const suggestions = [
+                    ...commonCpp.map(item => ({ ...item, range: range })),
+                    ...localVariables
+                ];
 
                 return { suggestions };
             }

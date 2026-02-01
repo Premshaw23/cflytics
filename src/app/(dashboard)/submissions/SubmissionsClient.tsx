@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
-import { Search, Activity, CheckCircle2, Target, Code2, History, PieChart as PieChartIcon } from "lucide-react";
+import { Search, Activity, CheckCircle2, Target, Code2, History, PieChart as PieChartIcon, RefreshCw } from "lucide-react";
 
 export default function SubmissionsClient() {
     const searchParams = useSearchParams();
@@ -21,6 +21,7 @@ export default function SubmissionsClient() {
 
     const [handle, setHandle] = useState<string | null>(urlHandle);
     const [searchInput, setSearchInput] = useState(urlHandle || "");
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     useEffect(() => {
         if (!urlHandle) {
@@ -45,6 +46,15 @@ export default function SubmissionsClient() {
         e.preventDefault();
         if (searchInput.trim()) {
             router.push(`/submissions?handle=${searchInput.trim()}`);
+        }
+    };
+
+    const handleRefresh = async () => {
+        setIsRefreshing(true);
+        try {
+            await userStatus.refetch();
+        } finally {
+            setIsRefreshing(false);
         }
     };
 
@@ -134,6 +144,16 @@ export default function SubmissionsClient() {
                             <History className="mr-2 h-4 w-4" />
                             Local Archive
                         </Link>
+                    </Button>
+                    <Button
+                        size="lg"
+                        className="h-12 px-6 rounded-xl font-black uppercase tracking-widest"
+                        variant="outline"
+                        onClick={handleRefresh}
+                        disabled={isRefreshing}
+                    >
+                        <RefreshCw className={`mr-2 h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                        Verify
                     </Button>
                     <form onSubmit={handleSearch} className="flex gap-3 w-full max-w-sm">
                         <Input

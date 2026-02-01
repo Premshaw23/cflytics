@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
 
     try {
         // 1. Fetch Codeforces submissions
-        const cfRes = await fetch(`https://codeforces.com/api/user.status?handle=${handle}`)
+        const cfRes = await fetch(`https://codeforces.com/api/user.status?handle=${handle}`, { cache: 'no-store' })
         const cfData = await cfRes.json()
         const cfSubmissions: CFSubmission[] = cfData.status === 'OK' ? cfData.result : []
 

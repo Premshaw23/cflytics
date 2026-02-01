@@ -77,6 +77,7 @@ export function useUserData({ handle, enabled = true }: UseUserDataProps) {
       isLoading: userStatus.isLoading,
       isError: userStatus.isError,
       error: userStatus.error,
+      refetch: userStatus.refetch
     },
     isLoading: userInfo.isLoading || ratingHistory.isLoading || userStatus.isLoading,
   };
