@@ -84,14 +84,24 @@ export function ProblemDescription({ problemId }: ProblemDescriptionProps) {
 
     return (
         <div className="p-4 overflow-y-auto h-full scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-800">
-            <div className="mb-6 flex items-start justify-between gap-4">
+            <div className="mb-8 flex items-start justify-between gap-4">
                 <div>
-                    <h2 className="text-2xl font-black tracking-tight mb-2 uppercase">{problem.name}</h2>
-                    <div className="flex flex-wrap gap-2">
+                    <h2 className="text-2xl font-black tracking-tight mb-2 uppercase text-primary">{problem.name}</h2>
+                    <div className="flex flex-wrap gap-2 mb-4">
                         <Badge variant="outline" className="font-mono bg-indigo-500/5 text-indigo-500 border-indigo-500/20">{problem.rating || 'Unrated'}</Badge>
                         {(problem.tags || []).map((tag: string) => (
                             <Badge key={tag} variant="secondary" className="bg-muted/50 text-[10px] uppercase font-bold tracking-widest">{tag}</Badge>
                         ))}
+                    </div>
+                    <div className="flex flex-col gap-1 text-[11px] text-muted-foreground font-medium uppercase tracking-wider bg-muted/20 p-3 rounded-xl border border-border/50">
+                        <div className="flex items-center gap-2">
+                            <span className="opacity-50">Time limit:</span>
+                            <span>{problem.timeLimit || '1 second'}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <span className="opacity-50">Memory limit:</span>
+                            <span>{problem.memoryLimit || '256 MB'}</span>
+                        </div>
                     </div>
                 </div>
                 <Button
@@ -99,7 +109,7 @@ export function ProblemDescription({ problemId }: ProblemDescriptionProps) {
                     size="icon"
                     onClick={handleRefresh}
                     disabled={loading}
-                    className="h-8 w-8 rounded-xl bg-muted/30 hover:bg-indigo-500/10 hover:text-indigo-500 transition-all shrink-0"
+                    className="h-9 w-9 rounded-2xl bg-muted/30 hover:bg-indigo-500/10 hover:text-indigo-500 transition-all shrink-0 border border-border/50"
                     title="Refresh from Codeforces"
                 >
                     <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
@@ -141,9 +151,11 @@ export function ProblemDescription({ problemId }: ProblemDescriptionProps) {
                             <div key={index} className="space-y-4">
                                 <div className="space-y-2">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">input</p>
-                                    <pre className="bg-muted/30 p-4 rounded-2xl text-xs font-mono overflow-x-auto border border-border/50 shadow-inner whitespace-pre-wrap">
-                                        {sample.input}
-                                    </pre>
+                                    <div className="relative group">
+                                        <pre className="bg-muted/30 p-4 rounded-2xl text-xs font-mono overflow-x-auto border border-border/50 shadow-inner whitespace-pre-wrap">
+                                            {sample.input}
+                                        </pre>
+                                    </div>
                                 </div>
                                 <div className="space-y-2">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">output</p>
@@ -153,6 +165,15 @@ export function ProblemDescription({ problemId }: ProblemDescriptionProps) {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                )}
+
+                {problem.note && (
+                    <div className="pt-8 border-t border-border/50">
+                        <h3 className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground/60 mb-3 ml-1">Note</h3>
+                        <div className="[&_.prose]:text-sm [&_.prose]:p-4 [&_.prose]:rounded-xl bg-amber-500/[0.02] border border-amber-500/10 rounded-2xl">
+                            <LatexRenderer html={problem.note} />
+                        </div>
                     </div>
                 )}
             </div>

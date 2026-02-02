@@ -4,7 +4,7 @@ const JUDGE0_URL = process.env.JUDGE0_API_URL || 'http://127.0.0.1:2358'
 
 // Language ID mapping for Judge0
 const LANGUAGE_IDS: Record<string, number> = {
-  'cpp': 54,      // C++ (GCC 9.2.0)
+  'cpp': 105,      // C++ (GCC 14.1.0)
   'python': 71,   // Python (3.8.1)
   'java': 62,     // Java (OpenJDK 13.0.1)
   'javascript': 63, // JavaScript (Node.js 12.14.0)
@@ -63,6 +63,7 @@ export async function POST(request: NextRequest) {
                   expected_output: Buffer.from(testCase.expectedOutput).toString('base64'),
                   cpu_time_limit: timeLimit,
                   memory_limit: memoryLimit * 1024,
+                  compiler_options: language === 'cpp' ? '-std=c++20' : undefined,
                 }),
               });
               if (submitResponse.ok) break;

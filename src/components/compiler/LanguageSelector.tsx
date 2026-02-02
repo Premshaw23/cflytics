@@ -11,7 +11,7 @@ import {
 import { cn } from '@/lib/utils'
 
 export const LANGUAGES = [
-    { value: 'cpp', label: 'C++ (GCC 9.2)', icon: '🔧' },
+    { value: 'cpp', label: 'C++ (GCC 14.1)', icon: '🔧' },
     { value: 'python', label: 'Python 3.8', icon: '🐍' },
     { value: 'java', label: 'Java 13', icon: '☕' },
     { value: 'javascript', label: 'Node.js 12', icon: '📜' },

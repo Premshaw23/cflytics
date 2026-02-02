@@ -146,6 +146,7 @@ model ProblemStatement {
   inputSpecification    String   @db.Text
   outputSpecification   String   @db.Text
   sampleTestCases       Json     // Array of {input, output}
+  note                  String?  @db.Text
   tags                  String[]
   rating                Int?
   scrapedAt             DateTime @default(now())

@@ -12,6 +12,7 @@ export interface ScrapedProblem {
         input: string;
         output: string;
     }>;
+    note?: string;
     tags: string[];
     rating?: number;
 }
@@ -37,6 +38,7 @@ async function fetchProblemMetadataFromAPI(contestId: string, index: string): Pr
                     inputSpecification: '',
                     outputSpecification: '',
                     sampleTestCases: [],
+                    note: '',
                     tags: problem.tags || [],
                     rating: problem.rating
                 };
@@ -153,6 +155,7 @@ export async function performScrape(contestId: string, index: string, force = fa
                     inputSpecification: dbCached.inputSpecification,
                     outputSpecification: dbCached.outputSpecification,
                     sampleTestCases: dbCached.sampleTestCases as Array<{ input: string; output: string }>,
+                    note: dbCached.note || undefined,
                     tags: dbCached.tags,
                     rating: dbCached.rating || undefined
                 };
@@ -215,8 +218,17 @@ export async function performScrape(contestId: string, index: string, force = fa
                 return $(el).html();
             }).get().join('');
 
-            const inputSpecification = problemStatement.find('.input-specification').html() || '';
-            const outputSpecification = problemStatement.find('.output-specification').html() || '';
+            const inputSpecElement = problemStatement.find('.input-specification');
+            inputSpecElement.find('.section-title').remove();
+            const inputSpecification = inputSpecElement.html() || '';
+
+            const outputSpecElement = problemStatement.find('.output-specification');
+            outputSpecElement.find('.section-title').remove();
+            const outputSpecification = outputSpecElement.html() || '';
+
+            const noteElement = problemStatement.find('.note');
+            noteElement.find('.section-title').remove();
+            const note = noteElement.html() || '';
 
             const sampleTestCases: Array<{ input: string, output: string }> = [];
             $('.sample-test').each((_: number, sampleTest: any) => {
@@ -283,6 +295,7 @@ export async function performScrape(contestId: string, index: string, force = fa
                 inputSpecification,
                 outputSpecification,
                 sampleTestCases,
+                note,
                 tags,
                 rating
             };
@@ -305,6 +318,7 @@ export async function performScrape(contestId: string, index: string, force = fa
                         inputSpecification,
                         outputSpecification,
                         sampleTestCases: sampleTestCases as any,
+                        note,
                         tags,
                         rating: rating || null
                     },
@@ -316,6 +330,7 @@ export async function performScrape(contestId: string, index: string, force = fa
                         inputSpecification,
                         outputSpecification,
                         sampleTestCases: sampleTestCases as any,
+                        note,
                         tags,
                         rating: rating || null,
                         updatedAt: new Date()

@@ -1,8 +1,9 @@
 'use client'
 
 import React, { useEffect, useState, useRef } from 'react'
-import { Editor } from '@monaco-editor/react'
+import { Editor, loader } from '@monaco-editor/react'
 import { useTheme } from 'next-themes'
+import { toast } from 'sonner'
 
 interface CodeEditorProps {
     language: string
@@ -12,16 +13,38 @@ interface CodeEditorProps {
     readOnly?: boolean
 }
 
-export function CodeEditor({
+export interface CodeEditorHandle {
+    formatCode: () => void;
+}
+
+export const CodeEditor = React.forwardRef<CodeEditorHandle, CodeEditorProps>(({
     language,
     value,
     onChange,
     height = '500px',
     readOnly = false,
-}: CodeEditorProps) {
+}, ref) => {
     const { resolvedTheme } = useTheme()
     const [mounted, setMounted] = useState(false)
     const completionProviderRef = useRef<any>(null);
+    const editorRef = useRef<any>(null);
+
+    React.useImperativeHandle(ref, () => ({
+        formatCode: () => {
+            if (editorRef.current) {
+                try {
+                    // Try to trigger the build-in format action
+                    editorRef.current.trigger('anyString', 'editor.action.formatDocument', null);
+                    toast.success("Code formatted", { duration: 1000 });
+                } catch (err) {
+                    console.error("Format error:", err);
+                    toast.error("Format failed");
+                }
+            } else {
+                toast.error("Editor not ready");
+            }
+        }
+    }));
 
     useEffect(() => {
         setMounted(true)
@@ -50,6 +73,7 @@ export function CodeEditor({
     const editorTheme = resolvedTheme === 'dark' ? 'vs-dark' : 'light'
 
     const handleEditorDidMount = (editor: any, monaco: any) => {
+        editorRef.current = editor;
         // Dispose old if exists
         if (completionProviderRef.current) {
             completionProviderRef.current.dispose();
@@ -143,6 +167,59 @@ export function CodeEditor({
         // Add C++ keywords manually to ensure they always show up
         monaco.languages.setLanguageConfiguration('cpp', {
             wordPattern: /(-?\d*\.\d\w*)|([^\`\\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
+            brackets: [
+                ['{', '}'],
+                ['[', ']'],
+                ['(', ')'],
+            ],
+            autoClosingPairs: [
+                { open: '{', close: '}' },
+                { open: '[', close: ']' },
+                { open: '(', close: ')' },
+                { open: '"', close: '"' },
+                { open: "'", close: "'" },
+            ],
+        });
+
+        // Register a simple C++ Formatter (Since Monaco doesn't have one build-in)
+        monaco.languages.registerDocumentFormattingEditProvider('cpp', {
+            provideDocumentFormattingEdits: (model: any) => {
+                const text = model.getValue();
+                const lines = text.split('\n');
+                let indentLevel = 0;
+                const tabSize = 4;
+                const formattedLines = lines.map((line: string) => {
+                    const trimmedLine = line.trim();
+                    if (!trimmedLine) return '';
+
+                    // Decrease indent before printing line if it starts with closing brace
+                    if (trimmedLine.startsWith('}') || trimmedLine.startsWith(')')) {
+                        indentLevel = Math.max(0, indentLevel - 1);
+                    }
+
+                    const formattedLine = ' '.repeat(indentLevel * tabSize) + trimmedLine;
+
+                    // Increase indent after printing line if it ends with opening brace
+                    // Also handle case where it might have both (like "} else {")
+                    const openBraces = (trimmedLine.match(/{/g) || []).length;
+                    const closeBraces = (trimmedLine.match(/}/g) || []).length;
+
+                    // Already accounted for start of line closing braces above, 
+                    // so we only adjust based on the net change if it wasn't at the start
+                    if (!trimmedLine.startsWith('}')) {
+                        indentLevel += (openBraces - closeBraces);
+                    } else {
+                        indentLevel += openBraces; // Already subtracted 1 for the start
+                    }
+
+                    return formattedLine;
+                });
+
+                return [{
+                    range: model.getFullModelRange(),
+                    text: formattedLines.join('\n'),
+                }];
+            }
         });
     };
 
@@ -202,4 +279,4 @@ export function CodeEditor({
             />
         </div>
     )
-}
+})

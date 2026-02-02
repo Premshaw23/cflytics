@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect, Suspense, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { CodeEditor } from '@/components/compiler/CodeEditor'
+import { CodeEditor, CodeEditorHandle } from '@/components/compiler/CodeEditor'
 import { TestCasePanel } from '@/components/compiler/TestCasePanel'
 import { ProblemDescription } from '@/components/compiler/ProblemDescription'
 import { LanguageSelector } from '@/components/compiler/LanguageSelector'
 import { Button } from '@/components/ui/button'
-import { Maximize2, Minimize2, RotateCcw, ChevronLeft, ChevronRight, LayoutPanelTop, PanelRightClose, PanelRightOpen, History as HistoryIcon, Play, Send, Share2, Database, CheckCircle2, MoreHorizontal } from 'lucide-react'
+import { Maximize2, Minimize2, RotateCcw, ChevronLeft, ChevronRight, LayoutPanelTop, PanelRightClose, PanelRightOpen, History as HistoryIcon, Play, Send, Share2, Database, CheckCircle2, MoreHorizontal, Code } from 'lucide-react'
 import { getTemplate } from '@/lib/compiler/templates'
 import Link from 'next/link'
 import { toast } from 'sonner'
@@ -42,23 +42,27 @@ function CompilerContent() {
     const [showDescription, setShowDescription] = useState(true)
     const [isFullScreen, setIsFullScreen] = useState(false)
     const [problemMetadata, setProblemMetadata] = useState<any>(null)
-    const [leftPanelWidth, setLeftPanelWidth] = useState(450)
+    const [leftPanelWidth, setLeftPanelWidth] = useState(50) // Starting at 50%
+    const [testCasePanelHeight, setTestCasePanelHeight] = useState(300)
     const [isResizing, setIsResizing] = useState(false)
+    const [isVerticalResizing, setIsVerticalResizing] = useState(false)
     const [isSyncing, setIsSyncing] = useState(false)
-
+    const editorRef = React.useRef<CodeEditorHandle>(null)
     const containerRef = React.useRef<HTMLDivElement>(null)
+    const rightPanelRef = React.useRef<HTMLDivElement>(null)
 
-    // Handle Resize
+    // Handle Horizontal Resize
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             if (!isResizing || !containerRef.current) return
 
             const containerRect = containerRef.current.getBoundingClientRect()
             const newWidth = e.clientX - containerRect.left
+            const newPercentage = (newWidth / containerRect.width) * 100
 
-            // Constraints: min 300px, max 60% of container width
-            if (newWidth > 300 && newWidth < containerRect.width * 0.6) {
-                setLeftPanelWidth(newWidth)
+            // Constraints: min 20%, max 80%
+            if (newPercentage > 20 && newPercentage < 80) {
+                setLeftPanelWidth(newPercentage)
             }
         }
 
@@ -80,6 +84,39 @@ function CompilerContent() {
             document.body.style.userSelect = 'auto'
         }
     }, [isResizing])
+
+    // Handle Vertical Resize
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            if (!isVerticalResizing || !rightPanelRef.current) return
+
+            const rightPanelRect = rightPanelRef.current.getBoundingClientRect()
+            const newHeight = rightPanelRect.bottom - e.clientY
+
+            // Constraints: min 150px, max 80% of panel height
+            if (newHeight > 150 && newHeight < rightPanelRect.height * 0.8) {
+                setTestCasePanelHeight(newHeight)
+            }
+        }
+
+        const handleMouseUp = () => {
+            setIsVerticalResizing(false)
+        }
+
+        if (isVerticalResizing) {
+            window.addEventListener('mousemove', handleMouseMove)
+            window.addEventListener('mouseup', handleMouseUp)
+            document.body.style.cursor = 'row-resize'
+            document.body.style.userSelect = 'none'
+        }
+
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove)
+            window.removeEventListener('mouseup', handleMouseUp)
+            document.body.style.cursor = 'default'
+            document.body.style.userSelect = 'auto'
+        }
+    }, [isVerticalResizing])
 
     // Load problem metadata
     useEffect(() => {
@@ -378,6 +415,15 @@ function CompilerContent() {
                             variant="outline"
                             size="icon"
                             className="h-8 w-8 text-muted-foreground"
+                            onClick={() => editorRef.current?.formatCode()}
+                            title="Format Code (Prettify)"
+                        >
+                            <Code className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground"
                             onClick={handleShare}
                             title="Share Solution"
                         >
@@ -413,9 +459,9 @@ function CompilerContent() {
                                 <RotateCcw className="mr-2 h-4 w-4" />
                                 <span>Reset Code</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={handleShare}>
-                                <Share2 className="mr-2 h-4 w-4" />
-                                <span>Share</span>
+                            <DropdownMenuItem onClick={() => editorRef.current?.formatCode()}>
+                                <Code className="mr-2 h-4 w-4" />
+                                <span>Format Code</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => setShowDescription(!showDescription)}>
@@ -446,10 +492,11 @@ function CompilerContent() {
                 {showDescription && (
                     <>
                         <div
-                            style={{ "--left-panel-width": `${leftPanelWidth}px` } as React.CSSProperties}
+                            style={{ "--left-panel-width": `${leftPanelWidth}%` } as React.CSSProperties}
                             className={cn(
                                 "shrink-0 border-r bg-card/5 animate-in slide-in-from-left duration-300 overflow-y-auto",
-                                "w-full lg:w-[var(--left-panel-width)] h-[30vh] md:h-[40vh] lg:h-full"
+                                "w-full lg:w-[var(--left-panel-width)] h-[30vh] md:h-[40vh] lg:h-full transition-[width] duration-300",
+                                isResizing && "transition-none"
                             )}
                         >
                             <ProblemDescription problemId={problemId} />
@@ -467,9 +514,10 @@ function CompilerContent() {
                 )}
 
                 {/* Right: Editor & Test Cases */}
-                <div className="flex flex-1 flex-col overflow-hidden bg-muted/20 relative">
-                    <div className="flex-1 min-h-[200px] lg:min-h-0">
+                <div ref={rightPanelRef} className="flex flex-1 flex-col overflow-hidden bg-muted/20 relative">
+                    <div className="flex-1 min-h-[100px] lg:min-h-0">
                         <CodeEditor
+                            ref={editorRef}
                             language={language}
                             value={code}
                             onChange={(value) => setCode(value || '')}
@@ -477,8 +525,24 @@ function CompilerContent() {
                         />
                     </div>
 
+                    {/* Vertical Resizer Handle */}
+                    <div
+                        className={cn(
+                            "h-2 hover:h-2.5 active:h-2.5 bg-border hover:bg-indigo-500/50 active:bg-indigo-500 cursor-row-resize transition-all z-20 shrink-0 flex items-center justify-center group/resizer",
+                            isVerticalResizing && "bg-indigo-500 h-2.5"
+                        )}
+                        onMouseDown={() => setIsVerticalResizing(true)}
+                    >
+                        <div className="flex items-center gap-1 opacity-30 group-hover/resizer:opacity-100 transition-opacity">
+                            <div className="w-8 h-1 rounded-full bg-foreground/20 group-hover/resizer:bg-white" />
+                        </div>
+                    </div>
+
                     {/* Test Cases Panel */}
-                    <div className="h-[40%] min-h-[200px] border-t bg-background shadow-2xl relative z-10">
+                    <div
+                        style={{ height: `${testCasePanelHeight}px` }}
+                        className="min-h-[150px] border-t bg-background shadow-2xl relative z-10 overflow-hidden"
+                    >
                         <TestCasePanel
                             problemId={problemId}
                             results={results}
@@ -486,6 +550,7 @@ function CompilerContent() {
                             onSubmit={handleSubmit}
                             isRunning={isRunning}
                             onRestoreCode={(newCode) => setCode(newCode)}
+                            onToggleExpand={() => setTestCasePanelHeight(prev => prev > 400 ? 300 : 500)}
                         />
                     </div>
                 </div>

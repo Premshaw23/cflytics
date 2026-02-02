@@ -37,6 +37,7 @@ interface TestCasePanelProps {
     onSubmit: (customCases: TestCase[]) => void
     isRunning: boolean
     onRestoreCode: (code: string) => void
+    onToggleExpand?: () => void
 }
 
 export function TestCasePanel({
@@ -46,6 +47,7 @@ export function TestCasePanel({
     onSubmit,
     isRunning,
     onRestoreCode,
+    onToggleExpand,
 }: TestCasePanelProps) {
     const [sampleTestCases, setSampleTestCases] = useState<TestCase[]>([])
     const [customTestCases, setCustomTestCases] = useState<TestCase[]>([
@@ -242,8 +244,8 @@ export function TestCasePanel({
     return (
         <div className="flex h-full flex-col bg-background">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col h-full">
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between border-b px-4 py-2 sm:py-1.5 shrink-0 bg-muted/30 gap-2">
-                    <div className="overflow-x-auto scrollbar-none -mx-2 px-2">
+                <div className="flex flex-col sm:flex-row overflow-x-auto scrollbar-none items-stretch sm:items-center justify-between border-b px-4 py-2 sm:py-1.5 shrink-0 bg-muted/30 gap-2">
+                    <div className="flex items-center scrollbar-none -mx-2 px-2">
                         <TabsList className="h-8 bg-transparent w-full justify-start sm:w-auto">
                             <TabsTrigger value="sample" className="px-3 text-[10px] sm:text-xs data-[state=active]:bg-background data-[state=active]:shadow-sm">
                                 Sample Tests ({sampleTestCases.length})
@@ -258,6 +260,32 @@ export function TestCasePanel({
                                 History
                             </TabsTrigger>
                         </TabsList>
+
+                        {onToggleExpand && (
+                            <button
+                                onClick={onToggleExpand}
+                                className="ml-2 hidden sm:flex flex-col items-center justify-center w-6 h-8 rounded bg-zinc-800 hover:bg-zinc-700 transition-colors border border-zinc-700/50 group shrink-0"
+                                title="Toggle Panel Height"
+                            >
+                                <div className="w-0 h-0 border-l-[4px] border-r-[4px] border-b-[5px] border-l-transparent border-r-transparent border-b-zinc-400 group-hover:border-b-zinc-200 mb-0.5" />
+                                <div className="w-3 h-[1px] bg-zinc-700 group-hover:bg-zinc-600" />
+                                <div className="w-0 h-0 border-l-[4px] border-r-[4px] border-t-[5px] border-l-transparent border-r-transparent border-t-zinc-500 group-hover:border-t-zinc-300 mt-0.5" />
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="flex sm:hidden items-center gap-2">
+                        {onToggleExpand && (
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 text-muted-foreground hover:bg-muted"
+                                onClick={onToggleExpand}
+                                title="Toggle Panel Height"
+                            >
+                                <RefreshCw className="h-3 w-3" />
+                            </Button>
+                        )}
                     </div>
 
                     <div className="grid grid-cols-2 sm:flex gap-2 w-full sm:w-auto">
