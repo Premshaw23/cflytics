@@ -25,7 +25,7 @@ jobs:
     - name: Generate Prisma Client
       run: npx prisma generate
       env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://dummy:dummy@localhost:5432/dummy' }}
 
     - name: Run Lint
       run: npm run lint
@@ -33,10 +33,10 @@ jobs:
     - name: Build
       run: npm run build
       env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        REDIS_URL: ${{ secrets.REDIS_URL }}
-        CF_API_KEY: ${{ secrets.CF_API_KEY }}
-        CF_API_SECRET: ${{ secrets.CF_API_SECRET }}
-        CODEY_SESSION_PASSWORD: ${{ secrets.CODEY_SESSION_PASSWORD }}
-        JUDGE0_API_URL: ${{ secrets.JUDGE0_API_URL }}
-        NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL || 'postgresql://dummy:dummy@localhost:5432/dummy' }}
+        REDIS_URL: ${{ secrets.REDIS_URL || 'redis://localhost:6379' }}
+        CF_API_KEY: ${{ secrets.CF_API_KEY || 'dummy_key' }}
+        CF_API_SECRET: ${{ secrets.CF_API_SECRET || 'dummy_secret' }}
+        CODEY_SESSION_PASSWORD: ${{ secrets.CODEY_SESSION_PASSWORD || 'dummy_password_at_least_32_characters_long' }}
+        JUDGE0_API_URL: ${{ secrets.JUDGE0_API_URL || 'http://localhost:2358' }}
+        NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'http://localhost:3000' }}
