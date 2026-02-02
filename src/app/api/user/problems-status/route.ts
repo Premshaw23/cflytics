@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     let solvedIds = new Set<string>();
     try {
       const cfResponse = await fetch(`https://codeforces.com/api/user.status?handle=${user.handle}&from=1&count=1000`, {
-        next: { revalidate: 300 } // Cache for 5 minutes
+        cache: 'no-store' 
       });
       const cfData = await cfResponse.json();
       
@@ -47,12 +47,17 @@ export async function GET(request: NextRequest) {
       },
       select: {
         problemId: true,
+        verdict: true,
       },
     });
 
     const attemptedIds = new Set<string>();
     localSubmissions.forEach((s) => {
-      attemptedIds.add(s.problemId);
+      if (s.verdict === 'AC') {
+        solvedIds.add(s.problemId);
+      } else {
+        attemptedIds.add(s.problemId);
+      }
     });
 
     return NextResponse.json({

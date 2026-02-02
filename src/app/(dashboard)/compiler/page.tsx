@@ -29,7 +29,7 @@ function CompilerContent() {
 
     const { user, status: authStatus } = useAuth()
     const queryClient = useQueryClient()
-    const { data: statusData } = useUserProblemStatus()
+    const { data: statusData, refetch: statusRefetch, isFetching: isStatusFetching } = useUserProblemStatus()
 
     const isSolved = problemId && statusData?.solvedIds.includes(problemId)
     const isAttempted = problemId && statusData?.attemptedIds.includes(problemId) && !isSolved
@@ -321,22 +321,32 @@ function CompilerContent() {
                                 </span>
                             )}
                             <div className="hidden sm:flex items-center">
-                                {isSolved ? (
-                                    <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                                        <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-tight">Solved</span>
-                                    </div>
-                                ) : isAttempted ? (
-                                    <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
-                                        <HistoryIcon className="w-3.5 h-3.5 text-amber-500" />
-                                        <span className="text-[10px] font-bold text-amber-500 uppercase tracking-tight">Attempted</span>
-                                    </div>
-                                ) : problemId && (
-                                    <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-muted/20 border border-border/50">
-                                        <Database className="w-3.5 h-3.5 text-muted-foreground" />
-                                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">Unsolved</span>
-                                    </div>
-                                )}
+                                <button
+                                    onClick={() => statusRefetch()}
+                                    disabled={isStatusFetching}
+                                    className={cn(
+                                        "transition-opacity hover:opacity-80 active:scale-95",
+                                        isStatusFetching && "opacity-50 cursor-wait"
+                                    )}
+                                    title="Click to refresh status"
+                                >
+                                    {isSolved ? (
+                                        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                                            <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-tight">Solved</span>
+                                        </div>
+                                    ) : isAttempted ? (
+                                        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+                                            <HistoryIcon className="w-3.5 h-3.5 text-amber-500" />
+                                            <span className="text-[10px] font-bold text-amber-500 uppercase tracking-tight">Attempted</span>
+                                        </div>
+                                    ) : problemId && (
+                                        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-muted/20 border border-border/50">
+                                            <Database className="w-3.5 h-3.5 text-muted-foreground" />
+                                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">Unsolved</span>
+                                        </div>
+                                    )}
+                                </button>
                             </div>
                         </div>
                     </div>

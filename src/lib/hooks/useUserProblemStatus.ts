@@ -8,6 +8,7 @@ export function useUserProblemStatus() {
       if (!response.ok) throw new Error("Failed to fetch user problem status");
       return response.json();
     },
-    staleTime: 60 * 1000, 
+    staleTime: 0, 
+    refetchOnWindowFocus: true, 
   });
 }
