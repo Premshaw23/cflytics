@@ -40,12 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-codey-weekwise-plan.md
-codey-auth-plan.md
-compiler-plan.md
-SCRAPER_SOLUTION.md
-TROUBLESHOOTING.md
-
 /src/generated/prisma
 
 /src/generated/prisma
