@@ -1,13 +1,13 @@
 'use client'
 
 import React, { useState, useEffect, Suspense, useCallback } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { CodeEditor, CodeEditorHandle } from '@/components/compiler/CodeEditor'
 import { TestCasePanel } from '@/components/compiler/TestCasePanel'
 import { ProblemDescription } from '@/components/compiler/ProblemDescription'
 import { LanguageSelector } from '@/components/compiler/LanguageSelector'
 import { Button } from '@/components/ui/button'
-import { Maximize2, Minimize2, RotateCcw, ChevronLeft, ChevronRight, LayoutPanelTop, PanelRightClose, PanelRightOpen, History as HistoryIcon, Play, Send, Share2, Database, CheckCircle2, MoreHorizontal, Code } from 'lucide-react'
+import { Maximize2, Minimize2, RotateCcw, ChevronLeft, ChevronRight, LayoutPanelTop, PanelRightClose, PanelRightOpen, History as HistoryIcon, Play, Send, Share2, Database, CheckCircle2, MoreHorizontal, Code, Dices, Terminal, Loader2 } from 'lucide-react'
 import { getTemplate } from '@/lib/compiler/templates'
 import Link from 'next/link'
 import { toast } from 'sonner'
@@ -15,6 +15,7 @@ import { useAuth } from '@/lib/store/useAuth'
 import { cn } from '@/lib/utils'
 import { useUserProblemStatus } from '@/lib/hooks/useUserProblemStatus'
 import { useQueryClient } from '@tanstack/react-query'
+import { useUserData } from '@/lib/hooks/useUserData'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -22,14 +23,19 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Card, CardContent } from '@/components/ui/card'
+import { useProblems } from '@/lib/hooks/useProblems'
 
 function CompilerContent() {
     const searchParams = useSearchParams()
     const problemId = searchParams.get('problemId')
 
     const { user, status: authStatus } = useAuth()
+    const router = useRouter()
     const queryClient = useQueryClient()
     const { data: statusData, refetch: statusRefetch, isFetching: isStatusFetching } = useUserProblemStatus()
+    const { userInfo } = useUserData({ handle: user?.handle || '', enabled: !!user?.handle })
+    const { data: problemsData } = useProblems({ enabled: !problemId })
 
     const isSolved = problemId && statusData?.solvedIds.includes(problemId)
     const isAttempted = problemId && statusData?.attemptedIds.includes(problemId) && !isSolved
@@ -47,6 +53,8 @@ function CompilerContent() {
     const [isResizing, setIsResizing] = useState(false)
     const [isVerticalResizing, setIsVerticalResizing] = useState(false)
     const [isSyncing, setIsSyncing] = useState(false)
+    const [showSelection, setShowSelection] = useState(!problemId)
+    const [isPickingRandom, setIsPickingRandom] = useState(false)
     const editorRef = React.useRef<CodeEditorHandle>(null)
     const containerRef = React.useRef<HTMLDivElement>(null)
     const rightPanelRef = React.useRef<HTMLDivElement>(null)
@@ -140,33 +148,69 @@ function CompilerContent() {
 
     // Persistence with Sync Indicator
     useEffect(() => {
-        if (code) {
-            localStorage.setItem(`code-${problemId}-${language}`, code)
+        if (code && (problemId || showSelection === false)) {
+            localStorage.setItem(`code-${problemId || 'blank'}-${language}`, code)
 
             // Artificial delay to show "Syncing"
             setIsSyncing(true)
             const timer = setTimeout(() => setIsSyncing(false), 800)
             return () => clearTimeout(timer)
         }
-    }, [code, language, problemId])
+    }, [code, language, problemId, showSelection])
 
-    const handleRunCode = useCallback(async (customCases: any[] = []): Promise<any[]> => {
+    const handlePickRandom = async () => {
+        if (!problemsData?.problems) {
+            toast.error("Still loading problems. Please wait.")
+            return
+        }
+
+        setIsPickingRandom(true)
+        try {
+            const userRating = userInfo.data?.rating || 800
+            // Find problems within range (userRating +/- 200) or default to 800
+            const filtered = problemsData.problems.filter(p =>
+                p.rating && Math.abs(p.rating - userRating) <= 200
+            )
+
+            const pool = filtered.length > 0 ? filtered : problemsData.problems.filter(p => p.rating === 800)
+            const randomProblem = pool[Math.floor(Math.random() * pool.length)]
+
+            if (randomProblem) {
+                const newProblemId = `${randomProblem.contestId}${randomProblem.index}`
+                router.push(`/compiler?problemId=${newProblemId}`)
+                setShowSelection(false)
+                toast.success(`Selected random problem: ${randomProblem.name}`)
+            } else {
+                toast.error("Could not find a suitable random problem.")
+            }
+        } catch (err) {
+            toast.error("Failed to pick a random problem.")
+        } finally {
+            setIsPickingRandom(false)
+        }
+    }
+
+    const handleRunCode = useCallback(async (customCases: { input: string; expectedOutput: string }[] = []): Promise<any[]> => {
         setIsRunning(true)
         setResults([])
 
         try {
-            // First, get sample test cases
-            const tcRes = await fetch(`/api/compiler/testcases?problemId=${problemId}`)
-            const tcData = await tcRes.json()
+            let testCases: { input: string; expectedOutput: string }[] = []
 
-            const sampleCases = tcData.testCases || []
+            if (problemId) {
+                // First, get sample test cases
+                const tcRes = await fetch(`/api/compiler/testcases?problemId=${problemId}`)
+                const tcData = await tcRes.json()
+                const sampleCases = tcData.testCases || []
+                testCases = [...sampleCases]
+            }
 
             // Merge sample cases with valid custom cases
             const validCustomCases = customCases.filter(c => c.input.trim() !== '' || c.expectedOutput.trim() !== '')
-            const testCases = [...sampleCases, ...validCustomCases]
+            testCases = [...testCases, ...validCustomCases]
 
             if (testCases.length === 0) {
-                toast.error("No test cases found for this problem.")
+                toast.error(problemId ? "No test cases found for this problem." : "Add custom tests for blank compilation.")
                 return []
             }
 
@@ -219,7 +263,12 @@ function CompilerContent() {
         return () => window.removeEventListener('keydown', handleKeyDown)
     }, [handleRunCode, isRunning])
 
-    const handleSubmit = useCallback(async (customCases: any[] = []) => {
+    const handleSubmit = useCallback(async (customCases: { input: string; expectedOutput: string }[] = []) => {
+        if (!problemId) {
+            toast.error("Submission is only available for specific problems.")
+            return
+        }
+
         if (authStatus !== 'connected' || !user) {
             toast.error("Please connect your account to submit code.")
             return
@@ -330,6 +379,53 @@ function CompilerContent() {
 
     return (
         <div className={`flex flex-col bg-background ${isFullScreen ? 'fixed inset-0 z-50 overflow-hidden' : 'h-full'}`}>
+            {/* Selection Overlay */}
+            {!problemId && showSelection && (
+                <div className="absolute inset-0 z-[100] bg-background/80 backdrop-blur-md flex items-center justify-center p-4">
+                    <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 animate-in zoom-in-95 fade-in duration-500">
+                        {/* Option 1: Random Challenge */}
+                        <Card
+                            className="bg-card/40 border-border/40 hover:border-primary/50 transition-all cursor-pointer hover:shadow-2xl hover:shadow-primary/5 group rounded-[32px] overflow-hidden"
+                            onClick={handlePickRandom}
+                        >
+                            <CardContent className="p-10 flex flex-col items-center text-center space-y-6">
+                                <div className="p-6 rounded-[24px] bg-primary/10 border border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
+                                    <Dices className="w-12 h-12" />
+                                </div>
+                                <div className="space-y-2">
+                                    <h2 className="text-2xl font-black uppercase tracking-tighter">Random Challenge</h2>
+                                    <p className="text-muted-foreground text-xs uppercase font-bold tracking-widest leading-relaxed">
+                                        Solve a Codeforces problem targetted at your rating <span className="text-primary">({userInfo.data?.rating || 800})</span>
+                                    </p>
+                                </div>
+                                {isPickingRandom && <Loader2 className="w-6 h-6 animate-spin text-primary" />}
+                            </CardContent>
+                        </Card>
+
+                        {/* Option 2: Blank Compiler */}
+                        <Card
+                            className="bg-card/40 border-border/40 hover:border-indigo-500/50 transition-all cursor-pointer hover:shadow-2xl hover:shadow-indigo-500/5 group rounded-[32px] overflow-hidden"
+                            onClick={() => {
+                                setShowSelection(false)
+                                setShowDescription(false)
+                            }}
+                        >
+                            <CardContent className="p-10 flex flex-col items-center text-center space-y-6">
+                                <div className="p-6 rounded-[24px] bg-indigo-500/10 border border-indigo-500/20 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-500">
+                                    <Terminal className="w-12 h-12" />
+                                </div>
+                                <div className="space-y-2">
+                                    <h2 className="text-2xl font-black uppercase tracking-tighter">Blank Slate</h2>
+                                    <p className="text-muted-foreground text-xs uppercase font-bold tracking-widest leading-relaxed">
+                                        Pure compilation environment. No problem constraints, just your code.
+                                    </p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
+            )}
+
             {/* Header */}
             <div className="flex items-center justify-between border-b px-4 py-2 sm:px-6 sm:py-3 shrink-0 bg-card/30 backdrop-blur-sm gap-2 relative z-20">
                 <div className="flex items-center gap-2 sm:gap-4 overflow-hidden">

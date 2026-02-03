@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { RefreshCw } from 'lucide-react'
+import { RefreshCw, Code } from 'lucide-react'
 import { ProblemDescription as LatexRenderer } from '@/components/problems/ProblemDescription'
 import { toast } from 'sonner'
 import 'katex/dist/katex.min.css'
@@ -51,8 +51,21 @@ export function ProblemDescription({ problemId }: ProblemDescriptionProps) {
 
     if (!problemId) {
         return (
-            <div className="flex flex-col items-center justify-center p-8 text-center text-muted-foreground">
-                <p>Select a problem to view details</p>
+            <div className="flex flex-col items-center justify-center h-full p-10 text-center animate-in fade-in duration-500">
+                <div className="space-y-6 max-w-[280px]">
+                    <div className="relative inline-block">
+                        <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full" />
+                        <div className="relative bg-card border border-border/50 p-5 rounded-[24px] shadow-xl">
+                            <Code className="w-8 h-8 text-primary" />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <h3 className="text-lg font-black uppercase tracking-tighter text-foreground">Workspace Ready</h3>
+                        <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground/60 leading-relaxed">
+                            Select a problem to view details here, or simply start coding and compile your own logic without any problem constraints.
+                        </p>
+                    </div>
+                </div>
             </div>
         )
     }
@@ -88,7 +101,7 @@ export function ProblemDescription({ problemId }: ProblemDescriptionProps) {
                 <div>
                     <h2 className="text-2xl font-black tracking-tight mb-2 uppercase text-primary">{problem.name}</h2>
                     <div className="flex flex-wrap gap-2 mb-4">
-                        <Badge variant="outline" className="font-mono bg-indigo-500/5 text-indigo-500 border-indigo-500/20">{problem.rating || 'Unrated'}</Badge>
+                        <Badge variant="outline" className="font-mono bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 border-emerald-500/20">{problem.rating || 'Unrated'}</Badge>
                         {(problem.tags || []).map((tag: string) => (
                             <Badge key={tag} variant="secondary" className="bg-muted/50 text-[10px] uppercase font-bold tracking-widest">{tag}</Badge>
                         ))}
@@ -109,7 +122,7 @@ export function ProblemDescription({ problemId }: ProblemDescriptionProps) {
                     size="icon"
                     onClick={handleRefresh}
                     disabled={loading}
-                    className="h-9 w-9 rounded-2xl bg-muted/30 hover:bg-indigo-500/10 hover:text-indigo-500 transition-all shrink-0 border border-border/50"
+                    className="h-9 w-9 rounded-2xl bg-muted/30 hover:bg-emerald-500/10 hover:text-emerald-500 transition-all shrink-0 border border-border/50"
                     title="Refresh from Codeforces"
                 >
                     <RefreshCw className={cn("h-4 w-4", loading && "animate-spin")} />
@@ -159,7 +172,7 @@ export function ProblemDescription({ problemId }: ProblemDescriptionProps) {
                                 </div>
                                 <div className="space-y-2">
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">output</p>
-                                    <pre className="bg-indigo-500/[0.03] p-4 rounded-2xl text-xs font-mono overflow-x-auto border border-indigo-500/10 shadow-inner text-indigo-500/80 whitespace-pre-wrap">
+                                    <pre className="bg-emerald-500/[0.04] p-4 rounded-2xl text-xs font-mono overflow-x-auto border border-emerald-500/20 shadow-sm text-emerald-600 dark:text-emerald-400 whitespace-pre-wrap">
                                         {sample.output}
                                     </pre>
                                 </div>

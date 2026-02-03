@@ -35,52 +35,55 @@ export function VerdictChart({ submissions }: VerdictChartProps) {
     };
 
     return (
-        <Card className="bg-white/40 dark:bg-zinc-900/40 border-zinc-200 dark:border-white/5 backdrop-blur-xl shadow-xl">
-            <CardHeader className="pb-0 border-b border-zinc-200 dark:border-white/5">
-                <CardTitle className="text-[10px] font-black uppercase tracking-widest text-zinc-500 py-4">Verdict Distribution</CardTitle>
+        <Card className="bg-card/40 backdrop-blur-xl border border-border/40 rounded-[32px] overflow-hidden shadow-2xl">
+            <CardHeader className="pb-0 pt-8 border-b border-border/10 bg-muted/20">
+                <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground pb-6 pl-2">Verdict Analytics</CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
-                <div className="h-[300px] w-full">
+            <CardContent className="p-0">
+                <div className="h-[350px] w-full pt-10">
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
                                 data={data}
                                 cx="50%"
-                                cy="50%"
-                                innerRadius={80}
-                                outerRadius={100}
-                                paddingAngle={3}
+                                cy="45%"
+                                innerRadius={70}
+                                outerRadius={95}
+                                paddingAngle={4}
                                 dataKey="value"
                                 stroke="none"
                             >
                                 {data.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={getColor(entry.name)} className="stroke-white dark:stroke-zinc-900 stroke-2" />
+                                    <Cell key={`cell-${index}`} fill={getColor(entry.name)} className="transition-opacity duration-300 hover:opacity-80" />
                                 ))}
                             </Pie>
                             <Tooltip
                                 contentStyle={{
-                                    backgroundColor: "var(--tooltip-bg, rgba(255, 255, 255, 0.95))", // Default light mode
-                                    borderColor: "var(--tooltip-border, rgba(0,0,0,0.1))",
-                                    borderRadius: "12px",
-                                    color: "var(--tooltip-text, #000)",
-                                    fontSize: "12px",
-                                    fontWeight: "bold",
-                                    boxShadow: "0 10px 30px -10px rgba(0,0,0,0.2)"
+                                    backgroundColor: "hsl(var(--card))",
+                                    border: "1px solid hsl(var(--border) / 0.5)",
+                                    borderRadius: "16px",
+                                    padding: "10px 14px",
+                                    boxShadow: "0 20px 40px -10px rgba(0,0,0,0.3)"
                                 }}
-                                itemStyle={{ color: "#71717a" }}
+                                itemStyle={{
+                                    fontSize: "10px",
+                                    fontWeight: "900",
+                                    color: "hsl(var(--foreground))",
+                                    textTransform: "uppercase"
+                                }}
                             />
                             <Legend
                                 verticalAlign="bottom"
-                                height={36}
+                                height={80}
                                 iconType="circle"
                                 iconSize={8}
                                 wrapperStyle={{
-                                    fontSize: "10px",
-                                    fontWeight: "700",
+                                    fontSize: "9px",
+                                    fontWeight: "900",
                                     textTransform: "uppercase",
                                     letterSpacing: "0.1em",
-                                    color: "#71717a",
-                                    paddingTop: "20px"
+                                    color: "hsl(var(--muted-foreground))",
+                                    paddingBottom: "20px"
                                 }}
                             />
                         </PieChart>

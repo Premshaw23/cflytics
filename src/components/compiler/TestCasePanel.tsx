@@ -115,7 +115,7 @@ export function TestCasePanel({
                                     href={cfLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-[10px] font-bold text-indigo-400 hover:text-indigo-300 underline underline-offset-2 flex items-center gap-1"
+                                    className="text-[10px] font-bold text-blue-500 hover:text-blue-400 underline underline-offset-2 flex items-center gap-1"
                                 >
                                     View Manual on Codeforces <ExternalLink className="h-2.5 w-2.5" />
                                 </a>
@@ -294,7 +294,7 @@ export function TestCasePanel({
                                 asChild
                                 size="sm"
                                 variant="outline"
-                                className="col-span-2 sm:col-span-1 h-9 sm:h-8 text-xs font-bold border-indigo-500/30 text-indigo-600 hover:bg-indigo-500/10 hover:text-indigo-600 animate-in zoom-in-95 duration-300"
+                                className="col-span-2 sm:col-span-1 h-9 sm:h-8 text-xs font-bold border-blue-500/30 text-blue-600 hover:bg-blue-500/10 hover:text-blue-600 animate-in zoom-in-95 duration-300"
                             >
                                 {(() => {
                                     const match = problemId.match(/^(\d+)([a-zA-Z0-9]+)$/) || problemId.match(/^(\d+)-([a-zA-Z0-9]+)$/);
@@ -326,7 +326,7 @@ export function TestCasePanel({
                             onClick={() => onSubmit(customTestCases)}
                             disabled={isRunning || !problemId}
                             size="sm"
-                            className="h-9 sm:h-8 text-xs font-medium bg-indigo-600 hover:bg-indigo-700 text-white"
+                            className="h-9 sm:h-8 text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white"
                         >
                             <Send className="mr-2 h-3.5 w-3.5" />
                             Submit
@@ -353,7 +353,7 @@ export function TestCasePanel({
                                             <div className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest flex items-center gap-1.5 ml-1">
                                                 <CheckCircle2 className="w-3 h-3 text-zinc-500" /> output
                                             </div>
-                                            <pre className="rounded-xl bg-indigo-500/[0.03] p-4 text-xs font-mono border border-indigo-500/10 shadow-inner text-indigo-500/80">
+                                            <pre className="rounded-xl bg-emerald-500/[0.04] p-4 text-xs font-mono border border-emerald-500/20 shadow-sm text-emerald-600 dark:text-emerald-400">
                                                 {tc.expectedOutput}
                                             </pre>
                                         </div>
@@ -374,7 +374,7 @@ export function TestCasePanel({
                                 onClick={handleAddCustomCase}
                                 variant="ghost"
                                 size="sm"
-                                className="h-7 text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-500/10 hover:text-indigo-500"
+                                className="h-7 text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-500/10 hover:text-emerald-500"
                             >
                                 <Plus className="w-3 h-3 mr-1.5" /> Add Case
                             </Button>
@@ -400,7 +400,7 @@ export function TestCasePanel({
                                         <textarea
                                             value={tc.input}
                                             onChange={(e) => handleUpdateCustomCase(index, 'input', e.target.value)}
-                                            className="w-full h-20 rounded-xl bg-background/50 p-3 text-xs font-mono border border-border/50 focus:border-indigo-500/50 outline-none transition-all resize-none shadow-inner"
+                                            className="w-full h-20 rounded-xl bg-background/50 p-3 text-xs font-mono border border-border/50 focus:border-blue-500/50 outline-none transition-all resize-none shadow-inner"
                                             placeholder="Standard input..."
                                         />
                                     </div>
@@ -411,7 +411,7 @@ export function TestCasePanel({
                                         <textarea
                                             value={tc.expectedOutput}
                                             onChange={(e) => handleUpdateCustomCase(index, 'expectedOutput', e.target.value)}
-                                            className="w-full h-20 rounded-xl bg-background/50 p-3 text-xs font-mono border border-border/50 focus:border-indigo-500/50 outline-none transition-all resize-none shadow-inner"
+                                            className="w-full h-20 rounded-xl bg-background/50 p-3 text-xs font-mono border border-border/50 focus:border-blue-500/50 outline-none transition-all resize-none shadow-inner"
                                             placeholder="Expected output..."
                                         />
                                     </div>
@@ -526,7 +526,7 @@ export function TestCasePanel({
                                                     <div className="mt-6 pt-4 border-t border-border/40 flex items-center justify-between">
                                                         <div className="flex gap-6">
                                                             <div className="flex items-center gap-2 group/metric">
-                                                                <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-500 group-hover/metric:bg-indigo-500 group-hover/metric:text-white transition-all">
+                                                                <div className="p-1.5 rounded-lg bg-blue-500/10 text-blue-500 group-hover/metric:bg-blue-500 group-hover/metric:text-white transition-all">
                                                                     <Clock className="w-3 h-3" />
                                                                 </div>
                                                                 <div className="flex flex-col">
@@ -561,7 +561,7 @@ export function TestCasePanel({
                         )}
                     </TabsContent>
 
-                    <TabsContent value="history" className="absolute inset-0 m-0 overflow-y-auto p-0 scrollbar-thin scrollbar-thumb-indigo-500/20">
+                    <TabsContent value="history" className="absolute inset-0 m-0 overflow-y-auto p-0 scrollbar-thin scrollbar-thumb-blue-500/20">
                         {loadingHistory ? (
                             <div className="flex items-center justify-center h-full">
                                 <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
@@ -582,7 +582,7 @@ export function TestCasePanel({
                                                     {formatDistanceToNow(new Date(sub.createdAt), { addSuffix: true })}
                                                 </span>
                                                 {sub.source === 'codeforces' && (
-                                                    <Badge variant="outline" className="text-[8px] h-4 leading-none border-indigo-500/30 text-indigo-500 uppercase font-black px-1.5 shadow-sm shadow-indigo-500/5 bg-indigo-500/5">
+                                                    <Badge variant="outline" className="text-[8px] h-4 leading-none border-blue-500/30 text-blue-500 uppercase font-black px-1.5 shadow-sm shadow-blue-500/5 bg-blue-500/5">
                                                         Codeforces Official
                                                     </Badge>
                                                 )}
@@ -602,7 +602,7 @@ export function TestCasePanel({
                                                         onClick={() => handleRestore(sub.code)}
                                                         variant="outline"
                                                         size="xs"
-                                                        className="h-6 text-[10px] font-bold border-indigo-500/20 text-indigo-600 hover:bg-indigo-500/10"
+                                                        className="h-6 text-[10px] font-bold border-blue-500/20 text-blue-600 hover:bg-blue-500/10"
                                                     >
                                                         <RefreshCw className="w-3 h-3 mr-1" /> Restore
                                                     </Button>
@@ -612,7 +612,7 @@ export function TestCasePanel({
                                                         disabled={fetchingId === sub.id}
                                                         variant="outline"
                                                         size="xs"
-                                                        className="h-6 text-[10px] font-bold border-indigo-500/20 text-indigo-600 hover:bg-indigo-500/10"
+                                                        className="h-6 text-[10px] font-bold border-blue-500/20 text-blue-600 hover:bg-blue-500/10"
                                                     >
                                                         {fetchingId === sub.id ? (
                                                             <Loader2 className="w-3 h-3 mr-1 animate-spin" />
