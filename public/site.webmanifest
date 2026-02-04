@@ -1,6 +1,6 @@
 {
-    "name": "Codey",
-    "short_name": "Codey",
+    "name": "CFlytics",
+    "short_name": "CFlytics",
     "description": "Advanced Codeforces Dashboard & Analytics Platform",
     "start_url": "./",
     "scope": "/",
