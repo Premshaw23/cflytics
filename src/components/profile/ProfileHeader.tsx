@@ -29,7 +29,7 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
 
     useEffect(() => {
         const update = () => {
-            const current = localStorage.getItem("codey_active_handle") || "";
+            const current = localStorage.getItem("cflytics_active_handle") || "";
             setActiveHandle(current);
         };
 
@@ -49,7 +49,7 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
 
     const setAsActive = () => {
         if (user) {
-            localStorage.setItem("codey_active_handle", user.handle);
+            localStorage.setItem("cflytics_active_handle", user.handle);
             setActiveHandle(user.handle);
             window.dispatchEvent(new Event('storage')); // Notify other components
         }
@@ -57,7 +57,7 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
 
     const backToMyHandle = () => {
         if (!connectedHandle) return;
-        localStorage.setItem("codey_active_handle", connectedHandle);
+        localStorage.setItem("cflytics_active_handle", connectedHandle);
         setActiveHandle(connectedHandle);
         window.dispatchEvent(new Event("storage"));
         router.push(`/profile/${connectedHandle}`);
@@ -73,7 +73,7 @@ export function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
         if (!ok) return;
 
         await logout();
-        localStorage.setItem("codey_active_handle", user.handle);
+        localStorage.setItem("cflytics_active_handle", user.handle);
         router.push(`/connect?handle=${encodeURIComponent(user.handle)}`);
     };
 

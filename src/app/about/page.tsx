@@ -8,11 +8,11 @@ export default function AboutPage() {
       <div className="container mx-auto px-6 md:px-12 lg:px-16 py-16 max-w-4xl">
         <Card className="border-border/50">
           <CardHeader>
-            <CardTitle className="text-3xl font-black tracking-tight">About Codey</CardTitle>
+            <CardTitle className="text-3xl font-black tracking-tight">About CFlytics</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 text-sm text-muted-foreground font-medium leading-relaxed">
             <p>
-              Codey is a Codeforces analytics dashboard that helps you understand progress, spot weaknesses,
+              CFlytics is a Codeforces analytics dashboard that helps you understand progress, spot weaknesses,
               and stay consistent.
             </p>
             <p>

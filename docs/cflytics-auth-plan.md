@@ -1,20 +1,20 @@
-# Codey - Authentication Plan (Guest + Connected)
+# CFlytics - Authentication Plan (Guest + Connected)
 
 This project uses a **dual system**:
 
 - **Guest mode (no login)**: all analytics work; **bookmarks/notes/goals are stored locally** (per device).
-- **Connected mode (verified handle)**: you verify you own a Codeforces handle by putting a short token in your Codeforces profile. Codey then creates a secure session cookie and **syncs bookmarks/notes/goals in the database**.
+- **Connected mode (verified handle)**: you verify you own a Codeforces handle by putting a short token in your Codeforces profile. CFlytics then creates a secure session cookie and **syncs bookmarks/notes/goals in the database**.
 
 ## Why not OAuth?
 
 Codeforces API supports **public + apiKey/apiSig** access, but it **does not provide OAuth2 endpoints** like `/oauth2/authorize` / `/oauth2/token` for “Sign in with Codeforces”.
 
-So instead of OAuth, Codey implements **Proof-of-Handle verification**.
+So instead of OAuth, CFlytics implements **Proof-of-Handle verification**.
 
 ## How the Connected flow works (implemented)
 
 1. Go to `/connect`
-2. Enter your handle → Codey generates a token like `codey-verify-...`
+2. Enter your handle → CFlytics generates a token like `cflytics-verify-...`
 3. Put that token into your Codeforces profile **Organization** field: `https://codeforces.com/settings/social`
 4. Click “Verify & Connect”
 
@@ -31,7 +31,7 @@ Database support:
 
 ```env
 # Session encryption (>= 32 characters)
-CODEY_SESSION_PASSWORD=replace-with-a-long-random-string
+CFLYTICS_SESSION_PASSWORD=replace-with-a-long-random-string
 
 # Database
 DATABASE_URL=postgresql://...
@@ -427,7 +427,7 @@ export default function SignInPage({
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Code2 className="h-6 w-6 text-primary" />
           </div>
-          <CardTitle className="text-2xl">Welcome to Codey</CardTitle>
+          <CardTitle className="text-2xl">Welcome to CFlytics</CardTitle>
           <CardDescription>
             Sign in with your Codeforces account to unlock personalized features
           </CardDescription>
@@ -976,4 +976,4 @@ Start with Week 1, Day 1 and follow the tasks step-by-step! 🚀
 - Codeforces API: https://codeforces.com/apiHelp
 - Discord/Forums: Ask in Next.js or Codeforces communities
 
-Good luck with Codey! 💪
+Good luck with CFlytics! 💪

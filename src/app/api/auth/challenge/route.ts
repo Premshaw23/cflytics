@@ -10,7 +10,7 @@ const bodySchema = z.object({
 function createChallengeToken() {
   // short, human-copyable, but still unpredictable
   const rand = crypto.randomBytes(9).toString("base64url"); // ~12 chars
-  return `codey-verify-${rand}`;
+  return `cflytics-verify-${rand}`;
 }
 
 export async function POST(req: Request) {

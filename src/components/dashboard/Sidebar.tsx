@@ -30,7 +30,7 @@ export function Sidebar() {
                     <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center shrink-0 shadow-2xl shadow-zinc-900/10 dark:shadow-white/10 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 ease-out">
                         <Image
                             src="/logo.png"
-                            alt="Codey Logo"
+                            alt="CFlytics Logo"
                             width={42}
                             height={42}
                             className="w-10 h-10 rounded-2xl object-fill"
@@ -45,7 +45,7 @@ export function Sidebar() {
                                 exit={{ opacity: 0, x: -10 }}
                                 className="text-xl font-black tracking-tighter text-zinc-900 dark:text-white whitespace-nowrap"
                             >
-                                CODEY
+                                CFLYTICS
                             </motion.span>
                         )}
                     </AnimatePresence>

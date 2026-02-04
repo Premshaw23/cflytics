@@ -35,7 +35,7 @@ export function MobileNav({ items }: MobileNavProps) {
                         <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
                             <Code className="text-primary-foreground w-5 h-5" />
                         </div>
-                        <span className="text-xl font-black tracking-tighter">CODEY</span>
+                        <span className="text-xl font-black tracking-tighter">CFLYTICS</span>
                     </SheetTitle>
                     <SheetDescription id="mobile-nav-description">
                         Master the competitive programming algorithms.

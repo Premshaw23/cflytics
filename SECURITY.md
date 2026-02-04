@@ -11,7 +11,7 @@ Currently only the `main` branch is supported for security updates.
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within Codey, please do NOT open a public issue. Instead, please follow these steps:
+If you discover a security vulnerability within CFlytics, please do NOT open a public issue. Instead, please follow these steps:
 
 1. Send an email to **shawprem217@gmail.com**.
 2. Include a detailed description of the vulnerability.

@@ -33,7 +33,7 @@ export default function NotesClient() {
     const isConnected = authStatus === "connected";
 
     useEffect(() => {
-        const saved = localStorage.getItem("codey_active_handle");
+        const saved = localStorage.getItem("cflytics_active_handle");
         setHandle(saved || "");
     }, []);
 

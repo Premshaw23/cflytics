@@ -40,7 +40,7 @@ export function Header() {
 
     useEffect(() => {
         const update = () => {
-            const current = localStorage.getItem("codey_active_handle") || "";
+            const current = localStorage.getItem("cflytics_active_handle") || "";
             setActiveHandle(current);
         };
 
@@ -59,7 +59,7 @@ export function Header() {
 
     const backToMyHandle = () => {
         if (!connectedHandle) return;
-        localStorage.setItem("codey_active_handle", connectedHandle);
+        localStorage.setItem("cflytics_active_handle", connectedHandle);
         window.dispatchEvent(new Event("storage"));
         router.refresh();
     };
@@ -87,9 +87,9 @@ export function Header() {
                                 <Code className="text-primary-foreground w-5 h-5" />
                             </div>
                             <div className="flex flex-col">
-                                <SheetTitle className="text-xl font-bold tracking-tight">Codey</SheetTitle>
+                                <SheetTitle className="text-xl font-bold tracking-tight">CFlytics</SheetTitle>
                                 <SheetDescription id="header-mobile-menu-description" className="sr-only">
-                                    Mobile navigation menu for Codey dashboard
+                                    Mobile navigation menu for CFlytics dashboard
                                 </SheetDescription>
                             </div>
                         </SheetHeader>

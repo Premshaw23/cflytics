@@ -1,14 +1,14 @@
-# <img src="./public/assets/images/hero_banner.png" alt="Codey Hero Banner" width="100%"/>
+# <img src="./public/assets/images/hero_banner.png" alt="CFlytics Hero Banner" width="100%"/>
 
-# 🤖 Codey - The Ultimate Codeforces Dashboard & Analytics Platform
+# 🤖 CFlytics - The Ultimate Codeforces Dashboard & Analytics Platform
 
-[![CI](https://github.com/premshaw23/codey/actions/workflows/ci.yml/badge.svg)](https://github.com/premshaw23/codey/actions)
+[![CI](https://github.com/premshaw23/cflytics/actions/workflows/ci.yml/badge.svg)](https://github.com/premshaw23/cflytics/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Next.js](https://img.shields.io/badge/Next.js-15+-black?logo=next.js)](https://nextjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 [![Prisma](https://img.shields.io/badge/Prisma-6.0-2D3748?logo=prisma)](https://www.prisma.io/)
 
-**Codey** is a premium, high-performance analytics and tracking platform designed specifically for Codeforces competitive programmers. It transforms raw data into actionable insights, helping you identify weaknesses, track progress, and sharpen your skills.
+**CFlytics** is a premium, high-performance analytics and tracking platform designed specifically for Codeforces competitive programmers. It transforms raw data into actionable insights, helping you identify weaknesses, track progress, and sharpen your skills.
 
 ---
 
@@ -61,8 +61,8 @@
 ### 2. Installation
 ```bash
 # Clone the repository
-git clone https://github.com/premshaw23/codey.git
-cd codey
+git clone https://github.com/premshaw23/cflytics.git
+cd cflytics
 
 # Install dependencies
 npm install
@@ -87,7 +87,7 @@ npx prisma db push
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) to see Codey in action!
+Open [http://localhost:3000](http://localhost:3000) to see CFlytics in action!
 
 ---
 
@@ -97,7 +97,7 @@ Detailed documentation can be found in the [docs/](./docs) directory:
 - [🚀 Scraper Architecture](./docs/SCRAPER_SOLUTION.md)
 - [🔧 Troubleshooting Guide](./docs/TROUBLESHOOTING.md)
 - [✅ Verification Protocols](./docs/VERIFICATION.md)
-- [📅 Project Roadmap](./docs/codey-weekwise-plan.md)
+- [📅 Project Roadmap](./docs/cflytics-weekwise-plan.md)
 
 ---
 
@@ -116,7 +116,7 @@ This project is licensed under the **MIT License**. See the [LICENSE](./LICENSE)
 ## 📧 Connect
 
 Developed with ❤️ for the CP community.
-- **GitHub Issues**: [Report a bug](https://github.com/premshaw23/codey/issues)
+- **GitHub Issues**: [Report a bug](https://github.com/premshaw23/cflytics/issues)
 - **Email**: shawprem217@gmail.com
 
 ---

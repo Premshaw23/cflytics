@@ -1,4 +1,4 @@
-# Codey - Detailed Week-by-Week Implementation Plan
+# CFlytics - Detailed Week-by-Week Implementation Plan
 ## Advanced Codeforces Dashboard & Analytics Platform
 
 **Total Duration:** 15 Weeks  
@@ -9,7 +9,7 @@
 
 ## 📋 **Overview**
 
-This plan breaks down the Codey project into 15 weeks of structured development, with clear daily tasks, deliverables, and checkpoints. Each week builds upon the previous one to ensure steady progress.
+This plan breaks down the CFlytics project into 15 weeks of structured development, with clear daily tasks, deliverables, and checkpoints. Each week builds upon the previous one to ensure steady progress.
 
 ---
 
@@ -26,7 +26,7 @@ This plan breaks down the Codey project into 15 weeks of structured development,
 #### **Day 1 (Monday) - Project Initialization**
 - [ ] Create Next.js 14 project with TypeScript and Tailwind
   ```bash
-  npx create-next-app@latest codey --typescript --tailwind --app --src-dir
+  npx create-next-app@latest cflytics --typescript --tailwind --app --src-dir
   ```
 - [ ] Initialize Git repository
 - [ ] Create `.gitignore` (add `.env.local`, `node_modules`, etc.)
@@ -1157,6 +1157,6 @@ Remember why you're building this:
 
 ---
 
-**Good luck with your Codey project! 🚀**
+**Good luck with your CFlytics project! 🚀**
 
 *Feel free to modify this plan based on your learning pace and priorities.*

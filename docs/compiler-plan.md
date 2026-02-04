@@ -1,8 +1,8 @@
-# Codey - Advanced Compiler & IDE Feature Implementation Plan
+# CFlytics - Advanced Compiler & IDE Feature Implementation Plan
 
 ## 📋 Overview
 
-This plan adds a **LeetCode-style compiler and IDE** to Codey, allowing users to:
+This plan adds a **LeetCode-style compiler and IDE** to CFlytics, allowing users to:
 - Write and test code directly in the platform
 - Run against sample and custom test cases
 - View detailed execution results (actual vs expected)

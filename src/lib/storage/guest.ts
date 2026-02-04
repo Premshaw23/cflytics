@@ -42,7 +42,7 @@ function normalizeHandle(handle: string) {
 }
 
 function key(scope: string, handle: string) {
-  return `codey_guest_${scope}:${normalizeHandle(handle) || "anonymous"}`;
+  return `cflytics_guest_${scope}:${normalizeHandle(handle) || "anonymous"}`;
 }
 
 export const guestStorage = {

@@ -30,22 +30,22 @@ export function SettingsManager() {
     const [refreshInterval, setRefreshInterval] = useState("30");
 
     useEffect(() => {
-        const savedHandle = localStorage.getItem("codey_active_handle");
+        const savedHandle = localStorage.getItem("cflytics_active_handle");
         if (savedHandle) setHandle(savedHandle);
 
-        const savedMode = localStorage.getItem("codey_problem_display_mode") as "card" | "table";
+        const savedMode = localStorage.getItem("cflytics_problem_display_mode") as "card" | "table";
         if (savedMode) setDisplayMode(savedMode);
 
-        const savedInterval = localStorage.getItem("codey_refresh_interval");
+        const savedInterval = localStorage.getItem("cflytics_refresh_interval");
         if (savedInterval) setRefreshInterval(savedInterval);
     }, []);
 
     const handleSave = () => {
         setIsSaving(true);
         // Persist all settings
-        localStorage.setItem("codey_active_handle", handle);
-        localStorage.setItem("codey_problem_display_mode", displayMode);
-        localStorage.setItem("codey_refresh_interval", refreshInterval);
+        localStorage.setItem("cflytics_active_handle", handle);
+        localStorage.setItem("cflytics_problem_display_mode", displayMode);
+        localStorage.setItem("cflytics_refresh_interval", refreshInterval);
 
         setTimeout(() => {
             setIsSaving(false);
@@ -55,7 +55,7 @@ export function SettingsManager() {
 
     const handleExport = () => {
         const data = {
-            handle: localStorage.getItem("codey_active_handle"),
+            handle: localStorage.getItem("cflytics_active_handle"),
             theme: theme,
             timestamp: new Date().toISOString()
         };
@@ -63,7 +63,7 @@ export function SettingsManager() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `codey-settings-${handle || 'dev'}.json`;
+        a.download = `cflytics-settings-${handle || 'dev'}.json`;
         a.click();
         URL.revokeObjectURL(url);
     };
@@ -82,7 +82,7 @@ export function SettingsManager() {
                         <CardTitle className="flex items-center gap-2">
                             <User className="w-5 h-5 text-primary" /> Profile Settings
                         </CardTitle>
-                        <CardDescription>Your public identity on Codey.</CardDescription>
+                        <CardDescription>Your public identity on CFlytics.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
@@ -111,7 +111,7 @@ export function SettingsManager() {
                         <CardTitle className="flex items-center gap-2">
                             <Sun className="w-5 h-5 text-primary" /> Appearance & Layout
                         </CardTitle>
-                        <CardDescription>Customize how Codey looks and behaves.</CardDescription>
+                        <CardDescription>Customize how CFlytics looks and behaves.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         {/* Theme Toggle */}
@@ -182,7 +182,7 @@ export function SettingsManager() {
                         <CardTitle className="flex items-center gap-2">
                             <Bell className="w-5 h-5 text-primary" /> Sync & Alerts
                         </CardTitle>
-                        <CardDescription>Manage how Codey updates your data.</CardDescription>
+                        <CardDescription>Manage how CFlytics updates your data.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <div className="flex items-center justify-between">

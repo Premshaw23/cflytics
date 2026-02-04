@@ -1,11 +1,11 @@
-# Codey User Guide 🚀
+# CFlytics User Guide 🚀
 
-Welcome to **Codey**, the ultimate performance tracking platform for Codeforces. This guide will help you get the most out of your dashboard.
+Welcome to **CFlytics**, the ultimate performance tracking platform for Codeforces. This guide will help you get the most out of your dashboard.
 
 ## 🔑 Getting Started
 
 1. **Set your handle**: Go to **Settings** and enter your Codeforces handle. This will be used as the default for your dashboard.
-2. **Choose your theme**: Codey supports Light, Dark, and System modes. Toggle this in the Header or Settings.
+2. **Choose your theme**: CFlytics supports Light, Dark, and System modes. Toggle this in the Header or Settings.
 3. **Set a goal**: Head over to the **Goals** page to set your rating target or problem solving objectives.
 
 ## 📊 Analytics Dashboard
@@ -26,7 +26,7 @@ Browse through 8,000+ problems with ease:
 
 Stay ahead of the competition:
 - **Countdowns**: Integrated countdowns for upcoming rounds.
-- **Practice While You Wait**: For unstarted contests, Codey automatically suggests similar past problems to help you warm up.
+- **Practice While You Wait**: For unstarted contests, CFlytics automatically suggests similar past problems to help you warm up.
 - **History**: View your past performance, rank changes, and solved problems for every contest.
 
 ## 🤝 Social & Comparison
@@ -36,8 +36,8 @@ Stay ahead of the competition:
 
 ## ⚙️ Advanced Settings
 
-- **Auto-Refresh**: Control how often Codey syncs with Codeforces API (5m to 1h).
+- **Auto-Refresh**: Control how often CFlytics syncs with Codeforces API (5m to 1h).
 - **Data Export**: Export your settings and bookmarks as a JSON file.
 
 ---
-*Codey is designed by competitive programmers, for competitive programmers. Happy coding!*
+*CFlytics is designed by competitive programmers, for competitive programmers. Happy coding!*

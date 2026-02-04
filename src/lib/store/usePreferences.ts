@@ -17,7 +17,7 @@ export const usePreferences = create<PreferencesState>()(
       toggleShowTags: () => set((state) => ({ showTags: !state.showTags })),
     }),
     {
-      name: 'codey-preferences',
+      name: 'cflytics-preferences',
     }
   )
 );

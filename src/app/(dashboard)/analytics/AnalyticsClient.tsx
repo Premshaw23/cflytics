@@ -33,7 +33,7 @@ export default function AnalyticsClient() {
 
     useEffect(() => {
         if (!urlHandle) {
-            const saved = localStorage.getItem("codey_active_handle");
+            const saved = localStorage.getItem("cflytics_active_handle");
             if (saved) {
                 setHandle(saved);
                 setSearchInput(saved);

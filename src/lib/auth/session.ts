@@ -14,17 +14,17 @@ export type AuthSession = {
 };
 
 function requireSessionPassword(): string {
-  const password = process.env.CODEY_SESSION_PASSWORD;
+  const password = process.env.CFLYTICS_SESSION_PASSWORD;
   if (!password) {
     throw new Error(
-      "Missing CODEY_SESSION_PASSWORD. Add a long random string to .env.local (at least 32 chars)."
+      "Missing CFLYTICS_SESSION_PASSWORD. Add a long random string to .env.local (at least 32 chars)."
     );
   }
   return password;
 }
 
 export const sessionOptions: SessionOptions = {
-  cookieName: "codey_session",
+  cookieName: "cflytics_session",
   password: requireSessionPassword(),
   cookieOptions: {
     secure: process.env.NODE_ENV === "production",

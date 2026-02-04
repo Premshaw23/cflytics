@@ -14,7 +14,7 @@ export default function BlogPage() {
         <div className="space-y-2">
           <h1 className="text-4xl font-black tracking-tight">Changelog</h1>
           <p className="text-muted-foreground font-medium">
-            Small updates and improvements as Codey evolves.
+            Small updates and improvements as CFlytics evolves.
           </p>
         </div>
 

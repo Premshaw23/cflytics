@@ -15,7 +15,7 @@ export function UserSearch({ className }: { className?: string }) {
     const router = useRouter();
 
     useEffect(() => {
-        const saved = localStorage.getItem("codey_recent_searches");
+        const saved = localStorage.getItem("cflytics_recent_searches");
         if (saved) {
             setRecentSearches(JSON.parse(saved));
         }
@@ -28,7 +28,7 @@ export function UserSearch({ className }: { className?: string }) {
             ...recentSearches.filter((s) => s.toLowerCase() !== searchHandle.toLowerCase()),
         ].slice(0, 5);
         setRecentSearches(updated);
-        localStorage.setItem("codey_recent_searches", JSON.stringify(updated));
+        localStorage.setItem("cflytics_recent_searches", JSON.stringify(updated));
     };
 
     const handleSearch = (e: React.FormEvent) => {
@@ -43,7 +43,7 @@ export function UserSearch({ className }: { className?: string }) {
     const clearRecent = (e: React.MouseEvent) => {
         e.stopPropagation();
         setRecentSearches([]);
-        localStorage.removeItem("codey_recent_searches");
+        localStorage.removeItem("cflytics_recent_searches");
     };
 
     return (

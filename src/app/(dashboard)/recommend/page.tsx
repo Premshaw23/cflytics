@@ -23,7 +23,7 @@ export default function RecommendPage() {
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
     useEffect(() => {
-        const saved = localStorage.getItem("codey_active_handle");
+        const saved = localStorage.getItem("cflytics_active_handle");
         if (saved) {
             setHandle(saved);
             setSubmittedHandle(saved);

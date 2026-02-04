@@ -17,7 +17,7 @@ export default function ProfileRedirect() {
             return;
         }
 
-        const handle = localStorage.getItem("codey_active_handle");
+        const handle = localStorage.getItem("cflytics_active_handle");
         router.replace(handle ? `/profile/${handle}` : "/settings");
     }, [router, authStatus, authUser?.handle]);
 

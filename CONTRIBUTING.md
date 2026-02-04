@@ -1,6 +1,6 @@
-# Contributing to Codey
+# Contributing to CFlytics
 
-First off, thank you for considering contributing to Codey! It's people like you that make Codey such a great tool for the competitive programming community.
+First off, thank you for considering contributing to CFlytics! It's people like you that make CFlytics such a great tool for the competitive programming community.
 
 ## 🌈 How Can I Contribute?
 

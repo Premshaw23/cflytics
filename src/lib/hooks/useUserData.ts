@@ -18,7 +18,7 @@ export function useUserData({ handle, enabled = true }: UseUserDataProps) {
     enabled: !!handle && enabled,
     refetchInterval: (() => {
       if (typeof window === 'undefined') return undefined;
-      const saved = localStorage.getItem("codey_refresh_interval");
+      const saved = localStorage.getItem("cflytics_refresh_interval");
       if (!saved || saved === "0") return undefined;
       return parseInt(saved) * 60 * 1000;
     })(),
@@ -36,7 +36,7 @@ export function useUserData({ handle, enabled = true }: UseUserDataProps) {
     enabled: !!handle && enabled,
     refetchInterval: (() => {
       if (typeof window === 'undefined') return undefined;
-      const saved = localStorage.getItem("codey_refresh_interval");
+      const saved = localStorage.getItem("cflytics_refresh_interval");
       if (!saved || saved === "0") return undefined;
       return parseInt(saved) * 60 * 1000;
     })(),
@@ -53,7 +53,7 @@ export function useUserData({ handle, enabled = true }: UseUserDataProps) {
     enabled: !!handle && enabled,
     refetchInterval: (() => {
       if (typeof window === 'undefined') return undefined;
-      const saved = localStorage.getItem("codey_refresh_interval");
+      const saved = localStorage.getItem("cflytics_refresh_interval");
       if (!saved || saved === "0") return undefined;
       return parseInt(saved) * 60 * 1000;
     })(),

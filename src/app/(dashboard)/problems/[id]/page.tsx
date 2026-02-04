@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const { id } = await params
     const problem = await getProblem(id)
     return {
-        title: problem ? `${problem.name} - Codey` : 'Problem Not Found',
+        title: problem ? `${problem.name} - CFlytics` : 'Problem Not Found',
     }
 }
 

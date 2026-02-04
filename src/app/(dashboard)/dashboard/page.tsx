@@ -33,7 +33,7 @@ export default function DashboardOverview() {
 
     useEffect(() => {
         // Try to get handle from localStorage first
-        const saved = localStorage.getItem("codey_active_handle");
+        const saved = localStorage.getItem("cflytics_active_handle");
         setHandle(saved || "tourist");
     }, []);
 

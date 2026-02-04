@@ -22,7 +22,7 @@ export default function BookmarksClient() {
     useEffect(() => {
         // Defer state update to avoid SSR `localStorage` + lint rule
         const id = setTimeout(() => {
-            const saved = localStorage.getItem("codey_active_handle") || "";
+            const saved = localStorage.getItem("cflytics_active_handle") || "";
             setGuestHandle(saved);
         }, 0);
         return () => clearTimeout(id);

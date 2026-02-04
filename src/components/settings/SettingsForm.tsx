@@ -21,7 +21,7 @@ export function SettingsForm() {
 
     const handleSave = () => {
         preferences.setDefaultHandle(handle);
-        localStorage.setItem("codey_active_handle", handle);
+        localStorage.setItem("cflytics_active_handle", handle);
         window.dispatchEvent(new Event('storage'));
         toast.success("Preferences updated successfully");
     };

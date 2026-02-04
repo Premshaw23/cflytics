@@ -23,7 +23,7 @@ export default function GoalsClient() {
 
     useEffect(() => {
         const id = setTimeout(() => {
-            const saved = localStorage.getItem("codey_active_handle") || "";
+            const saved = localStorage.getItem("cflytics_active_handle") || "";
             setSavedHandle(saved);
             // Prefill search only if URL didn't provide and user hasn't typed
             if (!urlHandle) {

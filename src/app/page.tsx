@@ -99,7 +99,7 @@ export default function LandingPage() {
             <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform duration-300 shadow-lg shadow-primary/20">
               <Code className="text-primary-foreground w-5 h-5" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-foreground">Codey</span>
+            <span className="text-xl font-bold tracking-tight text-foreground">CFlytics</span>
           </Link>
           <div className="hidden md:flex items-center space-x-8">
             <Link href="/problems" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Problems</Link>
@@ -252,7 +252,7 @@ export default function LandingPage() {
                 </h2>
               </div>
               <p className="text-base md:text-xl text-muted-foreground font-bold leading-relaxed max-w-xl mx-auto lg:mx-0">
-                Codey turns abstract numbers into actionable intelligence. Experience the most advanced tracking engine in the competitive programming ecosystem.
+                CFlytics turns abstract numbers into actionable intelligence. Experience the most advanced tracking engine in the competitive programming ecosystem.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 pb-4">
                 {[
@@ -305,7 +305,7 @@ export default function LandingPage() {
                 <span className="text-primary italic">ASCEND?</span>
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-bold leading-relaxed">
-                Join the elite circle of coders who use Codey to dominate their contests and track their legacy.
+                Join the elite circle of coders who use CFlytics to dominate their contests and track their legacy.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
                 <Button size="lg" className="h-16 px-12 text-lg font-black hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-primary/40 rounded-2xl" asChild>
@@ -328,7 +328,7 @@ export default function LandingPage() {
                 <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform shadow-lg shadow-primary/20">
                   <Code className="text-primary-foreground w-5 h-5" />
                 </div>
-                <span className="text-2xl font-bold tracking-tight text-foreground">Codey</span>
+                <span className="text-2xl font-bold tracking-tight text-foreground">CFlytics</span>
               </Link>
               <p className="text-muted-foreground text-lg max-w-md font-bold leading-relaxed">
                 Empowering the next generation of algorithmic masterminds with elite data visualization and tracking.
@@ -389,7 +389,7 @@ export default function LandingPage() {
           </div>
           <div className="mt-24 pt-12 border-t border-border flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
-              © {new Date().getFullYear()} Codey Intelligence. All Rights Reserved.
+              © {new Date().getFullYear()} CFlytics Intelligence. All Rights Reserved.
             </div>
             <div className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />

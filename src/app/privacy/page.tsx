@@ -12,11 +12,11 @@ export default function PrivacyPage() {
           </CardHeader>
           <CardContent className="space-y-4 text-sm text-muted-foreground font-medium leading-relaxed">
             <p>
-              Codey can be used without logging in. In guest mode, bookmarks/notes/goals are stored locally in your
+              CFlytics can be used without logging in. In guest mode, bookmarks/notes/goals are stored locally in your
               browser.
             </p>
             <p>
-              If you connect your Codeforces handle, Codey stores synced data (bookmarks/notes/goals) in the database
+              If you connect your Codeforces handle, CFlytics stores synced data (bookmarks/notes/goals) in the database
               under your verified handle.
             </p>
             <p>

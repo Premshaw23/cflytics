@@ -38,7 +38,7 @@ export default function ConnectPage() {
       ? new URLSearchParams(window.location.search).get("handle") || ""
       : "";
     const id = setTimeout(() => {
-      const saved = localStorage.getItem("codey_active_handle") || "";
+      const saved = localStorage.getItem("cflytics_active_handle") || "";
       setHandle((prev) => (prev.trim().length > 0 ? prev : (fromQuery || saved)));
     }, 0);
     return () => clearTimeout(id);

@@ -15,7 +15,7 @@ export function CompareSearch({ onCompare }: CompareSearchProps) {
     const [handle2, setHandle2] = useState('');
 
     useEffect(() => {
-        const saved = localStorage.getItem("codey_active_handle");
+        const saved = localStorage.getItem("cflytics_active_handle");
         if (saved) setHandle1(saved);
     }, []);
 

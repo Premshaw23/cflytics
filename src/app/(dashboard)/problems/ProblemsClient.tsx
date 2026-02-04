@@ -34,10 +34,10 @@ export default function ProblemsClient() {
     const [displayMode, setDisplayMode] = useState<"card" | "table">("table");
 
     useEffect(() => {
-        const saved = localStorage.getItem("codey_active_handle");
+        const saved = localStorage.getItem("cflytics_active_handle");
         if (saved) setHandle(saved);
 
-        const savedMode = localStorage.getItem("codey_problem_display_mode") as "card" | "table";
+        const savedMode = localStorage.getItem("cflytics_problem_display_mode") as "card" | "table";
         if (savedMode) setDisplayMode(savedMode);
     }, []);
 
@@ -155,7 +155,7 @@ export default function ProblemsClient() {
                         size="sm"
                         onClick={() => {
                             setDisplayMode("table");
-                            localStorage.setItem("codey_problem_display_mode", "table");
+                            localStorage.setItem("cflytics_problem_display_mode", "table");
                         }}
                         className="h-8 px-3 gap-2"
                     >
@@ -166,7 +166,7 @@ export default function ProblemsClient() {
                         size="sm"
                         onClick={() => {
                             setDisplayMode("card");
-                            localStorage.setItem("codey_problem_display_mode", "card");
+                            localStorage.setItem("cflytics_problem_display_mode", "card");
                         }}
                         className="h-8 px-3 gap-2"
                     >
