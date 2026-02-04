@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "CFlytics",
   description: "Advanced Codeforces Dashboard & Analytics Platform",
-  url: "https://cflytics-web.vercel.app",
-  ogImage: "https://cflytics-web.vercel.app/og.png",
+  url: "https://www.cflytics.in",
+  ogImage: "https://www.cflytics.in/og.png",
   links: {
     github: "https://github.com/Premshaw23/cflytics",
     x: "https://x.com/premshaw23",
