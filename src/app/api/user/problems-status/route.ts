@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuthSession } from "@/lib/auth/session";
 import prisma from "@/lib/db/prisma";
+import { normalizeProblemId } from "@/lib/utils";
 
 export async function GET(request: NextRequest) {
   try {
@@ -53,16 +54,17 @@ export async function GET(request: NextRequest) {
 
     const attemptedIds = new Set<string>();
     localSubmissions.forEach((s) => {
-      if (s.verdict === 'AC') {
-        solvedIds.add(s.problemId);
+      const normId = normalizeProblemId(s.problemId);
+      if (s.verdict === 'AC' || s.verdict === 'OK') {
+        solvedIds.add(normId);
       } else {
-        attemptedIds.add(s.problemId);
+        attemptedIds.add(normId);
       }
     });
 
     return NextResponse.json({
       solvedIds: Array.from(solvedIds),
-      attemptedIds: Array.from(attemptedIds),
+      attemptedIds: Array.from(attemptedIds).filter(id => !solvedIds.has(id)),
     });
   } catch (error: any) {
     console.error("API Error (problems-status):", error);

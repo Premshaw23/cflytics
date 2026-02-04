@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/db/prisma'
+import { normalizeProblemId } from '@/lib/utils'
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
     const submission = await prisma.submission.create({
       data: {
         userId,
-        problemId,
+        problemId: normalizeProblemId(problemId),
         language,
         code,
         verdict,
@@ -49,10 +50,14 @@ export async function GET(request: NextRequest) {
   const userId = searchParams.get('userId')
   const problemId = searchParams.get('problemId')
 
+  if (!userId && !problemId) {
+    return NextResponse.json({ submissions: [] })
+  }
+
   try {
     const where: any = {}
     if (userId) where.userId = userId
-    if (problemId) where.problemId = problemId
+    if (problemId) where.problemId = normalizeProblemId(problemId)
 
     // 1. Fetch Local Submissions
     const localSubmissions = await prisma.submission.findMany({
@@ -76,8 +81,9 @@ export async function GET(request: NextRequest) {
 
       if (user?.handle) {
         try {
-          // Problem ID is typically "123A", split into contestId and index
-          const match = problemId.match(/^(\d+)([a-zA-Z0-9]+)$/)
+          // Normalize and extract contestId/index
+          const normProblemId = normalizeProblemId(problemId)
+          const match = normProblemId.match(/^(\d+)([a-zA-Z0-9]+)$/)
           if (match) {
             const contestId = match[1]
             const index = match[2]

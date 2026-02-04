@@ -7,6 +7,8 @@ import { Menu, X, Code, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/lib/store/useAuth";
+import { User, LogOut, LayoutDashboard } from "lucide-react";
 
 interface NavItem {
     title: string;
@@ -20,6 +22,8 @@ interface MobileNavProps {
 export function MobileNav({ items }: MobileNavProps) {
     const [open, setOpen] = useState(false);
     const pathname = usePathname();
+    const { status: authStatus, user: authUser, logout } = useAuth();
+    const isConnected = authStatus === "connected" && !!authUser;
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -58,10 +62,40 @@ export function MobileNav({ items }: MobileNavProps) {
                             <ExternalLink className="w-4 h-4 opacity-30" />
                         </Link>
                     ))}
-                    <div className="mt-8 pt-8 border-t border-border/50">
-                        <Button className="w-full h-14 rounded-2xl font-black uppercase tracking-widest" asChild onClick={() => setOpen(false)}>
-                            <Link href="/dashboard">Get Started</Link>
-                        </Button>
+                    <div className="mt-auto pt-8 border-t border-border/50 space-y-4">
+                        {isConnected ? (
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3 px-4 py-3 bg-primary/5 rounded-2xl border border-primary/10">
+                                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                                        <User className="w-5 h-5 text-primary" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-primary/60">Connected</p>
+                                        <p className="text-sm font-bold truncate">@{authUser.handle}</p>
+                                    </div>
+                                </div>
+                                <Button
+                                    variant="outline"
+                                    className="w-full h-14 rounded-2xl font-black uppercase tracking-widest text-red-500 hover:text-red-500 hover:bg-red-500/10 border-red-500/20"
+                                    onClick={() => {
+                                        logout();
+                                        setOpen(false);
+                                    }}
+                                >
+                                    <LogOut className="mr-2 h-4 w-4" />
+                                    Log out
+                                </Button>
+                            </div>
+                        ) : (
+                            <div className="space-y-3">
+                                <Button variant="outline" className="w-full h-14 rounded-2xl font-black uppercase tracking-widest" asChild onClick={() => setOpen(false)}>
+                                    <Link href="/dashboard">Guest Mode</Link>
+                                </Button>
+                                <Button className="w-full h-14 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-primary/20" asChild onClick={() => setOpen(false)}>
+                                    <Link href="/connect">Connect</Link>
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </nav>
             </SheetContent>

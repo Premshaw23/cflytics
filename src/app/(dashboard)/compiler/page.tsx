@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 import { useAuth } from '@/lib/store/useAuth'
 import { cn } from '@/lib/utils'
 import { useUserProblemStatus } from '@/lib/hooks/useUserProblemStatus'
+import { normalizeProblemId } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUserData } from '@/lib/hooks/useUserData'
 import {
@@ -37,8 +38,9 @@ function CompilerContent() {
     const { userInfo } = useUserData({ handle: user?.handle || '', enabled: !!user?.handle })
     const { data: problemsData } = useProblems({ enabled: !problemId })
 
-    const isSolved = problemId && statusData?.solvedIds.includes(problemId)
-    const isAttempted = problemId && statusData?.attemptedIds.includes(problemId) && !isSolved
+    const normId = problemId ? normalizeProblemId(problemId) : ""
+    const isSolved = normId && statusData?.solvedIds.includes(normId)
+    const isAttempted = normId && statusData?.attemptedIds.includes(normId) && !isSolved
 
     // States
     const [language, setLanguage] = useState('cpp')

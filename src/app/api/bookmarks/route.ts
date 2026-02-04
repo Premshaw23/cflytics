@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db/prisma";
 import { z } from "zod";
 import { requireAuthUser } from "@/lib/auth/session";
+import { normalizeProblemId } from "@/lib/utils";
 
 const bookmarkSchema = z.object({
   problemId: z.string().min(1),
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
       where: {
         userId_problemId: {
           userId: authUser.id,
-          problemId
+          problemId: normalizeProblemId(problemId)
         }
       }
     });
@@ -64,7 +65,7 @@ export async function POST(req: NextRequest) {
       const bookmark = await prisma.bookmark.create({
         data: {
           userId: authUser.id,
-          problemId,
+          problemId: normalizeProblemId(problemId),
           name,
           rating
         },

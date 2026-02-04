@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db/prisma";
 import { z } from "zod";
 import { requireAuthUser } from "@/lib/auth/session";
+import { normalizeProblemId } from "@/lib/utils";
 
 const noteSchema = z.object({
   problemId: z.string().min(1),
@@ -23,7 +24,7 @@ export async function GET(req: NextRequest) {
         where: {
           userId_problemId: {
             userId: authUser.id,
-            problemId
+            problemId: normalizeProblemId(problemId)
           }
         }
       });
@@ -62,13 +63,13 @@ export async function POST(req: NextRequest) {
       where: {
         userId_problemId: {
           userId: authUser.id,
-          problemId
+          problemId: normalizeProblemId(problemId)
         }
       },
       update: { content },
       create: {
         userId: authUser.id,
-        problemId,
+        problemId: normalizeProblemId(problemId),
         content
       }
     });

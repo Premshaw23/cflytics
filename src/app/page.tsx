@@ -23,6 +23,16 @@ import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { MobileNav } from "@/components/shared/MobileNav";
 import { siteConfig } from "@/config/site";
+import { useAuth } from "@/lib/store/useAuth";
+import { User, LogOut, LayoutDashboard } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const features = [
   {
@@ -76,6 +86,9 @@ export default function LandingPage() {
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
 
+  const { status: authStatus, user: authUser, logout } = useAuth();
+  const isConnected = authStatus === "connected" && !!authUser;
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (handle.trim()) {
@@ -108,12 +121,64 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center space-x-2 md:space-x-3">
             <ThemeToggle />
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground hidden sm:flex px-2" asChild>
-              <Link href="/connect">Log in</Link>
-            </Button>
-            <Button className="h-9 px-4 md:px-6 font-bold transition-all text-sm" asChild>
-              <Link href="/dashboard">Get Started</Link>
-            </Button>
+
+            {authStatus === "loading" ? (
+              <div className="w-24 h-9 bg-muted animate-pulse rounded-lg hidden sm:block" />
+            ) : isConnected ? (
+              <div className="flex items-center gap-2">
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground hidden sm:flex px-4 font-bold text-xs uppercase tracking-widest" asChild>
+                  <Link href="/dashboard">Dashboard</Link>
+                </Button>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="h-9 px-3 gap-2 border-primary/20 hover:border-primary/50 bg-primary/5 transition-all rounded-xl">
+                      <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center">
+                        <User className="w-3 h-3 text-primary" />
+                      </div>
+                      <span className="text-xs font-black truncate max-w-[80px]">{authUser.handle}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 mt-2 p-2 rounded-2xl border-border/50 bg-background/95 backdrop-blur-xl">
+                    <DropdownMenuLabel className="px-3 py-2">
+                      <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Authenticated</div>
+                      <div className="text-sm font-bold truncate">@{authUser.handle}</div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator className="opacity-50" />
+                    <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+                      <Link href="/dashboard" className="flex items-center w-full">
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        <span>Dashboard</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="rounded-xl cursor-pointer">
+                      <Link href={`/profile/${authUser.handle}`} className="flex items-center w-full">
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Profile</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="opacity-50" />
+                    <DropdownMenuItem
+                      className="rounded-xl cursor-pointer text-red-500 focus:text-red-500 focus:bg-red-500/10"
+                      onClick={() => logout()}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Log out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : (
+              <>
+                <Button variant="ghost" className="text-muted-foreground hover:text-foreground hidden sm:flex px-4 font-bold text-xs uppercase tracking-widest transition-all" asChild>
+                  <Link href="/dashboard">Guest Mode</Link>
+                </Button>
+                <Button className="h-9 px-5 md:px-6 font-black transition-all text-xs uppercase tracking-widest shadow-lg shadow-primary/20 active:scale-95" asChild>
+                  <Link href="/connect">Connect</Link>
+                </Button>
+              </>
+            )}
+
             <MobileNav items={[
               { title: "Problems", href: "/problems" },
               { title: "Contests", href: "/contests" },

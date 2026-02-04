@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/store/useAuth";
 import { guestStorage, type GuestBookmark } from "@/lib/storage/guest";
+import { normalizeProblemId } from "@/lib/utils";
 
 export function useBookmarks(handle: string) {
   const queryClient = useQueryClient();
@@ -57,6 +58,9 @@ export function useBookmarks(handle: string) {
     isLoading,
     isError,
     toggleBookmark,
-    isBookmarked: (problemId: string) => bookmarks?.some(b => b.problemId === problemId) || false,
+    isBookmarked: (id: string) => {
+      const normId = normalizeProblemId(id);
+      return bookmarks?.some(b => normalizeProblemId(b.problemId) === normId) || false;
+    },
   };
 }

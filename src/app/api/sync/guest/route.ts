@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/db/prisma";
 import { requireAuthUser } from "@/lib/auth/session";
+import { normalizeProblemId } from "@/lib/utils";
 
 const bodySchema = z.object({
   bookmarks: z
@@ -70,7 +71,7 @@ export async function POST(req: Request) {
       where: {
         userId_problemId: {
           userId: authUser.id,
-          problemId: b.problemId,
+          problemId: normalizeProblemId(b.problemId),
         },
       },
       update: {
@@ -79,7 +80,7 @@ export async function POST(req: Request) {
       },
       create: {
         userId: authUser.id,
-        problemId: b.problemId,
+        problemId: normalizeProblemId(b.problemId),
         name: b.name,
         rating: b.rating ?? null,
         createdAt: b.createdAt ? new Date(b.createdAt) : undefined,
@@ -93,7 +94,7 @@ export async function POST(req: Request) {
       where: {
         userId_problemId: {
           userId: authUser.id,
-          problemId: n.problemId,
+          problemId: normalizeProblemId(n.problemId),
         },
       },
       update: {
@@ -102,7 +103,7 @@ export async function POST(req: Request) {
       },
       create: {
         userId: authUser.id,
-        problemId: n.problemId,
+        problemId: normalizeProblemId(n.problemId),
         content: n.content,
         updatedAt: n.updatedAt ? new Date(n.updatedAt) : undefined,
       },
