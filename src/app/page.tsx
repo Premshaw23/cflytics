@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { cn } from "@/lib/utils";
 import {
   Search,
   BarChart2,
@@ -15,7 +16,8 @@ import {
   Code,
   ArrowRight,
   Sparkles,
-  LineChart
+  LineChart,
+  CheckCircle2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -99,10 +101,20 @@ export default function LandingPage() {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground selection:bg-primary/30">
       {/* Premium Background Effects */}
+      {/* Premium Background Effects */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[30%] bg-blue-600/5 dark:bg-blue-600/10 rounded-full blur-[80px]" />
-        <div className="absolute bottom-[-5%] right-[-5%] w-[30%] h-[30%] bg-purple-600/5 dark:bg-purple-600/10 rounded-full blur-[80px]" />
-        <div className="absolute inset-0 bg-background" />
+        {/* Base Gradient */}
+        <div className="absolute inset-0 bg-linear-to-b from-background via-background/90 to-background" />
+
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
+        {/* Radial Orbs - Optimized for Light/Dark */}
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 dark:bg-blue-600/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse-slow" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-500/10 dark:bg-purple-600/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse-slow delay-1000" />
+
+        {/* Central Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 dark:bg-primary/10 rounded-full blur-[100px] opacity-40 dark:opacity-50" />
       </div>
 
       {/* Navigation */}
@@ -191,72 +203,136 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-16 lg:pt-36 lg:pb-24 overflow-hidden">
+      <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden min-h-[90vh] flex flex-col items-center justify-center">
+
+        {/* Floating Stat Pills (Decorative) */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden max-w-[1920px] mx-auto">
+          {/* Left Pill */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="absolute top-[25%] left-[5%] lg:left-[3%] hidden lg:flex items-center gap-4 bg-white/80 dark:bg-zinc-900/40 backdrop-blur-xl border border-zinc-200/50 dark:border-white/10 p-4 rounded-3xl shadow-xl dark:shadow-2xl rotate-[-6deg]"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-white">
+              <CheckCircle2 className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/80 dark:text-muted-foreground">Problems Solved</div>
+              <div className="text-xl font-black text-zinc-900 dark:text-foreground">1,240+</div>
+            </div>
+          </motion.div>
+
+          {/* Right Pill */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
+            className="absolute bottom-1/3 right-[5%] lg:right-[10%] hidden lg:flex items-center gap-4 bg-white/80 dark:bg-zinc-900/40 backdrop-blur-xl border border-zinc-200/50 dark:border-white/10 p-4 rounded-3xl shadow-xl dark:shadow-2xl rotate-[6deg]"
+          >
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-lg shadow-primary/20 text-white">
+              <TrendingUp className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/80 dark:text-muted-foreground">Rating Growth</div>
+              <div className="text-xl font-black text-zinc-900 dark:text-foreground flex items-center gap-2">
+                2100 <span className="text-emerald-600 dark:text-emerald-500 text-sm bg-emerald-100 dark:bg-emerald-500/10 px-1.5 py-0.5 rounded-md">+50</span>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
         <motion.div
           style={{ opacity, scale }}
           className="container mx-auto px-6 md:px-12 lg:px-16 text-center z-10 relative"
         >
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
             className="flex flex-col items-center"
           >
-            <Badge variant="outline" className="mb-6 md:mb-8 py-1.5 px-3 md:px-4 text-[9px] md:text-sm font-black uppercase tracking-[0.2em] md:tracking-[0.3em] border-primary/20 bg-primary/5 text-primary">
-              <Sparkles className="w-3 md:w-3.5 h-3 md:h-3.5 mr-2" /> Elite Codeforces Analytics
-            </Badge>
-            <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-6 md:mb-10 leading-[1.1] md:leading-[0.95] text-foreground">
-              MASTER THE <br />
-              <span className="bg-clip-text text-transparent bg-linear-to-b from-foreground via-foreground/90 to-foreground/40">
-                ALGORITHM
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="mb-8 md:mb-10 group cursor-default"
+            >
+              <Badge variant="outline" className="py-2 px-6 text-xs font-black uppercase tracking-[0.3em] border-primary/20 bg-primary/5 text-primary backdrop-blur-sm group-hover:border-primary/50 transition-all shadow-[0_0_20px_-10px_var(--primary)]">
+                <Sparkles className="w-3.5 h-3.5 mr-3 animate-pulse" />
+                The Analytics Engine for Winners
+              </Badge>
+            </motion.div>
+
+            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-8 md:mb-12 leading-[0.9] text-foreground relative">
+              <span className="inline-block relative">
+                UNLOCK YOUR
+                <motion.span
+                  className="absolute -top-6 -right-6 md:-top-10 md:-right-10 text-primary opacity-20 blur-xl animate-pulse"
+                  animate={{ opacity: [0.1, 0.3, 0.1] }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
+                  <Zap className="w-12 h-12 md:w-24 md:h-24" />
+                </motion.span>
+              </span>
+              <br />
+              <span className="bg-clip-text text-transparent bg-gradient-to-b from-foreground via-foreground/90 to-foreground/50 pb-4">
+                TRUE POTENTIAL
               </span>
             </h1>
-            <p className="text-sm text-muted-foreground max-w-xl md:max-w-2xl mx-auto mb-10 md:mb-16 leading-relaxed font-bold uppercase tracking-tight px-2">
-              The fastest way to analyze, track, and dominate your Codeforces journey.
+
+            <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 md:mb-16 leading-relaxed font-bold tracking-tight px-4">
+              Stop guessing. Start analyzing.
+              <span className="block mt-2 text-foreground/80">
+                The most advanced performance tracking suite built directly for the Codeforces ecosystem.
+              </span>
             </p>
           </motion.div>
 
-          {/* Search Box */}
+          {/* Search Box - Premium Glass Version */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="max-w-2xl mx-auto mb-12 md:mb-20 px-0"
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="max-w-3xl mx-auto mb-16 px-0 relative z-20"
           >
-            <form onSubmit={handleSearch} className="relative group max-w-[95%] sm:max-w-2xl mx-auto">
-              <div className="absolute -inset-1 bg-primary/10 rounded-[24px] blur-2xl opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
-              <div className="relative flex flex-col sm:flex-row items-stretch sm:items-center bg-card border border-border rounded-2xl md:rounded-3xl shadow-lg p-1.5 md:p-2.5 transition-all">
-                <div className="flex items-center flex-1">
-                  <Search className="ml-4 md:ml-6 text-muted-foreground w-5 h-5 shrink-0" />
+            <form onSubmit={handleSearch} className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-purple-600/30 rounded-[2rem] blur-2xl opacity-50 group-hover:opacity-100 transition-all duration-700 animate-tilt"></div>
+              <div className="relative flex flex-col sm:flex-row items-center bg-background/60 dark:bg-zinc-900/60 backdrop-blur-2xl border border-white/20 dark:border-white/10 rounded-[1.5rem] shadow-2xl p-2 transition-all group-focus-within:border-primary/50 group-focus-within:bg-background/80">
+                <div className="flex items-center flex-1 w-full sm:w-auto pl-4">
+                  <Search className="text-muted-foreground w-6 h-6 shrink-0 group-focus-within:text-primary transition-colors" />
                   <input
                     type="text"
-                    placeholder="Analyze handle..."
-                    className="flex-1 bg-transparent border-none outline-none py-5 px-4 text-base md:text-xl text-foreground placeholder:text-muted-foreground font-bold w-full"
+                    placeholder="Enter Codeforces handle..."
+                    className="flex-1 bg-transparent border-none outline-none py-4 px-4 text-lg md:text-xl text-foreground placeholder:text-muted-foreground/50 font-bold w-full"
                     value={handle}
                     onChange={(e) => setHandle(e.target.value)}
                   />
                 </div>
-                <div className="flex items-center p-1 sm:p-0 sm:pr-2">
-                  <Button
-                    type="submit"
-                    className="w-full sm:w-auto h-12 md:h-14 px-8 md:px-12 font-black rounded-xl text-xs md:text-base transition-all active:scale-95"
-                  >
-                    ANALYZE
-                  </Button>
-                </div>
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full sm:w-auto h-14 px-8 md:px-10 rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  Analyze Now
+                </Button>
               </div>
             </form>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-8 text-[9px] md:text-xs font-black uppercase tracking-[0.15em] md:tracking-[0.2em] text-muted-foreground px-4">
-              <span className="opacity-50">Popular:</span>
-              <div className="flex flex-wrap justify-center gap-3 md:gap-6">
-                {["tourist", "Benq", "Egor", "Radewoosh"].map(h => (
-                  <button key={h} onClick={() => setHandle(h)} className="hover:text-primary transition-colors hover:scale-110 active:scale-95">{h}</button>
+
+            {/* Quick Links */}
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-xs font-bold text-muted-foreground">
+              <span className="uppercase tracking-widest opacity-60">Trending:</span>
+              <div className="flex flex-wrap justify-center gap-2">
+                {["tourist", "Benq", "Egor", "Radewoosh", "jiangly"].map((h) => (
+                  <button
+                    key={h}
+                    onClick={() => setHandle(h)}
+                    className="px-3 py-1.5 rounded-lg bg-muted/50 hover:bg-primary/10 hover:text-primary border border-transparent hover:border-primary/20 transition-all duration-300"
+                  >
+                    {h}
+                  </button>
                 ))}
               </div>
             </div>
           </motion.div>
-
-
         </motion.div>
       </section>
 
