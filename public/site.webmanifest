@@ -29,7 +29,7 @@
         }
     ],
     "theme_color": "#09090b",
-    "background_color": "#ffffff",
+    "background_color": "#09090b",
     "display": "standalone",
     "orientation": "portrait",
     "screenshots": [
