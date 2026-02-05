@@ -256,7 +256,7 @@ export default function LandingPage() {
               whileHover={{ scale: 1.05 }}
               className="mb-8 md:mb-10 group cursor-default"
             >
-              <Badge variant="outline" className="py-2 px-6 text-xs font-black uppercase tracking-[0.3em] border-primary/20 bg-primary/5 text-primary backdrop-blur-sm group-hover:border-primary/50 transition-all shadow-[0_0_20px_-10px_var(--primary)]">
+              <Badge variant="outline" className="py-1.5 px-3 md:py-2 md:px-6 text-[10px] md:text-sm font-black uppercase tracking-[0.15em] md:tracking-[0.3em] border-primary/20 bg-primary/5 text-primary backdrop-blur-sm group-hover:border-primary/50 transition-all shadow-[0_0_20px_-10px_var(--primary)]">
                 <Sparkles className="w-3.5 h-3.5 mr-3 animate-pulse" />
                 The Analytics Engine for Winners
               </Badge>
