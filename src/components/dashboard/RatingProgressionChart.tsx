@@ -23,16 +23,16 @@ interface RatingProgressionChartProps {
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
         return (
-            <div className="bg-popover/90 backdrop-blur-md border border-border p-3 rounded-xl shadow-2xl transition-all duration-300">
+            <div className="bg-popover border border-border p-3 rounded-xl shadow-2xl transition-all duration-300">
                 <p className="text-muted-foreground text-[10px] mb-2 font-black uppercase tracking-[0.1em]">
                     {formatIST(label * 1000, 'dd MMM yyyy')}
                 </p>
                 <div className="flex items-center gap-2 text-sm">
-                    <span className="font-black text-primary text-lg">{payload[0].value}</span>
+                    <span className="font-black text-foreground text-lg">{payload[0].value}</span>
                     <span className="text-[10px] font-bold text-muted-foreground uppercase">Rating</span>
                 </div>
                 {payload[0].payload.rank && (
-                    <div className="mt-1 text-[10px] font-bold text-primary/80 uppercase">
+                    <div className="mt-1 text-[10px] font-bold text-muted-foreground uppercase">
                         {payload[0].payload.rank}
                     </div>
                 )}
@@ -40,6 +40,24 @@ const CustomTooltip = ({ active, payload, label }: any) => {
         );
     }
     return null;
+};
+
+const CustomLabel = ({ viewBox, value }: any) => {
+    const { x, y, width } = viewBox;
+    return (
+        <text
+            x={x + width}
+            y={y}
+            fill="hsl(var(--muted-foreground))"
+            fontSize={10}
+            fontWeight="bold"
+            textAnchor="end"
+            dx={-10}
+            dy={4}
+        >
+            {value}
+        </text>
+    );
 };
 
 export function RatingProgressionChart({ history, isLoading }: RatingProgressionChartProps) {
@@ -69,26 +87,25 @@ export function RatingProgressionChart({ history, isLoading }: RatingProgression
             >
                 <defs>
                     <linearGradient id="colorRating" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                        <stop offset="5%" stopColor="rgb(16, 185, 129)" stopOpacity={0.4} />
+                        <stop offset="95%" stopColor="rgb(16, 185, 129)" stopOpacity={0} />
                     </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.1} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.3} />
 
                 {/* Rating Level Reference Lines */}
-                <ReferenceLine y={1200} stroke="#808080" strokeDasharray="3 3" opacity={0.2} label={{ position: 'right', value: '1200', fill: '#808080', fontSize: 10 }} />
-                <ReferenceLine y={1400} stroke="#008000" strokeDasharray="3 3" opacity={0.2} label={{ position: 'right', value: '1400', fill: '#008000', fontSize: 10 }} />
-                <ReferenceLine y={1600} stroke="#03a89e" strokeDasharray="3 3" opacity={0.2} />
-                <ReferenceLine y={1900} stroke="#aa00aa" strokeDasharray="3 3" opacity={0.2} label={{ position: 'right', value: '1900', fill: '#aa00aa', fontSize: 10 }} />
-                <ReferenceLine y={2100} stroke="#ff8c00" strokeDasharray="3 3" opacity={0.2} />
-                <ReferenceLine y={2400} stroke="#ff0000" strokeDasharray="3 3" opacity={0.2} label={{ position: 'right', value: '2400', fill: '#ff0000', fontSize: 10 }} />
+                {/* <ReferenceLine y={1200} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" opacity={0.3} label={<CustomLabel value="1200" />} />
+                <ReferenceLine y={1400} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" opacity={0.3} label={<CustomLabel value="1400" />} />
+                <ReferenceLine y={1600} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" opacity={0.3} label={<CustomLabel value="1600" />} />
+                <ReferenceLine y={1900} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" opacity={0.3} label={<CustomLabel value="1900" />} />
+                <ReferenceLine y={2100} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" opacity={0.3} label={<CustomLabel value="2100" />} />
+                <ReferenceLine y={2400} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" opacity={0.3} label={<CustomLabel value="2400" />} /> */}
 
                 <XAxis
                     dataKey="ratingUpdateTimeSeconds"
                     tickFormatter={(unix) => formatIST(unix * 1000, 'yyyy')}
-                    stroke="var(--muted-foreground)"
-                    fontSize={10}
-                    fontWeight="bold"
+                    stroke="#6b7280"
+                    tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 'bold' }}
                     tickLine={false}
                     axisLine={false}
                     type="number"
@@ -97,27 +114,26 @@ export function RatingProgressionChart({ history, isLoading }: RatingProgression
                 />
                 <YAxis
                     domain={[minRating - padding, maxRating + padding]}
-                    stroke="var(--muted-foreground)"
-                    fontSize={10}
-                    fontWeight="bold"
+                    stroke="#6b7280"
+                    tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 'bold' }}
                     tickLine={false}
                     axisLine={false}
                     tickFormatter={(val) => val.toString()}
                 />
-                <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 1, strokeDasharray: '4 4' }} />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgb(16, 185, 129)', strokeWidth: 2, strokeDasharray: '4 4' }} />
                 <Area
                     type="monotone"
                     dataKey="newRating"
-                    stroke="hsl(var(--primary))"
+                    stroke="rgb(16, 185, 129)"
                     strokeWidth={3}
                     fillOpacity={1}
                     fill="url(#colorRating)"
                     animationDuration={2500}
                     activeDot={{
                         r: 6,
-                        fill: "hsl(var(--primary))",
+                        fill: "rgb(16, 185, 129)",
                         strokeWidth: 2,
-                        stroke: "white",
+                        stroke: "hsl(var(--background))",
                         className: "shadow-xl"
                     }}
                 />

@@ -109,10 +109,10 @@ export function ActivityHeatmap({ submissions, isLoading }: ActivityHeatmapProps
     const getActivityColor = (count: number) => {
         if (count === 0) return "bg-zinc-100 dark:bg-zinc-900";
         // Scale based on max submissions slightly, or fixed thresholds
-        if (count <= 2) return "bg-emerald-200/50 dark:bg-emerald-900/40 opacity-100 ring-1 ring-emerald-500/30";
-        if (count <= 5) return "bg-emerald-400/50 dark:bg-emerald-600/40 opacity-100 ring-1 ring-emerald-500/50";
-        if (count <= 8) return "bg-emerald-500/60 opacity-100 ring-1 ring-emerald-400/60";
-        return "bg-emerald-500 dark:bg-emerald-400 opacity-100 shadow-[0_0_10px_rgba(52,211,153,0.5)]";
+        if (count <= 2) return "bg-emerald-200/50 dark:bg-emerald-900/40";
+        if (count <= 5) return "bg-emerald-400/50 dark:bg-emerald-600/40";
+        if (count <= 8) return "bg-emerald-500/60 dark:bg-emerald-700/60";
+        return "bg-emerald-500 dark:bg-emerald-400";
     };
 
     if (isLoading) return <SkeletonLoader className="h-[300px] w-full rounded-[24px]" />;
@@ -185,7 +185,7 @@ export function ActivityHeatmap({ submissions, isLoading }: ActivityHeatmapProps
                                                             // If day is not in the current month rendering block, render transparent placeholder
                                                             // This maintains the grid structure but "breaks" visual connection
                                                             if (!isCurrentMonth) {
-                                                                return <div key={dateStr} className="w-3 h-3 bg-transparent" />;
+                                                                return <div key={dateStr} className="w-2.5 h-2.5 bg-transparent" />;
                                                             }
 
                                                             return (
@@ -194,7 +194,7 @@ export function ActivityHeatmap({ submissions, isLoading }: ActivityHeatmapProps
                                                                         <TooltipTrigger asChild>
                                                                             <div
                                                                                 className={cn(
-                                                                                    "w-3 h-3 rounded-[2px] transition-all duration-200 hover:ring-1 hover:ring-zinc-400 dark:hover:ring-white/50 cursor-pointer",
+                                                                                    "w-2.5 h-2.5 rounded-[2px] transition-all duration-200 hover:ring-1 hover:ring-zinc-400 dark:hover:ring-white/50 cursor-pointer",
                                                                                     getActivityColor(count)
                                                                                 )}
                                                                             />
@@ -225,7 +225,7 @@ export function ActivityHeatmap({ submissions, isLoading }: ActivityHeatmapProps
                     <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-600">Less</span>
                     <div className="flex gap-1">
                         {[0, 2, 5, 8, 12].map((level, i) => (
-                            <div key={i} className={cn("w-3 h-3 rounded-[2px] border border-transparent", getActivityColor(level))} />
+                            <div key={i} className={cn("w-2.5 h-2.5 rounded-[2px] border border-transparent", getActivityColor(level))} />
                         ))}
                     </div>
                     <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-600">More</span>
