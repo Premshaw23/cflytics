@@ -8,7 +8,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 [![Prisma](https://img.shields.io/badge/Prisma-6.0-2D3748?logo=prisma)](https://www.prisma.io/)
 
-**CFlytics** is a premium, high-performance analytics and tracking platform designed specifically for Codeforces competitive programmers. It transforms raw data into actionable insights, helping you identify weaknesses, track progress, and sharpen your skills.
+**CFlytics** is a premium, high-performance analytics and tracking platform designed specifically for Codeforces competitive programmers. It transforms raw data into actionable insights, helping you identify weaknesses, track progress, and sharpen your skills. 
 
 ---
 
