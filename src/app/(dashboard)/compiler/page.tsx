@@ -161,59 +161,78 @@ function CompilerContent() {
     }, [code, language, problemId, showSelection])
 
     const handlePickRandom = async () => {
-        if (!problemsData?.problems) {
-            toast.error("Still loading problems. Please wait.")
-            return
+        if (!problemsData || !Array.isArray(problemsData.problems) || problemsData.problems.length === 0) {
+            toast.error("No problems available. Please try again later or check your connection.");
+            return;
         }
 
-        setIsPickingRandom(true)
+        setIsPickingRandom(true);
         try {
-            const userRating = userInfo.data?.rating || 800
-            // Find problems within range (userRating +/- 200) or default to 800
+            const userRating = userInfo.data?.rating || 800;
+            // Find problems within range (userRating +/- 200)
             const filtered = problemsData.problems.filter(p =>
-                p.rating && Math.abs(p.rating - userRating) <= 200
-            )
+                typeof p.rating === 'number' && Math.abs(p.rating - userRating) <= 200
+            );
 
-            const pool = filtered.length > 0 ? filtered : problemsData.problems.filter(p => p.rating === 800)
-            const randomProblem = pool[Math.floor(Math.random() * pool.length)]
+            // Fallback pools
+            let pool = filtered;
+            if (pool.length === 0) {
+                // Try all problems with a rating (any rating)
+                pool = problemsData.problems.filter(p => typeof p.rating === 'number');
+            }
+            if (pool.length === 0) {
+                // Fallback to all problems (even if unrated)
+                pool = problemsData.problems;
+            }
 
-            if (randomProblem) {
-                const newProblemId = `${randomProblem.contestId}${randomProblem.index}`
-                router.push(`/compiler?problemId=${newProblemId}`)
-                setShowSelection(false)
-                toast.success(`Selected random problem: ${randomProblem.name}`)
+            if (!pool || pool.length === 0) {
+                toast.error("No problems found to pick from. Please try again later.");
+                return;
+            }
+
+            const randomProblem = pool[Math.floor(Math.random() * pool.length)];
+
+            if (randomProblem && randomProblem.contestId && randomProblem.index) {
+                const newProblemId = `${randomProblem.contestId}${randomProblem.index}`;
+                router.push(`/compiler?problemId=${newProblemId}`);
+                setShowSelection(false);
+                toast.success(`Selected random problem: ${randomProblem.name}`);
             } else {
-                toast.error("Could not find a suitable random problem.")
+                toast.error("Could not find a suitable random problem. Please try again.");
             }
         } catch (err) {
-            toast.error("Failed to pick a random problem.")
+            console.error("Random problem selection error:", err);
+            toast.error("Failed to pick a random problem. Please try again.");
         } finally {
-            setIsPickingRandom(false)
+            setIsPickingRandom(false);
         }
-    }
+    };
 
     const handleRunCode = useCallback(async (customCases: { input: string; expectedOutput: string }[] = []): Promise<any[]> => {
-        setIsRunning(true)
-        setResults([])
-
+        setIsRunning(true);
+        setResults([]);
         try {
-            let testCases: { input: string; expectedOutput: string }[] = []
+            let testCases: { input: string; expectedOutput: string }[] = [];
 
             if (problemId) {
                 // First, get sample test cases
-                const tcRes = await fetch(`/api/compiler/testcases?problemId=${problemId}`)
-                const tcData = await tcRes.json()
-                const sampleCases = tcData.testCases || []
-                testCases = [...sampleCases]
+                const tcRes = await fetch(`/api/compiler/testcases?problemId=${problemId}`);
+                if (!tcRes.ok) {
+                    toast.error("Failed to fetch test cases for this problem.");
+                    return [];
+                }
+                const tcData = await tcRes.json();
+                const sampleCases = tcData.testCases || [];
+                testCases = [...sampleCases];
             }
 
             // Merge sample cases with valid custom cases
-            const validCustomCases = customCases.filter(c => c.input.trim() !== '' || c.expectedOutput.trim() !== '')
-            testCases = [...testCases, ...validCustomCases]
+            const validCustomCases = customCases.filter(c => c.input.trim() !== '' || c.expectedOutput.trim() !== '');
+            testCases = [...testCases, ...validCustomCases];
 
             if (testCases.length === 0) {
-                toast.error(problemId ? "No test cases found for this problem." : "Add custom tests for blank compilation.")
-                return []
+                toast.error(problemId ? "No test cases found for this problem." : "Add custom tests for blank compilation.");
+                return [];
             }
 
             const response = await fetch('/api/compiler/execute', {
@@ -224,30 +243,30 @@ function CompilerContent() {
                     language,
                     testCases,
                 }),
-            })
+            });
 
-            const data = await response.json()
+            const data = await response.json();
 
             if (data.success) {
-                setResults(data.results)
-                if (data.summary.allPassed) {
-                    toast.success(`Passed all ${data.summary.totalTests} test cases!`)
-                } else {
-                    toast.error(`Passed ${data.summary.passed}/${data.summary.totalTests} test cases.`)
+                setResults(data.results);
+                if (data.summary && data.summary.allPassed) {
+                    toast.success(`Passed all ${data.summary.totalTests} test cases!`);
+                } else if (data.summary) {
+                    toast.error(`Passed ${data.summary.passed}/${data.summary.totalTests} test cases.`);
                 }
-                return data.results
+                return data.results;
             } else {
-                toast.error(data.error || 'Failed to execute code')
-                return []
+                toast.error(data.error || 'Failed to execute code');
+                return [];
             }
         } catch (error) {
-            console.error('Failed to run code:', error)
-            toast.error('An error occurred while running your code.')
-            return []
+            console.error('Failed to run code:', error);
+            toast.error('An error occurred while running your code. Please try again.');
+            return [];
         } finally {
-            setIsRunning(false)
+            setIsRunning(false);
         }
-    }, [code, language, problemId])
+    }, [code, language, problemId]);
 
     // Keyboard Shortcuts
     useEffect(() => {
@@ -383,7 +402,7 @@ function CompilerContent() {
         <div className={`flex flex-col bg-background ${isFullScreen ? 'fixed inset-0 z-50 overflow-hidden' : 'h-full'}`}>
             {/* Selection Overlay */}
             {!problemId && showSelection && (
-                <div className="absolute inset-0 z-[100] bg-background/80 backdrop-blur-md flex items-center justify-center p-4">
+                <div className="absolute inset-0 z-100 bg-background/80 backdrop-blur-md flex items-center justify-center p-4">
                     <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 animate-in zoom-in-95 fade-in duration-500">
                         {/* Option 1: Random Challenge */}
                         <Card
@@ -569,7 +588,7 @@ function CompilerContent() {
                         </DropdownMenuContent>
                     </DropdownMenu>
 
-                    <div className="h-6 w-[1px] bg-border/50 mx-1 hidden sm:block"></div>
+                    <div className="h-6 w-px bg-border/50 mx-1 hidden sm:block"></div>
 
                     <LanguageSelector value={language} onChange={setLanguage} />
 
@@ -593,7 +612,7 @@ function CompilerContent() {
                             style={{ "--left-panel-width": `${leftPanelWidth}%` } as React.CSSProperties}
                             className={cn(
                                 "shrink-0 border-r bg-card/5 animate-in slide-in-from-left duration-300 overflow-y-auto",
-                                "w-full lg:w-[var(--left-panel-width)] h-[30vh] md:h-[40vh] lg:h-full transition-[width] duration-300",
+                                "w-full lg:w-(--left-panel-width) h-[30vh] md:h-[40vh] lg:h-full transition-[width] duration-300",
                                 isResizing && "transition-none"
                             )}
                         >
@@ -613,7 +632,7 @@ function CompilerContent() {
 
                 {/* Right: Editor & Test Cases */}
                 <div ref={rightPanelRef} className="flex flex-1 flex-col overflow-hidden bg-muted/20 relative">
-                    <div className="flex-1 min-h-[100px] lg:min-h-0">
+                    <div className="flex-1 min-h-25 lg:min-h-0">
                         <CodeEditor
                             ref={editorRef}
                             language={language}
@@ -639,7 +658,7 @@ function CompilerContent() {
                     {/* Test Cases Panel */}
                     <div
                         style={{ height: `${testCasePanelHeight}px` }}
-                        className="min-h-[150px] border-t bg-background shadow-2xl relative z-10 overflow-hidden"
+                        className="min-h-37.5 border-t bg-background shadow-2xl relative z-10 overflow-hidden"
                     >
                         <TestCasePanel
                             problemId={problemId}

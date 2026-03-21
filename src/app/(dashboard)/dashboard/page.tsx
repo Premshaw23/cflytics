@@ -121,7 +121,7 @@ export default function DashboardOverview() {
                             </a>
                         </Button>
                     </CardHeader>
-                    <CardContent className="h-[350px] p-6">
+                    <CardContent className="h-87.5 p-6">
                         {isLoading ? (
                             <SkeletonLoader className="h-full w-full" />
                         ) : (
