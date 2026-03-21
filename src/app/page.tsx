@@ -107,31 +107,51 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-linear-to-b from-background via-background/90 to-background" />
 
         {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]"></div>
 
         {/* Radial Orbs - Optimized for Light/Dark */}
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 dark:bg-blue-600/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse-slow" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-500/10 dark:bg-purple-600/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse-slow delay-1000" />
 
         {/* Central Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 dark:bg-primary/10 rounded-full blur-[100px] opacity-40 dark:opacity-50" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-200 bg-primary/5 dark:bg-primary/10 rounded-full blur-[100px] opacity-40 dark:opacity-50" />
       </div>
 
       {/* Navigation */}
       <nav className="fixed top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-md supports-backdrop-filter:bg-background/60">
         <div className="container mx-auto px-6 md:px-12 lg:px-16 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2 group">
+          {/* Left: Logo */}
+          <Link href="/" className="flex items-center space-x-2 group shrink-0">
             <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center group-hover:rotate-6 transition-transform duration-300 shadow-lg shadow-primary/20">
               <Code className="text-primary-foreground w-5 h-5" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-foreground">CFlytics</span>
+            <span className="text-xl font-bold tracking-tight text-foreground hidden sm:inline">CFlytics</span>
           </Link>
-          <div className="hidden md:flex items-center space-x-8">
-            <Link href="/problems" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Problems</Link>
-            <Link href="/contests" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Contests</Link>
-            <Link href="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Dashboard</Link>
+
+          {/* Center: Navigation Links */}
+          <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1">
+            <Link 
+              href="/problems" 
+              className="px-4 py-2 text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all duration-300"
+            >
+              Problems
+            </Link>
+            <Link 
+              href="/contests" 
+              className="px-4 py-2 text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all duration-300"
+            >
+              Contests
+            </Link>
+            <Link 
+              href="/dashboard" 
+              className="px-4 py-2 text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-lg transition-all duration-300"
+            >
+              Dashboard
+            </Link>
           </div>
-          <div className="flex items-center space-x-2 md:space-x-3">
+
+          {/* Right: Actions */}
+          <div className="flex items-center space-x-2 md:space-x-3 shrink-0">
             <ThemeToggle />
 
             {authStatus === "loading" ? (
@@ -148,7 +168,7 @@ export default function LandingPage() {
                       <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center">
                         <User className="w-3 h-3 text-primary" />
                       </div>
-                      <span className="text-xs font-black truncate max-w-[80px]">{authUser.handle}</span>
+                      <span className="text-xs font-black truncate max-w-20">{authUser.handle}</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56 mt-2 p-2 rounded-2xl border-border/50 bg-background/95 backdrop-blur-xl">
@@ -182,10 +202,17 @@ export default function LandingPage() {
               </div>
             ) : (
               <>
-                <Button variant="ghost" className="text-muted-foreground hover:text-foreground hidden sm:flex px-4 font-bold text-xs uppercase tracking-widest transition-all" asChild>
+                <Button 
+                  variant="ghost" 
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted/50 hidden sm:flex px-4 font-semibold text-xs uppercase tracking-widest transition-all rounded-lg" 
+                  asChild
+                >
                   <Link href="/dashboard">Guest Mode</Link>
                 </Button>
-                <Button className="h-9 px-5 md:px-6 font-black transition-all text-xs uppercase tracking-widest shadow-lg shadow-primary/20 active:scale-95" asChild>
+                <Button 
+                  className="h-10 px-6 font-bold text-xs uppercase tracking-widest shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-95 transition-all rounded-lg bg-linear-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90" 
+                  asChild
+                >
                   <Link href="/connect">Connect</Link>
                 </Button>
               </>
@@ -206,13 +233,13 @@ export default function LandingPage() {
       <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-32 overflow-hidden min-h-[90vh] flex flex-col items-center justify-center">
 
         {/* Floating Stat Pills (Decorative) */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden max-w-[1920px] mx-auto">
+        <div className="absolute inset-0 pointer-events-none overflow-hidden max-w-480 mx-auto">
           {/* Left Pill */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="absolute top-[25%] left-[5%] lg:left-[3%] hidden lg:flex items-center gap-4 bg-white/80 dark:bg-zinc-900/40 backdrop-blur-xl border border-zinc-200/50 dark:border-white/10 p-4 rounded-3xl shadow-xl dark:shadow-2xl rotate-[-6deg]"
+            className="absolute top-[25%] left-[5%] lg:left-[3%] hidden lg:flex items-center gap-4 bg-white/80 dark:bg-zinc-900/40 backdrop-blur-xl border border-zinc-200/50 dark:border-white/10 p-4 rounded-3xl shadow-xl dark:shadow-2xl -rotate-6"
           >
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-white">
               <CheckCircle2 className="w-6 h-6" />
@@ -357,21 +384,21 @@ export default function LandingPage() {
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 whileHover={{ y: -5 }}
               >
-                <Card className="h-full bg-card border-border/50 hover:border-primary/50 transition-all duration-500 group relative overflow-hidden flex flex-col shadow-sm hover:shadow-md">
+                <Card className="h-full bg-card/50 border border-border/80 hover:border-primary/60 transition-all duration-500 group relative overflow-hidden flex flex-col shadow-lg hover:shadow-xl hover:shadow-primary/10 backdrop-blur-sm">
                   <div className="absolute top-0 right-0 p-8 opacity-[0.03] dark:opacity-[0.05] group-hover:opacity-[0.08] dark:group-hover:opacity-[0.12] transition-opacity duration-500 group-hover:scale-150 transform rotate-12">
                     <feature.icon size={120} className="text-foreground" />
                   </div>
                   <CardContent className="p-10 flex-1 flex flex-col">
-                    <div className={`${feature.bg} ${feature.color} w-14 h-14 rounded-xl flex items-center justify-center mb-8 shadow-inner`}>
+                    <div className={`${feature.bg} ${feature.color} w-14 h-14 rounded-xl flex items-center justify-center mb-8 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                       <feature.icon className="w-7 h-7" />
                     </div>
-                    <h3 className="text-2xl font-black mb-4 group-hover:text-primary transition-colors text-foreground uppercase tracking-tight">{feature.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed font-bold text-sm lg:text-base">
+                    <h3 className="text-xl md:text-2xl font-black mb-4 group-hover:text-primary transition-colors text-foreground uppercase tracking-tight leading-tight">{feature.title}</h3>
+                    <p className="text-muted-foreground/90 leading-relaxed font-semibold text-sm lg:text-base">
                       {feature.description}
                     </p>
                   </CardContent>
                   <div className="px-10 pb-10 mt-auto">
-                    <div className="h-0.5 w-0 group-hover:w-full bg-primary transition-all duration-500 rounded-full" />
+                    <div className="h-0.5 w-0 group-hover:w-full bg-gradient-to-r from-primary to-purple-500 transition-all duration-500 rounded-full" />
                   </div>
                 </Card>
               </motion.div>
@@ -411,15 +438,19 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <Button size="lg" className="h-14 md:h-16 px-8 md:px-10 font-black tracking-widest transition-all shadow-xl text-xs md:text-base" asChild>
+              <Button 
+                size="lg" 
+                className="h-14 md:h-16 px-8 md:px-10 font-black tracking-widest transition-all shadow-lg shadow-primary/30 hover:shadow-primary/50 text-xs md:text-base bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 active:scale-95 rounded-lg" 
+                asChild
+              >
                 <Link href="/dashboard">EXPLORE THE PLATFORM <ChevronRight className="ml-2 w-4 md:w-5 h-4 md:h-5" /></Link>
               </Button>
             </div>
             <div className="flex-1 w-full max-w-sm md:max-w-2xl mx-auto">
               <div className="grid grid-cols-2 gap-3 md:gap-4">
                 {[LineChart, Trophy, Target, Zap].map((Icon, i) => (
-                  <div key={i} className="aspect-square rounded-2xl md:rounded-3xl bg-card border border-border flex items-center justify-center group hover:border-primary/50 transition-all duration-500 shadow-lg hover:shadow-xl">
-                    <Icon className="w-8 md:w-12 h-8 md:h-12 text-muted-foreground group-hover:text-primary transition-all duration-500 group-hover:scale-110" />
+                  <div key={i} className="aspect-square rounded-2xl md:rounded-3xl bg-card/50 border border-border/80 flex items-center justify-center group hover:border-primary/60 hover:bg-card transition-all duration-500 shadow-lg hover:shadow-xl hover:shadow-primary/10 backdrop-blur-sm">
+                    <Icon className="w-8 md:w-12 h-8 md:h-12 text-muted-foreground group-hover:text-primary transition-all duration-500 group-hover:scale-125" />
                   </div>
                 ))}
               </div>
@@ -434,26 +465,30 @@ export default function LandingPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="relative max-w-6xl mx-auto rounded-[3rem] overflow-hidden p-12 md:p-24 text-center border border-border bg-card shadow-xl"
+            className="relative max-w-6xl mx-auto rounded-3xl overflow-hidden p-12 md:p-24 text-center border border-border/50 bg-card/50 shadow-2xl backdrop-blur-sm hover:border-primary/30 transition-all duration-500"
           >
-            <div className="absolute inset-0 bg-linear-to-tr from-primary/20 via-primary/5 to-purple-500/10 pointer-events-none" />
-            <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/20 rounded-full blur-[120px]" />
-            <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px]" />
+            <div className="absolute inset-0 bg-linear-to-tr from-primary/20 via-primary/10 to-purple-500/15 pointer-events-none" />
+            <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/25 rounded-full blur-[120px] animate-pulse" />
+            <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-500/25 rounded-full blur-[120px] animate-pulse delay-700" />
 
             <div className="relative z-10 space-y-8">
               <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-foreground leading-[0.9]">
                 READY TO <br />
                 <span className="text-primary italic">ASCEND?</span>
               </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-bold leading-relaxed">
+              <p className="text-base md:text-xl text-muted-foreground/90 max-w-2xl mx-auto font-semibold leading-relaxed">
                 Join the elite circle of coders who use CFlytics to dominate their contests and track their legacy.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
-                <Button size="lg" className="h-16 px-12 text-lg font-black hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-primary/40 rounded-2xl" asChild>
+                <Button 
+                  size="lg" 
+                  className="h-16 px-12 text-lg font-black hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-primary/50 rounded-lg bg-gradient-to-r from-primary via-primary to-purple-600 hover:from-primary/90 hover:via-primary/90 hover:to-purple-600/90" 
+                  asChild
+                >
                   <Link href="/dashboard">CLAIM YOUR DASHBOARD</Link>
                 </Button>
                 <Link href="/dashboard" className="text-muted-foreground hover:text-foreground font-black text-sm uppercase tracking-widest transition-colors flex items-center gap-2 group">
-                  EXPLORE THE ARCHIVE <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  EXPLORE THE ARCHIVE <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
                 </Link>
               </div>
             </div>
@@ -461,7 +496,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="py-24 border-t border-border relative bg-muted/30">
+      <footer className="py-24 border-t border-border/50 relative bg-muted/20">
         <div className="container mx-auto px-6 md:px-12 lg:px-16">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-16">
             <div className="md:col-span-2 space-y-8">
@@ -471,7 +506,7 @@ export default function LandingPage() {
                 </div>
                 <span className="text-2xl font-bold tracking-tight text-foreground">CFlytics</span>
               </Link>
-              <p className="text-muted-foreground text-lg max-w-md font-bold leading-relaxed">
+              <p className="text-muted-foreground text-lg max-w-md font-semibold leading-relaxed">
                 Empowering the next generation of algorithmic masterminds with elite data visualization and tracking.
               </p>
               <div className="flex gap-6">
