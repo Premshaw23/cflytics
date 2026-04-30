@@ -1,4 +1,4 @@
-# <img src="./public/assets/images/hero_banner.png" alt="CFlytics Hero Banner" width="100%"/>
+# <img src="./public/logo.svg" alt="CFlytics Hero Banner" width="100%"/>
 
 # 🤖 CFlytics - The Ultimate Codeforces Dashboard & Analytics Platform
 
